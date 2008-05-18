@@ -1,0 +1,72 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: Odbc2 - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x413 /fo"Release/Odbc2.res" /d "NDEBUG" "D:\Projekte\NWNXsvn\trunk\Odbc2\Odbc2.rc"" 
+Creating temporary file "C:\DOKUME~1\ing\LOKALE~1\Temp\RSPC.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wsock32.lib mysqlclient.lib madCHook.lib /nologo /dll /incremental:no /pdb:"Release/nwnx_odbc.pdb" /machine:I386 /out:"d:\games\nwn\nwnx_odbc.dll" /implib:"Release/nwnx_odbc.lib" 
+.\Release\attach.obj
+.\Release\auth.obj
+.\Release\btree.obj
+.\Release\build.obj
+.\Release\date.obj
+.\Release\delete.obj
+.\Release\expr.obj
+.\Release\func.obj
+.\Release\hash.obj
+.\Release\insert.obj
+.\Release\legacy.obj
+.\Release\main.obj
+.\Release\opcodes.obj
+.\Release\os_mac.obj
+.\Release\os_unix.obj
+.\Release\os_win.obj
+.\Release\pager.obj
+.\Release\parse.obj
+.\Release\pragma.obj
+.\Release\printf.obj
+.\Release\random.obj
+.\Release\select.obj
+.\Release\shell.obj
+.\Release\table.obj
+.\Release\tclsqlite.obj
+.\Release\tokenize.obj
+.\Release\trigger.obj
+.\Release\update.obj
+.\Release\utf.obj
+.\Release\util.obj
+.\Release\vacuum.obj
+.\Release\vdbe.obj
+.\Release\vdbeapi.obj
+.\Release\vdbeaux.obj
+.\Release\vdbemem.obj
+.\Release\where.obj
+.\Release\IniFile.obj
+.\Release\mysql.obj
+.\Release\NWNXBase.obj
+.\Release\NWNXOdbc.obj
+.\Release\Odbc.obj
+.\Release\ODBC1.obj
+.\Release\scorcohook.obj
+.\Release\sqlite.obj
+.\Release\StdAfx.obj
+.\Release\Odbc2.res
+]
+Creating command line "link.exe @C:\DOKUME~1\ing\LOKALE~1\Temp\RSPC.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Linking...
+   Creating library Release/nwnx_odbc.lib and object Release/nwnx_odbc.exp
+
+
+
+<h3>Results</h3>
+nwnx_odbc.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
