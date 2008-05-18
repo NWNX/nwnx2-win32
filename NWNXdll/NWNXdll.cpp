@@ -37,6 +37,7 @@
 #include "madCHook.h"
 
 #include "NWNXBase.h"
+#include "IniFile.h"
 #include "HashTable.h"
 
 typedef CNWNXBase* (WINAPI* GETCLASSOBJECT)();
@@ -45,13 +46,20 @@ GETCLASSOBJECT GetClassObject = NULL;
 FILE *logFile;
 char logDir[8] = {0};
 char logFileName[18] = {0};
+int debuglevel = 0;
+
+bool ObjRet = 0;
+unsigned long oRes;
 
 CHashTable Libraries;
 
-void PayLoad(char*, char*, char*);
+void PayLoad(char*, char*, char**);
+void ObjectPayLoad(char*, char*);
 void SetLocalStringHookProc();
+void GetLocalObjectHookProc(const char **var_name);
 void LoadLibraries ();
 void (*SetLocalStringNextHook)();
+void (*GetLocalObjectNextHook)();
 BOOL APIENTRY DllMain(HANDLE, DWORD, LPVOID);
 char* GetLogDir();
 
@@ -68,7 +76,7 @@ void __declspec(naked) SetLocalStringHookProc()
         mov ebp, esp  // prolog 2
 
 		mov eax, dword ptr ss:[esp+0x20] // variable value (param 3)
-		mov eax, [eax] 
+		//mov eax, [eax] 
 		push eax
 		mov eax, dword ptr ss:[esp+0x20] // variable name (param 2)
 		mov eax, [eax] 
@@ -101,13 +109,66 @@ void __declspec(naked) SetLocalStringHookProc()
 	}
 }
 
-void PayLoad(char *gameObject, char* name, char* value)
+void __declspec(naked) GetLocalObjectHookProc(const char **var_name)
+{
+	//Too much assembly here..
+	__asm {
+
+		push ecx	  // save register contents
+		push edx
+		push ebx
+		push esi
+		push edi
+		push ebp	  // prolog 1
+        mov ebp, esp  // prolog 2
+
+		mov eax, dword ptr ss:[esp+0x1C] // variable name (param 2)
+		mov eax, [eax] 
+		push eax
+		mov eax, dword ptr ss:[esp+0x30] // game object (param 1)
+		push eax
+		call ObjectPayLoad
+		add esp, 0x8
+
+		pop ebp		// restore register contents
+		pop edi		
+		pop esi
+		pop ebx
+		pop edx
+		pop ecx
+
+		xor eax, eax
+		mov al, byte ptr ObjRet //check if we need to bypass the original function and return our value
+		test eax, eax
+		mov ObjRet, 0
+		mov eax, oRes  //return value
+		jnz ext  //don't call the original function
+		
+		mov eax, dword ptr ss:[esp+0x4] // arg 1
+		push eax
+
+		call GetLocalObjectNextHook // call original function
+
+ext:
+        retn 4
+	}
+}
+
+void PayLoad(char *gameObject, char* name, char** ppvalue)
 {
 	int iValueLength;
 	int iResultLength;
 	
-	if (!name || !value)
+	if (!name || !ppvalue || !*ppvalue)
 		return;
+
+	char *value= (char*)*ppvalue;
+
+	if(debuglevel>=3){
+		fprintf(logFile, "name='%s'\n",name);
+		fprintf(logFile, "value='%s'\n",value);
+	}
+
 
 	if (strncmp(name, "NWNX!", 5) != 0) 	// not for us
 		return;
@@ -134,22 +195,84 @@ void PayLoad(char *gameObject, char* name, char* value)
 	{
 		// library found, handle the request
 		iValueLength = strlen(value);
-		const char* pRes = pBase->OnRequest(gameObject, function + 1, value);
+		char* pRes = pBase->OnRequest(gameObject, function + 1, value);
 		if (pRes != NULL)
 		{
-			// copy result into nwn variable value while respecting the maximum size
-			iResultLength = strlen(pRes);
-			if (iValueLength < iResultLength)
+			if(strncmp(library,"LETO",4) != 0 &&
+			   strncmp(library,"HASHSET",7) != 0)
 			{
-				strncpy(value, pRes, iValueLength);
-				*(value+iValueLength) = 0x0;
+				// copy result into nwn variable value while respecting the maximum size
+				// new plugins
+				iResultLength = strlen(pRes);
+				if (iValueLength < iResultLength)
+				{
+					free(value);
+					*ppvalue = pRes;
+					*((unsigned long *)ppvalue+1) = strlen(pRes);
+				}
+				else
+				{
+					strncpy(value, pRes, iResultLength);
+					*(value+iResultLength) = 0x0;
+					free(pRes);
+				}
 			}
 			else
 			{
-				strncpy(value, pRes, iResultLength);
-				*(value+iResultLength) = 0x0;
+				// copy result into nwn variable value while respecting the maximum size
+				// legacy plugins
+				iResultLength = strlen(pRes);
+				if (iValueLength < iResultLength)
+				{
+					strncpy(value, pRes, iValueLength);
+					*(value+iValueLength) = 0x0;
+				}
+				else
+				{
+					strncpy(value, pRes, iResultLength);
+					*(value+iResultLength) = 0x0;
+				}
+
 			}
 		}
+	}
+	else
+		fprintf(logFile, "* Library %s does not exist.", library);
+}
+
+void ObjectPayLoad(char *gameObject, char* name)
+{
+	if (!name)
+		return;
+	if(debuglevel>=3)
+		fprintf(logFile, "Object Request='%s'\n",name);
+
+	if (strncmp(name, "NWNX!", 5) != 0) 	// not for us
+		return;
+
+	char* library = &name[5];
+	if (!library)
+	{
+		fprintf (logFile, "* Library not specified.");
+		return;
+	}
+
+	char* function = strchr(library, '!');
+	if (!function)
+	{
+		fprintf (logFile, "* Function not specified.");
+		return;
+	}
+
+	// see if the library is already loaded
+	*function = 0x0;
+	CNWNXBase* pBase = (CNWNXBase*)Libraries.Lookup (library);
+	*function = '!';
+	if (pBase != NULL)
+	{
+		// library found, handle the request
+		oRes = pBase->OnRequestObject(gameObject, function + 1);
+		ObjRet = 1;
 	}
 	else
 		fprintf(logFile, "* Library %s does not exist.", library);
@@ -294,17 +417,46 @@ DWORD FindHook()
 	return NULL;
 }
 
+DWORD FindObjectHook()
+{
+	char* ptr = (char*) 0x400000;
+	while (ptr < (char*) 0x600000)
+	{
+		if ((ptr[0] == (char) 0x8b) &&
+			(ptr[1] == (char) 0x44) &&
+			(ptr[2] == (char) 0x24) &&
+			(ptr[3] == (char) 0x04) &&
+			(ptr[4] == (char) 0x56) &&
+			(ptr[11] == (char) 0x6a) &&
+			(ptr[12] == (char) 0x00) &&
+			(ptr[13] == (char) 0x6a) &&
+			(ptr[14] == (char) 0x04)
+			)
+			return (DWORD) ptr;
+		else
+			ptr++;
+
+	}
+	return NULL;
+}
+
 DWORD WINAPI Init(LPVOID lpParam) 
 {
-	DWORD hookAt = FindHook();
-	HookCode((PVOID) hookAt, SetLocalStringHookProc, (PVOID*) &SetLocalStringNextHook);
+	DWORD SLSHook = FindHook();
+	DWORD GLOHook = FindObjectHook();
+	HookCode((PVOID) SLSHook, SetLocalStringHookProc, (PVOID*) &SetLocalStringNextHook);
+	HookCode((PVOID) GLOHook, GetLocalObjectHookProc, (PVOID*) &GetLocalObjectNextHook);
 
 	strcpy(logFileName, GetLogDir());
 	strcat(logFileName, "\\nwnx.txt");
+	CIniFile iniFile ("nwnx.ini");
+
+	debuglevel = iniFile.ReadInteger("NWNX", "debuglevel", 0);
 
 	logFile = fopen(logFileName, "w");
-	fprintf(logFile, "NWN Extender V.2.6.0\n");
+	fprintf(logFile, "NWN Extender V.2.7-beta4\n");
 	fprintf(logFile, "(c) 2004 by Ingmar Stieger (Papillon) and Jeroen Broekhuizen\n");
+	fprintf(logFile, "(c) 2007-2008 by virusman\n");
 	fprintf(logFile, "visit us at http://www.nwnx.org\n\n");
 	fprintf(logFile, "* Loading plugins...\n");
 	LoadLibraries ();

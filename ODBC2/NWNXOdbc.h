@@ -72,6 +72,7 @@ private:
 		char *user;
 		char *pass;
 		char *db;
+		char *charset;
 	} p;
 
 	unsigned int request_counter;

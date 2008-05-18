@@ -33,10 +33,10 @@ CMySQL::~CMySQL()
 BOOL CMySQL::Connect ()
 {
 	// try to establish a default connection
-	return Connect ("localhost", "nwn", "nwnpwd", "nwn");
+	return Connect ("localhost", "nwn", "nwnpwd", "nwn", NULL);
 }
 
-BOOL CMySQL::Connect (const char *server, const char *user, const char *pass, const char *db)
+BOOL CMySQL::Connect (const char *server, const char *user, const char *pass, const char *db, const char *charset)
 {
 	// initialize the mysql structure
 	if (mysql_init (&mysql) == NULL) {
@@ -49,6 +49,8 @@ BOOL CMySQL::Connect (const char *server, const char *user, const char *pass, co
 		mysql_close (&mysql);
 		return FALSE;
     }
+	version = mysql_get_server_version(&mysql);
+	if(charset) SetCharacterSet(charset);
 	return TRUE;
 }
 
@@ -56,6 +58,11 @@ void CMySQL::Disconnect ()
 {
 	// close the connection
 	mysql_close (&mysql);
+}
+
+BOOL CMySQL::SetCharacterSet (const char *charset)
+{
+	return (mysql_set_character_set(&mysql, charset)==0);
 }
 
 BOOL CMySQL::Execute (const uchar* query)
@@ -154,6 +161,7 @@ BOOL CMySQL::WriteScorcoData(char* SQL, BYTE* pData, int Length)
 
 BYTE* CMySQL::ReadScorcoData(char* SQL, char *param, BOOL* pSqlError, int *size)
 {
+	MYSQL_RES *rcoresult;
 	if (strcmp(param, "FETCHMODE") != 0)
 	{	
 		if (mysql_query(&mysql, (const char *) SQL) != 0)
@@ -162,9 +170,10 @@ BYTE* CMySQL::ReadScorcoData(char* SQL, char *param, BOOL* pSqlError, int *size)
 			return NULL;
 		}
 
-		mysql_free_result(result);
-		result = mysql_store_result (&mysql);
-		if (!result)
+		/*mysql_free_result(result);
+		result = mysql_store_result (&mysql);*/
+		rcoresult = mysql_store_result (&mysql);
+		if (!rcoresult)
 		{
 			*pSqlError = true;
 			return NULL;
@@ -176,16 +185,20 @@ BYTE* CMySQL::ReadScorcoData(char* SQL, char *param, BOOL* pSqlError, int *size)
     row = mysql_fetch_row(result);
     if (row)
 	{
-		unsigned long* length = mysql_fetch_lengths(result);
+		unsigned long* length = mysql_fetch_lengths(rcoresult);
 		if (*length > MAXRESULT)
 			return NULL;
 
 		memcpy(pReturn, row[0], length[0]);
 		*size = length[0];
+		mysql_free_result(rcoresult);
 		return pReturn;	
 	}
 	else
+	{
+		mysql_free_result(rcoresult);
 		return NULL;
+	}
 }
 
 const char* CMySQL::GetErrorMessage ()

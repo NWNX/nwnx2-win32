@@ -26,6 +26,8 @@
 #endif // _MSC_VER > 1000
 #include <stdio.h>
 
+#define OBJECT_INVALID 0x7F000000
+
 class CNWNXBase  
 {
 public:
@@ -52,6 +54,15 @@ public:
 	virtual char* OnRequest (char *gameObject, char* Request, char* Parameters) = 0;
 
 	///////////////////////////////////////////////////////////////////////////
+	// Function: OnRequestObject (char* Request)
+	// Description
+	//	Called when a request is pending from a NWScript.
+	//	This function must be overloaded by the module.
+	//	Request		: the job that must be performed
+	virtual unsigned long OnRequestObject (char *gameObject, char* Request);
+
+
+	///////////////////////////////////////////////////////////////////////////
 	// Function: OnRelease
 	// Description
 	//	Called just before deletion of an instance of this class.
@@ -70,11 +81,41 @@ public:
 	//	Msg			: the format string
 	//  [argument]	: optional arguments
 	void Log (const char* Msg, ...);
+
+	///////////////////////////////////////////////////////////////////////////
+	// Function: Log (const char* pcMsg[, argument]...);
+	// Description:
+	//	This function formats and writes a message to the log file. It works
+	//  the same way as the standard C printf function.
+	//  Example: Log ("Set array item %d with value %s.", iIndex, pcValue);
+	// Parameters:
+	//	Msg			: the format string
+	//  [argument]	: optional arguments
+	void Log (int debugPri, const char* Msg, ...);
 	void WriteLogHeader();
+
+	///////////////////////////////////////////////////////////////////////////
+	// Function: SetDebugLevel (int level);
+    // Description:
+	//  Helper function to alter the instance's debuglevel independent of
+	//  the global level.  Returns the old debuglevel.
+	// Parameters:
+	//  level	: the desired level
+	int SetDebugLevel (int level);
+
+	///////////////////////////////////////////////////////////////////////////
+	// Function: BaseConf ();
+    // Description:
+	//  This function parses the generic config options: "debuglevel", etc.
+	// Parameters:
+	//  None
+	void BaseConf ();
 
 	FILE* m_fFile;
 	char* m_LogFile;
 	long m_maxLogSizeKB;
+	char* confKey;
+	int debuglevel;
 
 protected:
 	char acBuffer[65535];

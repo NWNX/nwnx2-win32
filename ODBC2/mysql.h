@@ -30,13 +30,14 @@ public:
 	~CMySQL();
 
 	BOOL Connect ();
-	BOOL Connect (const char *server, const char *user, const char *pass, const char *db);
+	BOOL Connect (const char *server, const char *user, const char *pass, const char *db, const char *charset);
 	void Disconnect ();
 
 	BOOL Execute (const uchar* query);
 	uint Fetch (char* buffer, uint size);
 	BOOL WriteScorcoData(char* SQL, BYTE* pData, int Length);
 	BYTE* ReadScorcoData(char* SQL, char *param, BOOL* pSqlError, int *size);
+	BOOL SetCharacterSet (const char *charset);
 
 	const char* GetErrorMessage ();
 
@@ -45,6 +46,7 @@ private:
 	MYSQL* connection;
 	MYSQL_RES *result;
 	ULONG NumCol;
+	unsigned long version;
 };
 
 #endif

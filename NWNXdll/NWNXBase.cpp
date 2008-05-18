@@ -21,6 +21,7 @@
 
 #include "stdafx.h"
 #include "NWNXBase.h"
+#include "IniFile.h"
 #include <stdarg.h>
 #include <typeinfo.h>
 
@@ -32,6 +33,7 @@ CNWNXBase::CNWNXBase()
 {
 	m_fFile = NULL;
 	m_maxLogSizeKB = 1024 * 1024;
+	debuglevel = 0;
 }
 
 CNWNXBase::~CNWNXBase()
@@ -56,6 +58,11 @@ BOOL CNWNXBase::OnRelease()
 	if (m_fFile)
 		ret = fclose (m_fFile);
 	return (ret == 0);
+}
+
+unsigned long CNWNXBase::OnRequestObject (char *gameObject, char* Request)
+{
+	return 0x7F000000;
 }
 
 void CNWNXBase::Log(const char *pcMsg, ...)
@@ -90,6 +97,48 @@ void CNWNXBase::Log(const char *pcMsg, ...)
 		fprintf (m_fFile, acBuffer);
 		fflush (m_fFile);
 	}
+}
+
+void CNWNXBase::Log(int priority, const char *pcMsg, ...)
+{
+	va_list argList;
+	char acBuffer[2048];
+
+	if (m_fFile && priority<=debuglevel)
+	{  
+		// build up the string
+		va_start(argList, pcMsg);
+		_vsnprintf(acBuffer, 2047, pcMsg, argList);
+		acBuffer[2047] = 0;
+		va_end(argList);
+
+		// log string in file
+		fprintf (m_fFile, "%s", acBuffer);
+		fflush (m_fFile);
+	}
+}
+
+int CNWNXBase::SetDebugLevel(int level) {
+	int temp = debuglevel;
+
+	//printf("[%s] SetDebugLevel(%d) called.  Current value=%d\n",
+	//	   confKey,level,temp);
+
+	if(level != debuglevel) {
+		debuglevel = level;
+	}
+
+	return temp;
+}
+
+void CNWNXBase::BaseConf() {
+
+	if(confKey==NULL) 
+		return;
+
+	CIniFile iniFile ("nwnx.ini");
+
+	SetDebugLevel(iniFile.ReadInteger(confKey, "debuglevel", 0));
 }
 
 void CNWNXBase::WriteLogHeader()

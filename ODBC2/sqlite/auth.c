@@ -14,7 +14,7 @@
 ** systems that do not need this facility may omit it by recompiling
 ** the library with -DSQLITE_OMIT_AUTHORIZATION=1
 **
-** $Id: auth.c,v 1.19 2004/09/30 13:43:13 drh Exp $
+** $Id: auth.c,v 1.25 2006/06/16 08:01:03 danielk1977 Exp $
 */
 #include "sqliteInt.h"
 
@@ -76,6 +76,7 @@ int sqlite3_set_authorizer(
 ){
   db->xAuth = xAuth;
   db->pAuthArg = pArg;
+  sqlite3ExpirePreparedStatements(db);
   return SQLITE_OK;
 }
 
@@ -111,13 +112,21 @@ void sqlite3AuthRead(
   int iSrc;             /* Index in pTabList->a[] of table being read */
   const char *zDBase;   /* Name of database being accessed */
   TriggerStack *pStack; /* The stack of current triggers */
+  int iDb;              /* The index of the database the expression refers to */
 
   if( db->xAuth==0 ) return;
+  if( pExpr->op==TK_AS ) return;
   assert( pExpr->op==TK_COLUMN );
-  for(iSrc=0; iSrc<pTabList->nSrc; iSrc++){
+  iDb = sqlite3SchemaToIndex(pParse->db, pExpr->pSchema);
+  if( iDb<0 ){
+    /* An attempt to read a column out of a subquery or other
+    ** temporary table. */
+    return;
+  }
+  for(iSrc=0; pTabList && iSrc<pTabList->nSrc; iSrc++){
     if( pExpr->iTable==pTabList->a[iSrc].iCursor ) break;
   }
-  if( iSrc>=0 && iSrc<pTabList->nSrc ){
+  if( iSrc>=0 && pTabList && iSrc<pTabList->nSrc ){
     pTab = pTabList->a[iSrc].pTab;
   }else if( (pStack = pParse->trigStack)!=0 ){
     /* This must be an attempt to read the NEW or OLD pseudo-tables
@@ -138,14 +147,14 @@ void sqlite3AuthRead(
   }else{
     zCol = "ROWID";
   }
-  assert( pExpr->iDb<db->nDb );
-  zDBase = db->aDb[pExpr->iDb].zName;
+  assert( iDb>=0 && iDb<db->nDb );
+  zDBase = db->aDb[iDb].zName;
   rc = db->xAuth(db->pAuthArg, SQLITE_READ, pTab->zName, zCol, zDBase, 
                  pParse->zAuthContext);
   if( rc==SQLITE_IGNORE ){
     pExpr->op = TK_NULL;
   }else if( rc==SQLITE_DENY ){
-    if( db->nDb>2 || pExpr->iDb!=0 ){
+    if( db->nDb>2 || iDb!=0 ){
       sqlite3ErrorMsg(pParse, "access to %s.%s.%s is prohibited", 
          zDBase, pTab->zName, zCol);
     }else{
@@ -173,8 +182,10 @@ int sqlite3AuthCheck(
   sqlite3 *db = pParse->db;
   int rc;
 
-  /* Don't do any authorization checks if the database is initialising. */
-  if( db->init.busy ){
+  /* Don't do any authorization checks if the database is initialising
+  ** or if the parser is being invoked from within sqlite3_declare_vtab.
+  */
+  if( db->init.busy || IN_DECLARE_VTAB ){
     return SQLITE_OK;
   }
 

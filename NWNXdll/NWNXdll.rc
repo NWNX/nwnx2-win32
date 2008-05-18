@@ -28,8 +28,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,0,0
- PRODUCTVERSION 2,6,0,0
+ FILEVERSION 2,7,0,0
+ PRODUCTVERSION 2,7,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -47,14 +47,14 @@ BEGIN
             VALUE "Comments", "http://www.nwnx.org\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "Neverwinter Nights Extender 2\0"
-            VALUE "FileVersion", "2, 6, 0, 0\0"
+            VALUE "FileVersion", "2, 7, 0, 0\0"
             VALUE "InternalName", "NWNX2 Modular\0"
             VALUE "LegalCopyright", "(C) 2005 Ingmar Stieger (Papillon)\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "nwnx-module.dll\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "NWNX2 Main Module\0"
-            VALUE "ProductVersion", "2, 6, 0, 0\0"
+            VALUE "ProductVersion", "2, 7, 0, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
