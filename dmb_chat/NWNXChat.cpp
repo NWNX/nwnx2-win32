@@ -100,13 +100,14 @@ char* CNWNXChat::OnRequest (char* gameObject, char* Request, char* Parameters)
 	if (strncmp(Request, "GETID", 5) == 0)
 	{
 		int OID = strtol(Parameters, 0, 16);
+		char *LastID = (char *) malloc(32);
 		if (!OID)
-			strcpy(lastIDs, "-1");
+			strcpy(LastID, "-1");
 		else
-			sprintf(lastIDs, "%ld", GetID(OID));
+			sprintf(LastID, "%ld", GetID(OID));
 		if (m_LogLevel >= logScripter)
-			Log("o GETID: oID='%s', ID=%s\n", Parameters, lastIDs);
-		return lastIDs;
+			Log("o GETID: oID='%s', ID=%s\n", Parameters, LastID);
+		return LastID;
 	}
 	else if (strncmp(Request, "LOGNPC", 6) == 0)
 	{
@@ -129,7 +130,13 @@ char* CNWNXChat::OnRequest (char* gameObject, char* Request, char* Parameters)
 	if (!scriptRun) return NULL; // all following cmds - only in chat script
 	
 	if (strncmp(Request, "TEXT", 4) == 0)
-		return lastMsg;
+	{
+		unsigned int length = strlen(lastMsg);
+		char *ret = (char *) malloc(length+1);
+		strncpy(ret, lastMsg, length);
+		ret[length]=0;
+		return ret;
+	}
 	else if (strncmp(Request, "LOG", 3) == 0)
 		Log("%s", Parameters);
 	else if (strncmp(Request, "SUPRESS", 7) == 0)
@@ -192,7 +199,7 @@ void CNWNXChat::LoadConfiguration ()
 
 void CNWNXChat::WriteLogHeader()
 {
-	fprintf(m_fFile, "NWNX Chat version 0.3.2 for Windows.\n");
+	fprintf(m_fFile, "NWNX Chat version 0.3.4 for Windows.\n");
 	fprintf(m_fFile, "(c) 2005-2006 by dumbo (dumbo@nm.ru)\n");
-	fprintf(m_fFile, "(c) 2006-2007 virusman (virusman@virusman.ru)\n");
+	fprintf(m_fFile, "(c) 2006-2008 virusman (virusman@virusman.ru)\n");
 }
