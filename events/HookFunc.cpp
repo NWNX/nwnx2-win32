@@ -20,10 +20,8 @@
 #include "HookFunc.h"
 #include "madCHook.h"
 #include "NWNXEvents.h"
-#include "AssemblyHelper.h"
 
 extern CNWNXEvents events;
-AssemblyHelper asmhelp;
 
 void (*SaveCharNextHook)();
 void (*PickPocketNextHook)();
@@ -295,12 +293,7 @@ int HookFunctions()
 	DWORD org_Run  = FindRunScript();
 	DWORD org_PickPocket = FindPickPocket();
 	DWORD org_Attack = FindAttack();
-	DWORD org_UseItem = asmhelp.FindFunctionBySignature("6A FF 68 ** ** ** ** +17 A1 ** ** ** ** 8B 54 24 40 55 56 57 8B F1 8B 48 04 52 E8");
-	DWORD org_ConvSelect = asmhelp.FindFunctionBySignature("+21 83 ** ** 53 55 56 57 8B 7C 24 4C 85 FF 8B F1");
-	DWORD org_ConditionalScript = asmhelp.FindFunctionBySignature("8B 48 10 8B 44 19 10 8B 56 08 8D 0C 80 C1 E1 04 68 ** ** ** ** 03 CA E8");
-	events.Log(0, "UseItem: %08lX\n", org_UseItem);
-	events.Log(0, "ConvSelect: %08lX\n", org_ConvSelect);
-	events.Log(0, "ConditionalScript: %08lX\n", org_ConditionalScript);
+
 	if (org_SaveChar)
 	{
 		pServThis = *(dword*)(org_SaveChar + 0x19);

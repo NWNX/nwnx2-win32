@@ -91,18 +91,6 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\AssemblyHelper.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CExoLinkedList.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CExoLocString.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\Events.cpp
 # End Source File
 # Begin Source File
@@ -125,18 +113,6 @@ SOURCE=.\NWNXEvents.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
-# Begin Source File
-
-SOURCE=.\AssemblyHelper.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CExoLinkedList.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CExoLocString.h
-# End Source File
 # Begin Source File
 
 SOURCE=.\HookFunc.h
