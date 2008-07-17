@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 madCHook.lib wsock32.lib /nologo /subsystem:windows /machine:I386 /out:"d:\games\nwn\NWNX2.exe"
+# ADD LINK32 madCHook.lib wsock32.lib /nologo /subsystem:windows /machine:I386
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "NWNX2 - Win32 Debug"
