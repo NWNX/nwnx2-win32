@@ -43,8 +43,8 @@ BOOL CNWNXFixes::OnCreate (const char* LogDir)
 	sprintf (log, "%s\\nwnx_fixes.txt", LogDir);
 	if (!CNWNXBase::OnCreate(log))
 		return false;
-	fprintf(m_fFile, "NWNX Fixes V.1.0.3 for Windows\n");
-	fprintf(m_fFile, "(c) by virusman, 2007\n");
+	fprintf(m_fFile, "NWNX Fixes V.1.0.4 for Windows\n");
+	fprintf(m_fFile, "(c) by virusman, 2007-2008\n");
 	fprintf(m_fFile, "visit us at http://www.nwnx.org\n\n");
 	
 	CIniFile iniFile ("nwnx.ini");

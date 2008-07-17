@@ -122,12 +122,15 @@ int FindHookFunctions()
 {
 	*(dword*)&pGetIsMergeable = asmhelp.FindFunctionBySignature("53 55 8B D9 8B 83 E0 01 00 00 85 C0 56 57 0F 84 ** ** ** ** 8B 74 24 14 8B 86 E0 01 00 00 85 C0");
 	fixes.Log(2, "GetIsMergeable: %08lX\n", pGetIsMergeable);
-	char *pSplitItem_Copy = (char *) asmhelp.FindFunctionBySignature("64 A1 00 00 00 00 6A FF 68 ** ** ** ** 50 64 89 25 00 00 00 00 53 8B 5C 24 14 85 DB 56 57 8B F9 0F 8E ** ** ** ** 3B 9F 80 02 00 00");
+	char *pSplitItem_Copy = (char *) asmhelp.FindFunctionBySignature("64 A1 00 00 00 00 6A FF 68 ** ** ** ** 50 64 89 25 00 00 00 00 53 8B 5C 24 14 85 DB 56 57 8B F9 0F 8E ** ** ** ** 3B 9F ** 02 00 00");
 	fixes.Log(2, "SplitItem_Copy: %08lX\n", pSplitItem_Copy);
 	char *pBuyItem = (char *) asmhelp.FindFunctionBySignature("6A FF 68 ** ** ** ** 64 A1 00 00 00 00 50 64 89 25 00 00 00 00 83 EC 08 8B 44 24 18 8B 40 0C 56 8B F1 8B 0D ** ** ** ** 8B 49 18");
 	fixes.Log(2, "BuyItem: %08lX\n", pBuyItem);
 	char *pMergeItems_RemoveItem = (char *) asmhelp.FindFunctionBySignature("8B F0 85 F6 74 76 8B 84 24 84 00 00 00 6A 01 50 8B CE E8");
 	fixes.Log(2, "MergeItems_RemoveItem: %08lX\n", pMergeItems_RemoveItem);
+
+	char *pAIActionDialogObject = (char *) asmhelp.FindFunctionBySignature("64 A1 00 00 00 00 6A FF 68 ** ** ** ** 50 64 89 25 00 00 00 00 83 EC 3C 53 55 56 8B F1 8B 06 57 FF 50 30");
+	fixes.Log(2, "AIActionDialogObject: %08lX\n", pAIActionDialogObject);
 
 	if(pSplitItem_Copy)
 	{
@@ -148,6 +151,16 @@ int FindHookFunctions()
 		d_enable_write((dword) pMergeItems_RemoveItem);
 		if(pMergeItems_RemoveItem[0xD]==0x6A) pMergeItems_RemoveItem[0xE] = 0x0;
 		else fixes.Log(2, "Couldn't patch the MergeItems_RemoveItem function\n");
+	}
+
+	if(pAIActionDialogObject)
+	{
+		d_enable_write((dword) pAIActionDialogObject);
+		if(pAIActionDialogObject[0x15C] == 0x6A && pAIActionDialogObject[0x15D] == 0x00)
+		{
+			memset(&pAIActionDialogObject[0x15C], 0x90, 11);
+		}
+		else fixes.Log(2, "Couldn't patch the AIActionDialogObject function\n");
 	}
 
 	if(pGetIsMergeable)
