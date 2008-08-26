@@ -67,7 +67,7 @@ void CNWNXProfiler::LoadConfiguration ()
 
 void CNWNXProfiler::WriteLogHeader()
 {
-	fprintf(m_fFile, "NWNX Profiler V.1.61\n");
+	fprintf(m_fFile, "NWNX Profiler V.1.62\n");
 	fprintf(m_fFile, "(c) 2005 by Ingmar Stieger (papillon@nwnx.org)\n");
 	fprintf(m_fFile, "(c) 2008 by virusman (virusman@virusman.ru)\n");
 	fprintf(m_fFile, "visit us at http://www.nwnx.org\n\n");

@@ -216,7 +216,11 @@ void __declspec(naked) RunScriptHookProc()
         mov ebp, esp  // prolog 2
 
 		// fetch script name
-		mov ecx, dword ptr ss:[esp+0x24]
+		mov esi, ecx
+		mov eax, [esi+0xC]
+		lea eax, [eax+eax*8]
+		lea ecx, [esi+eax*4+0x28]
+		//mov ecx, dword ptr ss:[esp+0x24]
 		mov eax, dword ptr ss:[ecx]
 		test eax, eax
 		je scriptpart
