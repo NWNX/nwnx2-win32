@@ -1,7 +1,7 @@
 /***************************************************************************
     Chat plugin for NWNX - Implementation of the CNWNXChat class.
     (c) 2005,2006 dumbo (dumbo@nm.ru)
-    (c) 2006-2007 virusman (virusman@virusman.ru)
+    (c) 2006-2008 virusman (virusman@virusman.ru)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -180,11 +180,12 @@ void CNWNXChat::LoadConfiguration ()
 
 	// read log file setting
 	m_LogLevel = iniFile.ReadLong(confKey, "LogLevel", 0);
+	if(!m_LogLevel) m_LogLevel = debuglevel;
 	maxMsgLen = iniFile.ReadLong(confKey, "max_msg_len", 1024);
 	processNPC = iniFile.ReadLong(confKey, "processnpc", 0);
 	ignore_silent = iniFile.ReadLong(confKey, "ignore_silent", 0);
-	iniFile.ReadString(confKey, "chat_script", chatScript, 16, "chat_script");
-	iniFile.ReadString(confKey, "server_script", servScript, 16, "server_script");
+	iniFile.ReadString(confKey, "chat_script", chatScript, 17, "chat_script");
+	iniFile.ReadString(confKey, "server_script", servScript, 17, "server_script");
 
 	if (m_LogLevel > 0)
 	{
@@ -199,7 +200,7 @@ void CNWNXChat::LoadConfiguration ()
 
 void CNWNXChat::WriteLogHeader()
 {
-	fprintf(m_fFile, "NWNX Chat version 0.3.4 for Windows.\n");
+	fprintf(m_fFile, "NWNX Chat version 0.3.5 for Windows.\n");
 	fprintf(m_fFile, "(c) 2005-2006 by dumbo (dumbo@nm.ru)\n");
 	fprintf(m_fFile, "(c) 2006-2008 virusman (virusman@virusman.ru)\n");
 }
