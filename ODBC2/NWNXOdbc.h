@@ -40,6 +40,7 @@
 #include "sqlite.h"
 #include "../NWNXdll/IniFile.h"
 #include "scorcohook.h"
+#include "tomcrypt.h"
 
 class CNWNXODBC : public CNWNXBase
 {
@@ -52,7 +53,7 @@ public:
 	BOOL OnRelease();
 	void WriteLogHeader();
 
-	void WriteScorcoData(BYTE* pData, int Length);
+	void WriteScorcoData(char *param, BYTE* pData, int Length);
 	BYTE* ReadScorcoData(char *param, int *size);
 
 protected:
@@ -60,6 +61,7 @@ protected:
 	void Execute(const char* request);
 	void Fetch(char* buffer, unsigned int buffersize);
 	void SetScorcoSQL(char *request);
+	void GetHash(char *request);
 	bool LoadConfiguration ();
 
 private:
@@ -83,6 +85,8 @@ private:
 
 	enum ELogLevel {logNothing, logErrors, logAll};
 	int logLevel;
+
+	char lastHash[33];
 };
 
 #endif // !defined(AFX_NWNXARRAY_H__925D298E_8775_4BBF_8D41_479D2179BABD__INCLUDED_)

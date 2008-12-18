@@ -113,6 +113,8 @@ char* CNWNXODBC::OnRequest (char* gameObject, char* Request, char* Parameters)
 		Fetch (Parameters, strlen (Parameters));
 	else if (strncmp(Request, "SETSCORCOSQL", 12) == 0)
 		SetScorcoSQL(Parameters);
+	else if (strncmp(Request, "GETHASH", 7) == 0)
+		GetHash(Parameters);
 
 	return NULL;
 }
@@ -176,9 +178,29 @@ void CNWNXODBC::SetScorcoSQL(char *request)
 		Log ("o Got request (scorco): %s\n", scorcoSQL);
 }
 
-void CNWNXODBC::WriteScorcoData(BYTE* pData, int Length)
+void CNWNXODBC::GetHash(char *request)
 {
-	if (Length > 0)
+	Log("* MD5 hash (gethash): %s\n", lastHash);
+	sprintf(request, "%s", lastHash);
+}
+
+void CNWNXODBC::WriteScorcoData(char *param, BYTE* pData, int Length)
+{
+	// This function either stores the object or computes a hash value of it
+	if (strcmp(param, "HASH") == 0) 	
+	{
+		unsigned char out[16];
+		hash_state md;
+		md5_init(&md);
+		md5_process(&md, pData, Length);
+		md5_done(&md, out);
+		for (int j = 0; j < 16; j += 4)
+		{
+			sprintf(&lastHash[j*2], "%.2x%.2x%.2x%.2x", out[j], out[j+1], out[j+2], out[j+3]);
+		}
+		Log("* MD5 hash (writescorcodata, length): %s, %d\n", lastHash, Length);
+	}
+	else if (Length > 0)
 	{
 		//Log ("o Writing scorco data.\n");
 		if (!db->WriteScorcoData(scorcoSQL, pData, Length))

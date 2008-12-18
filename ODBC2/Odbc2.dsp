@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ODBC_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "E:\mysql\include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ODBC_EXPORTS" /D "NO_TCL" /FR /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "mysql\include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ODBC_EXPORTS" /D "NO_TCL" /FR /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x413 /d "NDEBUG"
@@ -53,7 +53,8 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wsock32.lib mysqlclient.lib madCHook.lib /nologo /dll /machine:I386 /out:"Release/nwnx_odbc.dll" /libpath:"E:\mysql\lib\opt"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wsock32.lib madCHook.lib mysql/lib/mysqlclient.lib /nologo /dll /machine:I386 /nodefaultlib:"LIBCMT" /out:"Release/nwnx_odbc.dll" /libpath:"libtomcrypt"
+# SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "Odbc2 - Win32 Debug"
 
@@ -69,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ODBC_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ODBC_EXPORTS" /D "NO_TCL" /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "mysql\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ODBC_EXPORTS" /D "NO_TCL" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x413 /d "_DEBUG"
@@ -79,7 +80,8 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mysqlclient.lib wsock32.lib madCHook.lib /nologo /dll /debug /machine:I386 /out:"d:\games\nwn\nwnx_odbc.dll" /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wsock32.lib madCHook.lib mysql/lib/mysqlclient.lib /nologo /dll /debug /machine:I386 /nodefaultlib:"LIBCMT" /out:"Debug/nwnx_odbc.dll" /pdbtype:sept /libpath:"libtomcrypt"
+# SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
 
@@ -93,6 +95,14 @@ LINK32=link.exe
 # Begin Group "sqlite"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\sqlite\alter.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\analyze.c
+# End Source File
 # Begin Source File
 
 SOURCE=.\sqlite\attach.c
@@ -111,6 +121,14 @@ SOURCE=.\sqlite\build.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\sqlite\callback.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\complete.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\sqlite\date.c
 # End Source File
 # Begin Source File
@@ -120,6 +138,34 @@ SOURCE=.\sqlite\delete.c
 # Begin Source File
 
 SOURCE=.\sqlite\expr.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\fts1.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\fts1.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\fts1_hash.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\fts1_hash.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\fts1_porter.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\fts1_tokenizer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\fts1_tokenizer1.c
 # End Source File
 # Begin Source File
 
@@ -135,7 +181,15 @@ SOURCE=.\sqlite\insert.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\sqlite\keywordhash.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\sqlite\legacy.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\loadext.c
 # End Source File
 # Begin Source File
 
@@ -147,7 +201,15 @@ SOURCE=.\sqlite\opcodes.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\sqlite\os.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\sqlite\os_mac.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\os_os2.c
 # End Source File
 # Begin Source File
 
@@ -171,6 +233,10 @@ SOURCE=.\sqlite\pragma.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\sqlite\prepare.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\sqlite\printf.c
 # End Source File
 # Begin Source File
@@ -184,6 +250,10 @@ SOURCE=.\sqlite\select.c
 # Begin Source File
 
 SOURCE=.\sqlite\shell.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\sqlite3ext.h
 # End Source File
 # Begin Source File
 
@@ -231,7 +301,15 @@ SOURCE=.\sqlite\vdbeaux.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\sqlite\vdbefifo.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\sqlite\vdbemem.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\sqlite\vtab.c
 # End Source File
 # Begin Source File
 
@@ -240,7 +318,15 @@ SOURCE=.\sqlite\where.c
 # End Group
 # Begin Source File
 
-SOURCE=..\NWNXDLL\IniFile.cpp
+SOURCE=.\crypt_argchk.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\NWNXdll\IniFile.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\md5.c
 # End Source File
 # Begin Source File
 
@@ -261,10 +347,6 @@ SOURCE=.\Odbc.cpp
 # Begin Source File
 
 SOURCE=.\ODBC1.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Odbc2.rc
 # End Source File
 # Begin Source File
 
@@ -386,10 +468,38 @@ SOURCE=.\sqlite.h
 
 SOURCE=.\StdAfx.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\tomcrypt.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tomcrypt_argchk.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tomcrypt_cfg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tomcrypt_custom.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tomcrypt_hash.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tomcrypt_macros.h
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=.\Odbc2.rc
+# End Source File
 # End Group
 # End Target
 # End Project

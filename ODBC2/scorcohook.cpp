@@ -194,7 +194,7 @@ DWORD FindHookRCO()
 
 int SQLSCO(char** database, char** key, char** player, int flags, BYTE* pData, int size)
 {
-	odbc.WriteScorcoData(pData, size);
+	odbc.WriteScorcoData(*key, pData, size);
 	return 1;
 }
 
