@@ -96,10 +96,6 @@ SOURCE=.\Functions.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Functions.rc
-# End Source File
-# Begin Source File
-
 SOURCE=..\NWNXdll\IniFile.cpp
 # End Source File
 # Begin Source File
@@ -132,12 +128,20 @@ SOURCE=.\NWNXFunction.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\resource.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=.\Functions.rc
+# End Source File
 # End Group
 # End Target
 # End Project

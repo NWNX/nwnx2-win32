@@ -1,7 +1,0 @@
-Changelog for NWNX HashSet
-
-* 26.12.2004: v1.0.0
-- Split NWNX main program and modules into separately downloadable packages
-
-* 31.12.2003: v1.0.0
-- New module that offers an advanced data structure

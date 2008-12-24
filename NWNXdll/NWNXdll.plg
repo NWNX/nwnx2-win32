@@ -1,0 +1,35 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: NWNXdll - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOKUME~1\ing\LOKALE~1\Temp\RSP26E.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "NWNXDLL_EXPORTS" /Fp"Release/NWNXdll.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\Projekte\NWNXsvn\trunk\NWNXdll\NWNXdll.cpp"
+]
+Creating command line "cl.exe @C:\DOKUME~1\ing\LOKALE~1\Temp\RSP26E.tmp" 
+Creating temporary file "C:\DOKUME~1\ing\LOKALE~1\Temp\RSP26F.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib madCHook.lib /nologo /dll /incremental:no /pdb:"Release/nwnx-module.pdb" /machine:I386 /out:"Release/nwnx-module.dll" /implib:"Release/nwnx-module.lib" 
+.\Release\HashTable.obj
+.\Release\NWNXBase.obj
+.\Release\NWNXdll.obj
+.\Release\NWNXdll.res
+]
+Creating command line "link.exe @C:\DOKUME~1\ing\LOKALE~1\Temp\RSP26F.tmp"
+<h3>Output Window</h3>
+Compiling...
+NWNXdll.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+nwnx-module.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

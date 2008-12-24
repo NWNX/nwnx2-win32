@@ -13,12 +13,12 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// Russian resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
 #ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
 #endif //_WIN32
 
 #ifndef _MAC
@@ -28,15 +28,15 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,9,2,4
- PRODUCTVERSION 0,9,2,4
+ FILEVERSION 1,0,4,0
+ PRODUCTVERSION 1,0,4,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
 #else
  FILEFLAGS 0x0L
 #endif
- FILEOS 0x4L
+ FILEOS 0x40004L
  FILETYPE 0x2L
  FILESUBTYPE 0x0L
 BEGIN
@@ -45,16 +45,16 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "Comments", "http://www.nwnx.org\0"
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "Neverwinter Nights Extender 2 ODBC 2\0"
-            VALUE "FileVersion", "0, 9, 2, 4\0"
-            VALUE "InternalName", "NWNX2 ODBC2\0"
-            VALUE "LegalCopyright", "(C) 2005 Ingmar Stieger, Jeroen Broekhuizen\0"
+            VALUE "CompanyName", " \0"
+            VALUE "FileDescription", "NWNX Fixes\0"
+            VALUE "FileVersion", "1, 0, 4, 0\0"
+            VALUE "InternalName", "NWNX Fixes\0"
+            VALUE "LegalCopyright", "Copyright © virusman, 2007\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "nwnx_odbc.dll\0"
+            VALUE "OriginalFilename", "nwnx_fixes.dll\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "NWNX2 ODBC2\0"
-            VALUE "ProductVersion", "0, 9, 2, 4\0"
+            VALUE "ProductName", "NWNX Fixes\0"
+            VALUE "ProductVersion", "1, 0, 4, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -92,7 +92,7 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // English (U.S.) resources
+#endif    // Russian resources
 /////////////////////////////////////////////////////////////////////////////
 
 

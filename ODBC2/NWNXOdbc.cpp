@@ -284,7 +284,7 @@ bool CNWNXODBC::LoadConfiguration ()
 
 void CNWNXODBC::WriteLogHeader()
 {
-	fprintf(m_fFile, "NWNX ODBC2 plugin V.0.9.2.5\n");
+	fprintf(m_fFile, "NWNX ODBC2 plugin V.0.9.2.4\n");
 	fprintf(m_fFile, "(c) 2005 by Ingmar Stieger (Papillon) and Jeroen Broekhuizen\n");
 	fprintf(m_fFile, "visit us at http://www.nwnx.org\n\n");
 

@@ -3,54 +3,6 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "Areas"=".\Areas\Areas.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "Chat"=".\Chat\Chat.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "Events"=".\events\Events.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "Fixes"=".\fixes\Fixes.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
 Project: "Functions"=".\Functions\Functions.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -64,6 +16,42 @@ Package=<4>
 ###############################################################################
 
 Project: "HashSet"=".\Hashset\HashSet.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "NWNX Chat"=".\dmb_chat\NWNX Chat.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "NWNX Events"=".\events\NWNX Events.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "NWNX Fixes"=".\fixes\NWNX Fixes.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -112,42 +100,6 @@ Package=<4>
 ###############################################################################
 
 Project: "Profiler"=".\Profiler\Profiler.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "Resman"=".\ResMan\ResMan.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "SortSet"=".\SortSet\SortSet.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "Vaultster"=".\Vaultster\Vaultster.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
