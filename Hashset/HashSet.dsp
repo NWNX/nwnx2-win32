@@ -96,11 +96,11 @@ SOURCE=.\HashSet.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\HashSet.rc
+SOURCE=.\HashTable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\HashTable.cpp
+SOURCE=..\NWNXdll\IniFile.cpp
 # End Source File
 # Begin Source File
 
@@ -125,6 +125,10 @@ SOURCE=.\HashSet.h
 # Begin Source File
 
 SOURCE=.\HashTable.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\NWNXdll\IniFile.h
 # End Source File
 # Begin Source File
 
