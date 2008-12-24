@@ -178,7 +178,7 @@ BEGIN
             VALUE "FileDescription", "Neverwinter Nights Extender 2\0"
             VALUE "FileVersion", "2, 6, 1, 0\0"
             VALUE "InternalName", "NWNX2\0"
-            VALUE "LegalCopyright", "(C) 2005 Ingmar Stieger (Papillon)\0"
+            VALUE "LegalCopyright", "Copyright 2005 Ingmar Stieger (Papillon)\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "NWNX2.EXE\0"
             VALUE "PrivateBuild", "\0"

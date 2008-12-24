@@ -24,6 +24,7 @@
 #include "IniFile.h"
 #include <stdarg.h>
 #include <typeinfo.h>
+#include <time.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -68,6 +69,7 @@ unsigned long CNWNXBase::OnRequestObject (char *gameObject, char* Request)
 void CNWNXBase::Log(const char *pcMsg, ...)
 {
 	va_list argList;
+	char acTime[128], acDate[128];
 	char *pos;
 
 	if (m_fFile)
@@ -79,6 +81,9 @@ void CNWNXBase::Log(const char *pcMsg, ...)
 			WriteLogHeader();
 			fprintf(m_fFile, "o Logfile hit maximum size limit, starting again.\n");
 		}
+
+		_strtime (acTime);
+		_strdate (acDate);
 
 		// build up the string
 		va_start(argList, pcMsg);
@@ -94,6 +99,7 @@ void CNWNXBase::Log(const char *pcMsg, ...)
 		}
 
 		// log string in file
+		fprintf (m_fFile, "[%s %s] ", acDate, acTime);
 		fprintf (m_fFile, acBuffer);
 		fflush (m_fFile);
 	}
@@ -102,10 +108,13 @@ void CNWNXBase::Log(const char *pcMsg, ...)
 void CNWNXBase::Log(int priority, const char *pcMsg, ...)
 {
 	va_list argList;
-	char acBuffer[2048];
+	char acBuffer[2048], acTime[128], acDate[128];
 
 	if (m_fFile && priority<=debuglevel)
 	{  
+		_strtime (acTime);
+		_strdate (acDate);
+
 		// build up the string
 		va_start(argList, pcMsg);
 		_vsnprintf(acBuffer, 2047, pcMsg, argList);
@@ -113,6 +122,7 @@ void CNWNXBase::Log(int priority, const char *pcMsg, ...)
 		va_end(argList);
 
 		// log string in file
+		fprintf (m_fFile, "[%s %s] ", acDate, acTime);
 		fprintf (m_fFile, "%s", acBuffer);
 		fflush (m_fFile);
 	}
