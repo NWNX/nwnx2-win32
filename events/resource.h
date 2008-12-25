@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by NWNXEvents.rc
+// Used by Events.rc
 //
 
 // Next default values for new objects

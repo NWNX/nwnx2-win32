@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by NWNXFixes.rc
+// Used by Fixes.rc
 //
 
 // Next default values for new objects
