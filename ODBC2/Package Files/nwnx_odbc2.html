@@ -1,0 +1,660 @@
+<html>
+<head>
+<title> APS/NWNX_ODBC Documentation </title>
+</head>
+
+<body style="font-family:Arial,Verdana,sans-serif;">
+<h2>Avlis Persistence System</h2>
+
+<h3>Table of Contents:</h3>
+<table>
+ <tr>
+  <td> <a href="#I">I.</a></td>
+  <td> <a href="#I">Introduction - What does APS do?</a></td>
+ </tr>
+ <tr>
+   <td><a href="#II">II.</a></td>
+   <td><a href="#II">Installing and updating APS</a></td>
+ </tr>
+ <tr>
+  <td><a href="#III">III.</a></td>
+  <td><a href="#III">Setting up a database</a></td>
+ </tr>
+ <tr>
+  <td><a href="#IV">IV.</a></td>
+  <td><a href="#IV">Customization</a></td>
+ </tr>
+ <tr>
+  <td><a href="#V">V.</a></td>
+  <td><a href="#V">Speed comparison</a></td>
+ </tr>
+ <tr>
+  <td><a href="#VI">VI.</a></td>
+  <td><a href="#VI">Troubleshooting</a></td>
+ </tr>
+</table>
+  
+
+<a name="I"></a>
+<h3>I. Introduction - What does APS/NWNX ODBC2 do?</h3>
+
+<p>APS is a set of scripts written for Neverwinter Nights that work with NWNX2 to
+produce reliable persistence in a module. At the heart of the APS is
+an include file that lists a number of custom made functions for governing
+persistence. These functions can be used as is in your module or changed to
+suit your needs.
+
+<p>Whenever a script work with persistent data, it calls our APS functions 
+and the Extender pulls the query out of the memory of the NWN server. It then 
+passes it to the database, and writes the result of the query back into the 
+memory of the server. The database has been tested with MySQL, MS-SQL, 
+PostgresSQL, Microsoft Access, and the internal SQL database engine so far. Conceivably, any database with a 
+decent ODBC driver will work. 
+
+<p>We have included a demo module that illustrates how to use APS/NWNX ODBC2 and makes 
+creating the database tables easy, and a second module demonstrating how 
+persistent containers could be implemented.
+
+<p><b>Licence</b><br> APS and NWNX2 ODBC2 are distributed unter the terms of the GNU 
+GENERAL PUBLIC LICENSE included in <a href="../licence.txt">licence.txt</a>.
+
+<a name="II"></a>
+<h3>II. Installing and updating APS</h3>
+
+<h4>A. Installing the plugin</h4> 
+
+<p>Copy the file nwnx_odbc.dll to you NWN folder, and aps_demo.mod 
+to your NWN module folder.
+
+<h4>B. Importing the erf</h4>
+
+<p>In order to be able to use the APS functions, you will need to import
+the aps_include file into your module.
+
+<ol>
+<li>Place the file "aps2.erf" into the C:\Neverwinternights\NWN\erf directory.
+<li>In the toolset, open up the module into which you wish to install the
+scripts.
+<li>Under the File Menu, click Import. A window will pop up.
+<li>Make sure the contents of the C:\Neverwinternights\NWN\erf directory are
+showing in the window
+<li>Select "aps2.erf" from the list
+<li>Click Import and ignore any messages about missing resources (click Yes).
+</ol>
+
+<p>The following scripts should now be imported: aps_onload, aps_include.
+
+<h4>C. Updating from previous versions</h4> 
+
+<ul>
+<li>from ODBC v2.5 to ODBC2: Copy the new DLL into your NWN folder. 
+Edit the database connection parameters in your nwnx.ini file (check the
+supplied example INI file what parameters can be used). Import the updated
+aps_include file (from ap2.erf) into your module.
+</ul>
+
+<a name="III"></a>
+<h3>Setting up a database</h3>
+
+<p>The first choice you have to make is what database you are going to use. 
+We strongly suggest starting out with the internal SQL database (SQLite), which 
+is one of the fastest and easiest options. It also comes with a prepared datase 
+that is ready to go. Read the section "Configuration for the internal database" on 
+how to set this up.
+
+<p>If you are using MySQL, go to the section "Configuration for MySQL 
+database". If you are using any other database with an ODBC driver, go 
+to the section "Configuration for ODBC database".
+
+<h4>3.a. Configuration for the internal database</h4>
+
+The internal NWNX ODBC2 database is based on SQLite v3, which is a fast SQL 
+compliant database that developers can package with their applications - and 
+that is what we did ! The main benefits of SQLite for NWN users are twofold:
+
+<ol>
+<li>It is fast.
+<li>It is easy to setup (zero configuration).
+</ol>
+
+<p>Note: We recommend this type of database for single instance servers, 
+meaning setups where only one NWN server is accessing the database. 
+We recommend against using it in setups where multiple computers access 
+the database simultaneously.
+
+<p>Edit the nwnx.ini file and set the source= parameter to SQLite, and 
+the file= parameter to the path and file where you want your database file:
+
+<pre>
+   [ODBC2]
+   source = sqlite
+   file = sqlite.db
+</pre>
+
+<p>Note: Omitting the path like in the example above will put the database 
+file into your NWN folder. If you want it somewhere else, set the file 
+parameter to e.g. c:\temp\nwn.db.
+
+<p>Hint: One of the tools for working with the internal database is
+<a href="http://home.student.uu.se/frax0795/">SQLiteCC</a>. It is not 
+needed to follow the setup instructions in this document, but will come in
+handy later.
+
+<p>Advanced note: After opening the database file, an implicit transaction
+is started automatically, since SQLite is significantly faster when access to 
+the database is happening inside a transaction. If you want to access the
+database concurrently, or if you want to handle transactions yourself, issue
+a COMMIT right after the call to SQLInit to commit the implicit transaction.
+
+<h4>3.b. Configuration for MySQL database</h4>
+
+<p>Below the various parameters are listed which are required in the
+configuration file nwnx.ini:
+
+<ul>
+<li>Server: Either the name or IP address of the database system which you are
+using. Most of the time this will be your local machine: 'localhost'.
+<li>User/pwd: This is the username and password of the user which will be 
+used to connect to the database. For security reasons it is best to 
+create a special user which has only access to the nwn database.
+<li>DB: The database name.
+</ul>
+
+<p>An example configuration file is displayed below. In this configuration you 
+tell the plugin to use the direct mysql connection to the database nwn. 
+This database resides on the localhost (same machine as NWN runs) 
+and should be connected with user 'your_user' and password 'your_pwd'.
+
+<pre>
+   [ODBC2]
+   source = mysql
+   server = localhost
+   user   = your_user
+   pwd    = your_pwd
+   db     = nwn
+</pre>
+
+<p>Note: If your MySQL installation is not on the same machine you are 
+installing this plugin too, you will need to copy the library libmysql.dll to 
+your NWN folder as well, or ODBC2 will complain about a missing module.
+
+<h4>3.c. Configuration for ODBC database</h4>
+
+<p>If you have a different database system than MySQL you will use 
+the ODBC connection method. In this section we will describe 
+the steps needed to setup your system correctly. In the description 
+below we asume that you are using Windows XP or a similar system.
+
+<ul>
+<li>Make sure your database system (including ODBC support) is installed 
+and running correctly on your machine (with a remote database system you 
+only need the ODBC drivers on your machine).
+<li>Create an ODBC datasource: in the Control Panel select 
+Administrative Tools and then Data Sources (ODBC). In the System Tab 
+click on Add, and fill in the required fields. When finished the 
+datasource should appear in the list (if not, consult your database 
+system manual). 
+</ul>
+
+Edit the nwnx.ini file and set the dsn= parameter to the name you 
+have just entered, e.g.:
+
+<pre>
+   [ODBC2]
+   source = odbc
+   dsn = nwn
+</pre>
+
+<h4>3.c. Creating the database tables</h4>
+
+<p>Note: As there is an almost unlimited amount of different databases 
+out there, we can not give detailed instructions for all of them. If you want 
+to use a database server like MSSQL or PostgresSQL, try to follow the steps 
+described below accordingly. If you are using the internal database, all tables have already been 
+created for you (in the file sqlite.db). 
+
+<p>Make sure your database is up and running and that you have a 
+database that is accessible to the ODBC2 plugin. In order to store data in it, 
+you have to create some tables in the database. The included module 
+"aps_demo.mod" makes this easy for the internal database and MySQL. 
+By default, it creates tables for the internal database. If you want to use
+MySQL instead, open the module with the toolset and edit the scripts
+"demo_createtable" and "demo_obj_create" accordingly.
+
+<p>Next connect to your server with the Neverwinter Nights client. 
+On the left side, you will see several different signs in front of you:
+
+<ul>
+<li>Create table: Issues a database command that creates a table 
+in the database
+<li>Store variable in database: Tries to save a test variable named 
+"demoName" with the value "testValue" in the database
+<li>Load variable from database: Tries to retrieve the variable 
+"demoName" from the database and prints the results in the 
+server message window. 
+</ul>
+
+<p>Now click every sign once, starting with the one on the 
+left (Create Tables).
+
+<p>If the last sign sends you the message "Retrieved variable from 
+database: testValue" your setup is ok and you're ready to start using APS. 
+Note: This is the most basic setup. We encourage you to use more 
+sophisticated databases and data structures if you feel confident 
+to do so (see below). 
+
+<p> On the right side, you will see several different signs that do almost 
+the same as the other signs, but they are dealing with object instead
+of strings storage.
+
+<p> If the variable is not retrieved correctly, check out the log file 
+nwnx_odbc.txt for errors. Also check your database if the table really 
+has been created. The SQL statement  that is executed by default is suitable for MySQL. If you use a
+different database server, you should adjust that statement accordingly:
+
+<p>Create a table "pwdata" with the following fields
+player, tag, name, val, expire, last. Here is an example for MySQL
+(taken from aps_demo.mod, script demo_createtable):
+
+<pre>
+    SQLExecDirect("CREATE TABLE pwdata (" +
+        "player varchar(64) default NULL," +
+        "tag varchar(64) default NULL," +
+        "name varchar(64) default NULL," +
+        "val text," +
+        "expire int(11) default NULL," +
+        "last timestamp(14) NOT NULL," +
+        "KEY idx (player,tag,name)" +
+        ")" );
+
+</pre>
+
+<h4>E. Using the persistence functions in your module</h4>
+
+<ol>
+<li>After installing according to the instructions above, go to Module
+Properties under the Edit menu.
+<li> Select aps_onload for your module OnModuleLoad event.<br>
+     &nbsp;&nbsp;OR<br>
+     Open aps_onload in the script editor and paste the contents of it into your
+     pre-existing module's OnModuleLoad script. We only recommend doing this if you 
+     are familiar with NWScript.
+</ol>
+
+The functions below are now implemented. Here is a lexicon containing
+information on their purpose and use:
+
+<p><b>void SQLInit()</b>
+<p>Setup placeholders for ODBC requests and responses. This functions reserves memory APS and NWNX
+use for communication. Call this function <b>once</b> in the module load event.
+
+<p><b>SetPersistentString(object oObject, string sVarName, string sValue, 
+int iExpiration=0, string sTable="pwdata")</b>
+
+<p>This sets a persistent string on an object. The object can be
+any valid object in the game. The command works the same way the usual
+SetLocalString function works, except you can optionally add a little more
+information:
+
+<ul>
+<li>object oObject - The object which you wish to set the persistent variable
+upon.
+<li>string sVarName - The name of the persistent variable. Ex: "Quest Flag 1"
+or "QuestCompleted_True_False"
+<li>string sValue - The string you want to store.
+<li>int Expiration - (optional) The number of days after which the variable should
+expire, i.e. be deleted from the database. If you don't specify this parameter
+or pass 0 here, the variable will never be purged from the database.
+<li>string sTable - (optional) You can specify in which database table the value 
+should be stored. This parameter defaults to "pwdata".
+</ul>
+
+<p><b>SetPersistentInt(object oObject, string sVarName, int iValue,
+int iExpiration=0, string sTable="pwdata")</b>
+
+<p>This sets a persistent integer value on an object. The object can be
+any valid object in the game. The command works the same way the usual
+SetLocalInt function works, except you can optionally add a little more
+information:
+
+<ul>
+<li>object oObject - The object which you wish to set the persistent variable
+upon.
+<li>string sVarName - The name of the persistent variable. Ex: "Quest Flag 1"
+or "QuestCompleted_True_False"
+<li>int iValue - The integer value of the variable. 1, 2, 3... etc.
+<li>int Expiration - (optional) The number of days after which the variable should
+expire, i.e. be deleted from the database. If you don't specify this parameter
+or pass 0 here, the variable will never be purged from the database.
+<li>string sTable - (optional) You can specify in which database table the value 
+should be stored. This parameter defaults to "pwdata".
+</ul>
+
+<p><b>SetPersistentFloat(object oObject, string sVarName, float fValue,
+int iExpiration=0, string sTable="pwdata")</b>
+
+<p>This sets a persistent float value on an object. The object can be
+any valid object in the game. The command works the same way the usual
+
+SetLocalFloat function works, except you can optionally add a little more
+information:
+
+<ul>
+<li>object oObject - The object which you wish to set the persistent variable
+upon.
+<li>string sVarName - The name of the persistent variable. Ex: "Quest Flag 1"
+or "QuestCompleted_True_False"
+<li>float fValue - The float value of the variable. 1.6, 2.542, 3.0989... etc.
+<li>int Expiration - (optional) The number of days after which the variable should
+expire, i.e. be deleted from the database. If you don't specify this parameter
+or pass 0 here, the variable will never be purged from the database.
+<li>string sTable - (optional) You can specify in which database table the value 
+should be stored. This parameter defaults to "pwdata".
+</ul>
+
+<p><b>SetPersistentLocation(object oObject, string sVarName, location lLocation, 
+int iExpiration=0, string sTable="pwdata")</b>
+
+<p>This sets a persistent location on an object. The object can be
+any valid object in the game. The command works the same way the usual
+SetLocalLocation function works, except you can optionally add a little more
+information:
+
+<ul>
+<li>object oObject - The object which you wish to set the persistent variable
+upon.
+<li>string sVarName - The name of the persistent variable. Ex: "Quest Flag 1"
+or "QuestCompleted_True_False"
+<li>location lLocation - The location you want to store.
+<li>int Expiration - (optional) The number of days after which the variable should
+expire, i.e. be deleted from the database. If you don't specify this parameter
+or pass 0 here, the variable will never be purged from the database.
+<li>string sTable - (optional) You can specify in which database table the value 
+should be stored. This parameter defaults to "pwdata".
+</ul>
+
+<p><b>SetPersistentVector(object oObject, string sVarName, vector vVector, 
+int iExpiration=0, string sTable="pwdata")</b>
+
+<p>This sets a persistent vector on an object. The object can be
+any valid object in the game. The command works the same way the usual
+Set local variable functions work, except you can optionally add a little more
+information:
+
+<ul>
+<li>object oObject - The object which you wish to set the persistent variable
+upon.
+<li>string sVarName - The name of the persistent variable. Ex: "Quest Flag 1"
+or "QuestCompleted_True_False"
+<li>vector vVector - The vector you want to store.
+<li>int Expiration - (optional) The number of days after which the variable should
+expire, i.e. be deleted from the database. If you don't specify this parameter
+or pass 0 here, the variable will never be purged from the database.
+<li>string sTable - (optional) You can specify in which database table the value 
+should be stored. This parameter defaults to "pwdata".
+</ul>
+
+<p><b>GetPersistentString(object oObject, string sVarName, string sTable="pwdata")</b>
+
+<p>This function works in the same manner as GetLocalString. It gets the 
+persistent string from object oObject.
+
+<ul>
+<li>object oObject - This is the object from which you are retrieving the
+value of the variable.
+<li>string sVarName - This is the name of the variable that will be retrieved
+off of oObject. Ex: "Quest Flag 1"
+<li>string sTable - (optional) You can specify in which database table the value 
+can be found. This parameter defaults to "pwdata".
+</ul>
+
+<p><b>GetPersistentInt(object oObject, string sVarName, string sTable="pwdata")</b>
+
+<p>This function works in the same manner as GetLocalInt. It gets the 
+persistent integer value from object oObject.
+
+<ul>
+<li>object oObject - This is the object from which you are retrieving the
+value of the variable.
+
+<li>string sVarName - This is the name of the variable that will be retrieved
+off of oObject. Ex: "Quest Flag 1"
+<li>string sTable - (optional) You can specify in which database table the value 
+can be found. This parameter defaults to "pwdata".
+</ul>
+
+<p><b>GetPersistentFloat(object oObject, string sVarName, string sTable="pwdata")</b>
+
+<p>This function works in the same manner as GetLocalFloat. It gets the 
+persistent float value from object oObject.
+
+<ul>
+<li>object oObject - This is the object from which you are retrieving the
+value of the variable.
+<li>string sVarName - This is the name of the variable that will be retrieved
+off of oObject. Ex: "Quest Flag 1"
+<li>string sTable - (optional) You can specify in which database table the value 
+can be found. This parameter defaults to "pwdata".
+</ul>
+
+<p><b>GetPersistentLocation(object oObject, string sVarName, string sTable="pwdata")</b>
+
+<p>This function works in the same manner as GetLocalLocation. It gets the 
+persistent location value from object oObject.
+
+<ul>
+<li>object oObject - This is the object from which you are retrieving the
+value of the variable.
+<li>string sVarName - This is the name of the variable that will be retrieved
+off of oObject. Ex: "Quest Flag 1"
+<li>string sTable - (optional) You can specify in which database table the value 
+can be found. This parameter defaults to "pwdata".
+</ul>
+
+<p><b>GetPersistentVector(object oObject, string sVarName, string sTable="pwdata")</b>
+
+<p>This function works in the same manner as the other get local variable functions. It gets the 
+persistent vector value from object oObject.
+
+<ul>
+<li>object oObject - This is the object from which you are retrieving the
+value of the variable.
+<li>string sVarName - This is the name of the variable that will be retrieved
+off of oObject. Ex: "Quest Flag 1"
+<li>string sTable - (optional) You can specify in which database table the value 
+can be found. This parameter defaults to "pwdata".
+</ul>
+
+<p><b>void DeletePersistentVariable(object oObject, string sVarName, string sTable="pwdata")</b>
+
+<p>This function deletes a variable from the database.
+
+<ul>
+<li>object oObject - This is the object on which the variable has been stored.
+<li>string sVarName - This is the name of the variable that will be deleted.
+<li>string sTable - (optional) You can specify in which database table the value 
+can be found. This parameter defaults to "pwdata".
+</ul>
+
+<p><b>void SQLExecDirect(string sSQL)</b>
+<p> Executes a SQL statement. If the statement returns a result set, you can read the data
+with the next two functions.
+
+<p><b>int SQLFetch()</b>
+<p> Position cursor on next row of the resultset. Call this function before using SQLGetData().<br>
+Returns
+<ul>
+<li>SQL_SUCCESS if there is a row
+<li>SQL_ERROR if there are no more rows
+</ul>
+
+<p><b>int SQLFirstRow() (*deprecated*)</b>
+<p> Function is deprecated but still there for backward compability. Simply calls SQLFetch().
+
+<p><b>int SQLNextRow() (*deprecated*)</b>
+<p> Function is deprecated but still there for backward compability. Simply calls SQLFetch().
+
+<p><b>string SQLGetData(int iCol)</b>
+<p> Return value of column iCol in the current row of result set sResultSetName.
+
+<p><b>Comments</b>
+
+<ul>
+<li>Make sure you include aps_include in every script where you want to use these functions, 
+i.e. add the line
+<pre>
+    #include "aps_include"
+</pre>
+at the top of your script.
+</ul>
+
+<a name="IV"></a>
+<h3>IV. Customization</h3>
+
+<p>The APS is merely a set of custom functions that were originally used for the Avlis 
+persistent world. The names of the functions and their parameters can be set to whatever
+is convenient for your module. Below is a hypothetical example of how customization can be done.
+
+<p>The "PowerG I33t" persistent world maintains their persistence with the Joe Bloe Persistence 
+system (JBPS). In that system, a persistent string is set with the following JBPS function:
+
+<p>SetStickySring(string sVariableName, string sVariableValue, object oTarget)
+
+<p>All 5000 scripts in PowerG's elite world are written with the SetStickyString function, and they 
+wish to retrofit their world to use NWNX. They would follow these steps:
+
+<ol>
+<li>Open up the file aps_include in the script editor.
+<li>Change the name of the APS function called SetPersistentString to SetStickyString.
+<li>Rearrange the parameters of: 
+
+<p>SetPersistentString(object oObject, string sVarName, string sVarValue, int iExpiration, string sTable = "pwdata")<br>
+&nbsp;&nbsp;to:<br>
+SetStickyString(string VarName, string VarValue, object oObject, int iExpiration = 0, string sTable = "pwdata")<br>
+
+<li>Build the module, i.e. recompile all scripts.
+
+</ol>
+
+<p>Once the module is restarted, all of PowerG I33t's old persistent string scripts should be running the 
+new persistence system. All it took was changing one script.
+
+<p>The above example is a simplified one, and the rest of the functions in the JBPS would need to be changed
+in the same manner. In cases where the function parameters were completely not equivalent to those used
+by the APS, they may have to be changed throughout every script in the module. Many but not all of the 
+persistence systems out there should be convertible by the above method. We encourage further modification
+of aps_include to tailor the variable handling to your needs.
+
+<p>For persistence systems that use tokens, conversion will not be as easy. In these systems, token items
+are used to represent information on a player character. These tokens are not lost because they are
+actually in the inventory of the character. Because these systems work with tokens and not actual variables
+it will be hard to convert them into a database format. The module will most likely have to be completely
+re-fitted.
+
+<p>On possible idea to do this scriptomatically would be to write a module OnEnter script that strips the
+character of their tokens and issues SetPersistent variable commands into the database before destroying
+them. That would preserve the information that is there, but handling the actual scripts throughout the
+module will have to be done separately.
+
+<p>Alternatively, you can have a look at the GetPersistentString() function in 
+"aps_include". There are some comments in this functions that should give you 
+ideas on how to convert persistent data from your current system to APS.
+
+<a name="V"></a>
+<h3>V. Speed comparison </h3>
+
+<p>To give you an idea what to expect from the various database options, we 
+conducted a small test involving 500 writes and reads. Note that this test is 
+very artificial, since many aspects like table fragmentation, concurrent access,
+database size, and more realistic queries are not factored in. All tests were 
+done on a Athlon 64 3200+ with database server, NWServer, and NWClient 
+running local (NWClient with reduced process priority).
+
+<p>Writes were done with the following code:
+<pre>
+    for (i = 0; i < 500; i++)
+    {
+        SQLExecDirect("INSERT INTO pwdata (player, tag, name,val) values " +
+            "('~', '~', 'iter_" + IntToString(i) + "', 'value')");
+    }
+</pre>
+
+<p>Reads were done with the following code:
+<pre>
+    SQLExecDirect("SELECT * from pwdata");
+    while (SQLFetch() == SQL_SUCCESS) {}
+</pre>
+
+<p>Bioware DB reads and write were done with the following code:
+<pre>
+    for (i = 0; i < 500; i++)
+    {
+        SetCampaignString("test", "iter_" + IntToString(i), "value");
+      -- respecively --
+        s = GetCampaignString("test", "iter_" + IntToString(i));
+    }
+</pre>
+
+<p>Results:
+<table border="1" width="300" style="margin-left:2em;">
+<tr>
+  <td>Database</td>
+  <td>Write</td>
+  <td>Read</td>
+</tr>
+<tr>
+  <td>SQLite (1)</td>
+  <td>30 ms</td>
+  <td>20 ms</td>
+</tr>
+<tr>
+  <td>SQLite (2)</td>
+  <td>36 ms</td>
+  <td>20 ms</td>
+</tr>
+<tr>
+  <td>SQLite (3)</td>
+  <td>2800 ms</td>
+  <td>20 ms</td>
+</tr>
+<tr>
+  <td>MySQL via ODBC</td>
+  <td>71 ms</td>
+  <td>38 ms</td>
+</tr>
+<tr>
+  <td>MySQL direct</td>
+  <td>68 ms</td>
+  <td>22 ms</td>
+</tr>
+<tr>
+  <td>Bioware DB (4)</td>
+  <td>856 ms</td>
+  <td>10 ms</td>
+</tr>
+<table>
+
+<p>Comments:
+<ul>
+<li>SQLITE (1): Using a transaction. No commit after the for loop.
+<li>SQLITE (2): Using a transaction. Commit after the for loop.
+<li>SQLITE (3): Not using a transaction. Terribly slow ! Note that 
+NWNX ODBC2 starts an implicit transaction automatically. If you want 
+to handle transactions yourself, issue a COMMIT right after SQLInit() 
+to end the implicit transaction.
+<li>Bioware DB (4): This comparison is a bit unfair, since the call to the 
+Bioware database is significantly simpler and less flexible than its ODBC2 
+counterpart. Real world examples utilizing e.g. SQL resultsets would probably 
+favor ODBC2.
+</ul>
+
+<a name="VI"></a>
+<h3>VI. Troubleshooting </h3>
+
+<p> Starting out with NWNX ODBC2 can be a bit daunting at first, especially 
+if you are on your own. We highly encourage you to visit us at 
+<a href="http://www.nwnx.org">www.nwnx.org</a> to ask question and get
+help with setting this system up.
+
+</body>
+</html>

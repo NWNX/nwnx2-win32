@@ -1,0 +1,110 @@
+<html>
+<head>
+<title> Hashset Module Documentation </title>
+</head>
+
+<body style="font-family:Arial,Verdana,sans-serif;">
+<h2>Hashset Module Documentation</h2>
+
+<h4>Documentation and program are &#169; by Ingmar Stieger (Papillon). Version 1.0 of 18.12.2003.</h4>
+
+<h3>Table of Contents:</h3>
+<table>
+ <tr>
+  <td> <a href="#I">I.</a></td>
+  <td> <a href="#I">What does this module do?</a></td>
+ </tr>
+ <tr>
+   <td><a href="#II">II.</a></td>
+   <td><a href="#II">Using the module</a></td>
+ </tr>
+</table>
+  
+<a name="I">
+<h3>I. What does this module do?</h3>
+
+<p>This modules implements an advanced data structure, combining a hashmap and a 
+set. This means you can set up associations between key - value pairs (hashmap), 
+and also cycle through all stored data (set). You can even use this like an 
+array, although it has much more to offer than just that. Even if it's the first 
+release of this module, it has been in production on Avlis for quite some now 
+and proofed to be very reliable.
+
+<p><b>Licence</b><br> This module is distributed unter the terms of the GNU 
+GENERAL PUBLIC LICENSE included in <a href="licence.txt">licence.txt</a>.
+
+<a name="II">
+<h3>II. Using the module</h3>
+
+<h4>A. Importing the erf</h4>
+
+<ol>
+<li>Place the file "hashset_nwnx.erf" into the C:\Neverwinternights\NWN\erf directory.
+<li>In the toolset, open up the module into which you wish to install the
+scripts.
+<li>Under the File Menu, click Import. A window will pop up.
+<li>Make sure the contents of the C:\Neverwinternights\NWN\erf directory are
+showing in the window
+<li>Select "hashset_nwnx.erf" from the list.
+</ol>
+
+The following script should now be imported: hashset_nwnx
+
+<h4>B. Using the HashSet functions</h4>
+
+The functions below are implemented. Have a look at the script <a 
+href="nwnx_hashset_modload.html">modload</a> in the module "hashset_nwnx.mod" to 
+see how these functions are used.
+
+<p><b>int HashSetCreate(object oObject, string sHashSetName, int iSize = 500)</b>
+<p>create a new HashSet on oObject with name sHashSetName<br>
+iSize is optional
+
+<p><b>void HashSetDestroy(object oObject, string sHashSetName)</b>
+<p>Clear and delete sHashSetName on oObject
+
+<p><b>int HashSetValid(object oObject, string sHashSetName)</b>
+<p>return true if hashset sHashSet is valid
+
+<p><b>int HashSetKeyExists(object oObject, string sHashSetName, string sKey)</b>
+<p>return true if hashset sHashSet contains key sKey
+
+<p><b>int HashSetSetLocalString(object oObject, string sHashSetName, string sKey, string sValue)</b>
+<p>Set key sKey of sHashset to string sValue
+
+<p><b>string HashSetGetLocalString(object oObject, string sHashSetName, string sKey)</b>
+<p>Retrieve string value of sKey in sHashset
+
+<p><b>int HashSetSetLocalInt(object oObject, string sHashSetName, string sKey, int iValue)</b>
+<p>Set key sKey of sHashset to integer iValue
+
+<p><b>int HashSetGetLocalInt(object oObject, string sHashSetName, string sKey)</b>
+<p>Retrieve integer value of sKey in sHashset
+
+<p><b>int HashSetDeleteVariable(object oObject, string sHashSetName, string sKey)</b>
+<p>Delete sKey in sHashset
+
+<p><b>string HashSetGetNthKey(object oObject, string sHashSetName, int i)</b>
+<p>Return the n-th key in sHashset<br>
+note: this returns the KEY, not the value of the key
+
+<p><b>string HashSetGetFirstKey(object oObject, string sHashSetName)</b>
+<p>Return the first key in sHashset<br>
+note: this returns the KEY, not the value of the key;
+
+<p><b>string HashSetGetNextKey(object oObject, string sHashSetName)</b>
+<p>Return the next key in sHashset<br>
+note: this returns the KEY, not the value of the key;
+
+<p><b>string HashSetGetCurrentKey(object oObject, string sHashSetName)</b>
+<p>Return the current key in sHashset<br>
+note: this returns the KEY, not the value of the key;
+
+<p><b>int HashSetGetSize(object oObject, string sHashSetName)</b>
+<p>Return the number of elements in sHashset
+
+<p><b>int HashSetHasNext(object oObject, string sHashSetName)</b>
+<p>Return TRUE if the current key is not the last one, FALSE otherwise
+
+</body>
+</html>

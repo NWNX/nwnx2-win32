@@ -1,0 +1,10 @@
+Changelog for APS/NWNX
+
+* 13.01.2004: v1.6.0
+- Added nwnx.ini file support: MaxLogSize and LogLevel parameters.
+
+* 26.12.2004: v1.5.0
+- Split NWNX main program and modules into separately downloadable packages
+- New measure: NPC pathfinding
+- Logfiles do not grow over a fixed size of 512KB
+- Updated entries are marked with a star symbol
