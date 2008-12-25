@@ -1,7 +1,7 @@
 #pragma once
 
-const int STATUS_OK   = 0;
-const int STATUS_BUSY = 2;
+const int STATUS_OK   = 2;
+const int STATUS_BUSY = 0;
 const int STATUS_ERROR= 3;
 
 const int INFO_ACK  = 0;

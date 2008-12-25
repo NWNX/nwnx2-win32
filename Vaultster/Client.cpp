@@ -142,6 +142,9 @@ bool CClient::run ()
 		return false;
 	}
 
+	// make it linux compatible again:
+	strlwr (character);
+
 	vaultster.Log ("o Trying to connect to server %s...\n", server);
 	// try to connect to the server
 	socket.Create ();
@@ -149,7 +152,6 @@ bool CClient::run ()
 		vaultster.Log ("o Could not connect to %s on port %d.\n", server, port);
 		return false;
 	}
-	vaultster.Log ("o Connected: ");
 
 	if (!handShake ()) {
 		// wrong password, bail out!
@@ -157,7 +159,7 @@ bool CClient::run ()
 		socket.Close ();
 		return false;
 	}
-	vaultster.Log ("ready for file transmission\n");
+	vaultster.Log ("o Ready for file transmission.\n");
 
 	if (!transmitFile (filename)) {
 		// to bad! it failed
@@ -183,7 +185,7 @@ void CClient::createPattern (char* pattern)
 	int patternLen = (characterLen >= 14) ? 14 : characterLen;
 	
 	// create the pattern string
-	strncpy (pattern, character, characterLen);
+	strncpy (pattern, character, patternLen);
 	strcat (pattern, "*.bic");
 }
 
@@ -207,6 +209,16 @@ bool CClient::findLatestFile (char* pattern, char* filename)
 		GetFileAttributesEx (buffer, GetFileExInfoStandard, &fad);
 		latestFT = fad.ftLastAccessTime;
 		strcpy (filename, buffer);
+		if(strlen(Search.cFileName) < 32)
+		{
+			memset (character, 0, 32);
+			strncpy(character, Search.cFileName, strcspn(Search.cFileName, "."));
+		}
+		else
+		{
+			vaultster.Log("o Name of found file too long: %s\n", Search.cFileName);
+			return false;
+		}
 
 		vaultster.Log ("o Found at least one file.\n");
 				
@@ -217,6 +229,16 @@ bool CClient::findLatestFile (char* pattern, char* filename)
 			if (CompareFileTime (&fad.ftLastAccessTime, &latestFT) > 0) {
 				latestFT = fad.ftLastAccessTime;
 				strcpy (filename, buffer);
+				if(strlen(Search.cFileName) < 32)
+				{
+					memset (character, 0, 32);
+					strncpy(character, Search.cFileName, strcspn(Search.cFileName, "."));
+				}
+				else
+				{
+					vaultster.Log("o Name of found file too long: %s\n", Search.cFileName);
+					return false;
+				}
 			}
 		}
 

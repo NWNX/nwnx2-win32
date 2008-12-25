@@ -141,56 +141,6 @@ bool CServerClient::handShake ()
    return true;
 }
 
-void CServerClient::createPattern (char* pattern)
-{
-	// determine the length of the current pattern
-	int characterLen = strlen (character);
-	int patternLen = (characterLen >= 14) ? 14 : characterLen;
-	
-	// create the pattern string
-	strncpy (pattern, character, characterLen);
-	strcat (pattern, "*.bic");
-}
-
-bool CServerClient::findLatestFile (char* pattern, char* filename)
-{
-	WIN32_FIND_DATA Search;
-	WIN32_FILE_ATTRIBUTE_DATA fad;
-	char path[MAX_PATH];
-	bool found = false;
-
-	// try to find the first file in the dir
-	sprintf (path, "%s\\%s\\%s", serverVault, gamespy, pattern);
-	HANDLE hSearch = FindFirstFile (path, &Search);
-	if (hSearch != INVALID_HANDLE_VALUE) {
-		FILETIME latestFT;
-		char buffer[256];
-
-		// get date from this first file
-		sprintf (buffer, "%s\\%s\\%s", serverVault, gamespy, Search.cFileName);
-		GetFileAttributesEx (buffer, GetFileExInfoStandard, &fad);
-		latestFT = fad.ftLastAccessTime;
-		strcpy (filename, buffer);
-		
-		// check the rest of the files (if any)
-		while (FindNextFile (hSearch, &Search)) {
-			sprintf (buffer, "%s%s\\%s", serverVault, gamespy, Search.cFileName);
-			GetFileAttributesEx (buffer, GetFileExInfoStandard, &fad);
-			if (CompareFileTime (&fad.ftLastAccessTime, &latestFT) > 0) {
-	            latestFT = fad.ftLastAccessTime;
-				strcpy (filename, buffer);
-			}
-		}
-
-		// we at least found one, otherwise we wouldn't be here
-		found = true;
-	}
-
-	// finalize
-	FindClose (hSearch);
-	return found;
-}
-
 bool CServerClient::getFileName (char* filename)
 {
    int length;
@@ -213,23 +163,18 @@ bool CServerClient::getFileName (char* filename)
 
    vaultster.Log ("o Character: %s - %s - %s\n", serverVault, gamespy, character);
 
-   // build up the path & pattern
-   createPattern (pattern);
-   if (!findLatestFile (pattern, filename)) {
-      if (cmd == CMD_SEND) {
-         // only construct filename for when the file will be received here.
-         sprintf (filename, "%s\\%s\\%s.bic", serverVault, gamespy, character);
-         client.Send (INFO_ACK);
-      }
-      else {
-	     vaultster.Log ("o File not found here.\n");
-         // file name wasn't found
-         client.Send (INFO_NACK);
-         return false;
-      }
+   // build up the path
+   if (cmd == CMD_SEND) {
+     // only construct filename for when the file will be received here.
+     sprintf (filename, "%s\\%s\\%s.bic", serverVault, gamespy, character);
+     client.Send (INFO_ACK);
    }
-   else 
-		client.Send (INFO_ACK);
+   else {
+     vaultster.Log ("o File not found here.\n");
+     // file name wasn't found
+     client.Send (INFO_NACK);
+     return false;
+   }
 
    return true;
 }
@@ -315,17 +260,23 @@ bool CServer::run ()
 	CSock client;
 	sockaddr_in client_addr;
 	DWORD id;
+	char mutexname[15];
 
 	// See if there is already a VaultSTER server running on 
-	// this system. There can be only one, so leave when the
+	// this port. There can be only one, so leave when the
 	// mutex already exists.
-	HANDLE mutex = CreateMutex (NULL, TRUE, "VAULTSTER");
-	if (GetLastError () == ERROR_ALREADY_EXISTS)
+	sprintf(mutexname, "VAULTSTER%d", port);
+	HANDLE mutex = CreateMutex (NULL, TRUE, mutexname);
+	if (GetLastError () == ERROR_ALREADY_EXISTS) {
+		vaultster.Log("o Failed to run server; mutex already exists.\n");
 		return true;
+	}
 
 	// try to open the port
-	if (!socket.Create (port))
+	if (!socket.Create (port)) {
+		vaultster.Log("o Failed to run server; could not open socket on port.\n");
 		return false;
+	}
 	socket.Listen ();
 
 	// initialize memory for the clients
@@ -339,10 +290,15 @@ bool CServer::run ()
 				int i = 0;
 				for (i = 0; i < maxClients; i++) {
 					if (clients[i].isReady ()) {
-					clients[i].setReady (false);
-					clients[i].setSocket (client);
-					CreateThread (NULL, 0, CServerClient::thread, &clients[i], 0, &id);
-					break;
+						clients[i].setReady (false);
+						clients[i].setSocket (client);
+						HANDLE hThread = CreateThread (NULL, 0, CServerClient::thread, &clients[i], 0, &id);
+						if(hThread == NULL)
+						{
+							DWORD dw = GetLastError();
+							vaultster.Log ("o Failed to start serverclient thread (GetLastError returned %d - \"%s\")!\n", dw, vaultster.GetLastErrorMessage(dw));
+						}
+						break;
 					}
 				}
 				// when no spot is found, close the connection
@@ -391,7 +347,7 @@ bool CServer::isValidClient (sockaddr_in& client)
 					return true;
 			}
 			else
-				vaultster.Log ("* Warning(!!): could not retreive IP address for host %d.\n", WSAGetLastError());
+				vaultster.Log ("* Warning(!!): could not retrieve IP address for host %s; error code: %d.\n", addr.c_str(), WSAGetLastError());
 		}
 		else {
 			if ((*it) == addr)

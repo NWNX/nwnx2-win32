@@ -32,6 +32,7 @@ public:
    BOOL OnCreate(const char* logFileName);
    BOOL OnRelease(void);
    char* OnRequest(char* gameObject, char* Request, char* Parameters);
+   TCHAR* CNWNXVaultster::GetLastErrorMessage(DWORD last_error);
 
 private:
    int maxClients;

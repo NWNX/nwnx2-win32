@@ -281,7 +281,7 @@ BOOL CSock::SendFile (char* File, BOOL bCompress)
 
 	free (sendData);
 	Receive (code);
-	return TRUE;
+	return (bool)code;
 }
 
 BOOL CSock::ReceiveFile (char* File, BOOL bCompressed)

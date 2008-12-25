@@ -55,8 +55,8 @@ BOOL CNWNXVaultster::OnCreate(const char* logDir)
 		return FALSE;
 
 	// write copy information to the log file
-	Log ("NWNX2 Vaultster version 1.4.6 for Windows.\n");
-	Log ("Copyright 2004-2005 (C) Jeroen Broekhuizen\n\n");
+	Log ("NWNX2 Vaultster version 1.5.0 for Windows.\n");
+	Log ("Copyright 2004-2005 Jeroen Broekhuizen, 2006-2008 Andrew Brockert\n\n");
 
 	// start up WSA (winsock library)
 	if (!CSock::StartWSA ()) {
@@ -125,8 +125,19 @@ BOOL CNWNXVaultster::OnCreate(const char* logDir)
 
 BOOL CNWNXVaultster::OnRelease(void)
 {
-	Log ("* Shutdown server successfull.\n");
+	Log ("* Server shut down successfully.\n");
 	return CNWNXBase::OnRelease ();
+}
+
+TCHAR* CNWNXVaultster::GetLastErrorMessage(DWORD last_error)
+{
+   static TCHAR errmsg[512];
+   if (!FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,0,last_error,0,errmsg,511,NULL))
+   {
+      return (GetLastErrorMessage(GetLastError()));  
+   }
+ 
+   return errmsg;
 }
 
 char* CNWNXVaultster::OnRequest(char* gameObject, char* request, char* parameters)
@@ -143,7 +154,7 @@ char* CNWNXVaultster::OnRequest(char* gameObject, char* request, char* parameter
 		return NULL;
 	}
 	else if (cmd == Get || cmd == Put) {
-		char* pos[2];
+		char* pos[3];
 		DWORD id;
 		int i;
 
@@ -164,8 +175,10 @@ char* CNWNXVaultster::OnRequest(char* gameObject, char* request, char* parameter
 
 		pos[0] = strchr (parameters, '|');
 		pos[1] = strchr (&pos[0][1], '|');
-		if (!pos[0] || !pos[1]) {
+		pos[2] = strchr (&pos[1][1], '|');
+		if (!pos[0] || !pos[1] || !pos[2]) {
 			Log ("o Invalid parameter (%s)!\n", parameters);
+			clients[i].setStatus (STATUS_ERROR);
 			sprintf (parameters, "-4");
 			return NULL;
 		}
@@ -176,13 +189,16 @@ char* CNWNXVaultster::OnRequest(char* gameObject, char* request, char* parameter
 		memset (clients[i].character, 0, 32);
 		strncpy (clients[i].server, parameters, pos[0] - parameters);
 		strncpy (clients[i].gamespy, &pos[0][1], pos[1] - pos[0] - 1);
-		strcpy  (clients[i].character, &pos[1][1]);
+		strncpy  (clients[i].character, &pos[1][1], pos[2] - pos[1] - 1);
+		clients[i].setPort(atoi(&pos[2][1]));
 		clients[i].setCommand (cmd);
 
 		// start up the client thread
 		clients[i].hThread = CreateThread (NULL, 0, CClient::thread, &clients[i], 0, &id);
 		if (clients[i].hThread == NULL) {
-			Log ("o Failed to start client thread!\n");
+			DWORD dw = GetLastError();
+			Log ("o Failed to start client thread (GetLastError returned %d - \"%s\")!\n", dw, GetLastErrorMessage(dw));
+			clients[i].setStatus (STATUS_ERROR);
 			sprintf (parameters, "-1");
 		}
 		else {

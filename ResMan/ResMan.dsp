@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib madchook.lib /nologo /dll /machine:I386 /out:"d:\games\nwn\nwnx_resman.dll"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib madchook.lib /nologo /dll /machine:I386 /out:"Release/nwnx_resman.dll"
 
 !ELSEIF  "$(CFG)" == "Resman - Win32 Debug"
 
@@ -79,7 +79,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib madchook.lib /nologo /dll /debug /machine:I386 /out:"d:\games\nwn\nwnx_resman.dll" /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib madchook.lib /nologo /dll /debug /machine:I386 /out:"Debug/nwnx_resman.dll" /pdbtype:sept
 
 !ENDIF 
 
@@ -114,10 +114,6 @@ SOURCE=.\NWNXResMan.cpp
 
 SOURCE=.\ResMan.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=.\ResMan.rc
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -138,6 +134,10 @@ SOURCE=.\NWNXResMan.h
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=.\ResMan.rc
+# End Source File
 # End Group
 # End Target
 # End Project

@@ -1,5 +1,12 @@
 Changelog for Vaultster
 
+* 24.12.2008: v1.5.0
+- Added multiple port functionality
+- Changed status codes to ensure NWN's default of 0 won't cause problems
+- Enhanced client-server communication
+- Enhanced selection of most current bic
+- portal_nwnx_inc replaces vaultster_inc
+
 * 7.5.2005: v1.4.6
 - Added default character vault path
 - Added extra checks on variables
