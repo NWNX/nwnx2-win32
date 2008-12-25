@@ -1,0 +1,12 @@
+Changelog for Resource Manager Plugin
+
+* 29.05.2004:
+- Cleaned up source code now included
+- Find function for RetrieveResEntry now version independent
+
+* 12.02.2005: v0.2
+- Support for many additional resource types: creatures, items, dialogs, placables, ...
+
+* 10.02.2005: v0.1
+- Initial release under the GPL (see licence.txt)
+

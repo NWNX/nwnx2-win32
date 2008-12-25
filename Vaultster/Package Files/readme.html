@@ -1,0 +1,170 @@
+<HTML>
+
+<HEADER>
+<TITLE>NWNX VaultSTER plugin</TITLE>
+<style type="text/css">
+body { font-family: verdana; font-size: 11; color: #444444 }
+td { font-family: verdana; font-size: 11 }
+h1 { color: #777777 }
+h2 { color: #777777 }
+h3 { color: #777777 }
+a:link { font-family: verdana; font-size: 11; color=blue; text-decoration: none }
+a:visited { font-family: verdana; font-size: 11; color=blue; text-decoration: none }
+a:hover { font-family: verdana; font-size: 11; text-decoration: underline }
+.code {
+   border-style: dashed; 
+   border-color: blue;
+   border-width: 1px;
+   background-color: #EEEEEE;
+}
+</style>
+</HEADER>
+
+<BODY bgcolor="#EEEEEE">
+<table align=center width=600px><tr><td>
+<center>
+<H1>VaultSTER plugin for NWNX2</H1><br>
+2005 by Jeroen Broekhuizen<br>
+Email: <a href="mailto:jeroen@nwnx.org">jeroen@nwnx.org</a><br>
+Website: <a href="http://nwnx.org">nwnx.org</a><br>
+Windows Version: 1.4.6<br>
+Linux version: 0.3.0</center>
+<p>Documentation and program are &#169; by Jeroen Broekhuizen 2005
+</p>
+
+<h3 style="margin-bottom: 5px">Contents:</h3>
+<OL style="margin-top: 5px">
+<LI><a href="#chap1">Welcome</a>
+   <ol type=a>
+      <li><a href="#chap11">New features</a>
+   </ol>
+<LI><a href="#chap2">Upgrade</a>
+<LI><a href="#chap3">Full install</a>
+<LI><a href="#chap4">Configuration</a>
+<LI><a href="#chap5">Scripting</a>
+<LI><a href="#chap6">Security</a>
+<LI><a href="#chap7">End marks</a>
+<LI><a href="#chap8">Todo</a>
+<LI><a href="#chap9">Faq</a>
+</OL>
+
+<p><font color="red"><b>IMPORTANT!</b></font><br>
+This version is NOT compatible with previous version due to some coding differences on Windows and Linux. So be sure to update all your servers with this new version when you deside to upgrade to this version.</p>
+
+<H2><a name="chap1">1. Welcome</a></H2>
+<p>Vaultster can be described as a character transfer software, which makes it easy to link up multiple (autonomous) worlds to increase player base and space. Using traditional ways of sharing servervaults over the internet using distributed systems can be unreliable or have other side effects. To circumvent this I designed and implemented the Vaultster software based on the standard TCP/IP protocol available on every platform including Windows and Linux. Via compression using the well known zip method (rar is not free to use) high transmission speeds are ensured and by using a well known encryption method the security of the system is increased.</p>
+
+<h3><a name="char11">1.a New in this release</a></h3>
+<p>The most important new aspect of this release is that it is now available for Linux distributions too without any limitations or what soever. Other features include:</p>
+<ul>
+<li>Automatic detection of an already running Vaultster server on the same machine (only under Windows). This prefents binding to the same port errors, etc.</li>
+<li>A new security feature: DNS or IP validation. When this feature is turned on every client is validated against a list of known DNS names. If the client is not known the connection will be terminated. So, only known servers may transmit their character files to your server.</li>
+</ul>
+<p>I have rewritten the complete software from scratch resulting in better manageble, readable and stable (and perhaps slightly faster) code.
+</p>
+<p>The latest version of this document is available on the documentation page of <a href="http://www.nwnx.org">http://www.nwnx.org</a>.</p>
+
+<h2><a name="chap2">2. Upgrade</a></h2>
+<p>Upgrading VaultSter is a fairly simple task as it is still compatible with your NWN scripts with exception of the STARTSERVER function (see below). Start with removing the 'nwnx_send.dll' file from your Neverwinter Nights directory. When you have done so place the new 'nwnx_vaultster.dll' file in the NWN directory and rename it to <u>nwnx_send.dll</u>. See the Configuration section about setting up this new Vaultster.
+</p>
+<p>After configuring the plugin there is still one thing to do. Remove any calls to the STARTSERVER function from your modules. This new version of Vaultster has a building check to make sure that only one Vaultster Server is running on that machine. When you have finished this step you are ready for using Vaultster.</p><a name="121"></a>
+
+<h2><a name="chap3">3. Full install</a></h2>
+<p>Copy the <u>nwnx_vaultster.dll</u> and <u>nwnx_vaultster.ini</u> files to your Neverwinter Nights directory. Now follow the sections Configuration and Scripting to set up Vaultster with your module. When using linux make sure that you have installed the zlib library. For windows also copy the zlib.dll to the Neverwinter Nights directory.</p>
+
+<h2><a name="chap4">4. Configuration</a></h1>
+<p>This step will lead you through the configuration of the Vaultster plugin. This is done entirely in the <u>nwnx2.ini</u> file.</p>
+<p>Create a new section in the configuration file called <u>VAULTSTER</u>. This section will contain both server settings as the known server list with DNS names or IP addresses (prior versions had different sections for this, so now take those in one section).</p>
+
+<p>The Vaultster section contains the following options:</p>
+<ul>
+<li>port : the TCP/IP port to which Vaultster should bind.</li>
+<li>path : full path to the servervault of your server.</li>
+<li>startserver : when 1 the VaultSter Server will be started, on 0 it will not.</li>
+<li>key : the encryption method needs a key of characters (see Security section)</li>
+<li>password : character string (see Security section)</li>
+<li>count : the number of servers that are known</li>
+<li>serverN : server DNS name, where N is an increasing number starting at 1.</li>
+</ul>
+
+<p>Now both Windows and Linux users should add the options to the configuration file manually. Take a look at the nwnx_vaultster.ini for an example.</p>
+
+<h2><a name="char5">5. Scripting</a></h2>
+<p>I included an erf in the package (build with version 1.64) which includes an includable script <u>vaulster_inc</u>. Import it via File -> Import and make sure it gets imported correctly ;). The functions described below only portal the files to another server not the player himself. You must call the NWN portal function yourself in a script (see below for an example).
+</p>
+<p>You must include the file as usual (#include "vaultster_inc") before you can use the functions or constants declared in it. Before starting with coding I recommend you to read the comments of the functions first. They exactly describe what results you can expect from the functions.
+</p>
+<p>The first function is called <i>PortalPC</i> and takes two parameters. The first  parameter is the player object that should be transfered to the server which is given as the second parameter. Before anything it transferred the script exports the character to ensure that any latest changes are saved to file too. See the comments for descriptions of the return values.
+</p>
+<p>The second function returns the status for a player object. Transmission of the file takes place on the background so the NWN server can continue working on other things while Vaultster takes care of the transmission. With this function you can see what the current status is of the transmission. In case it returns the busy value, you can wait a second or two and call this function again, till you get a success or failure message. On a success message the file was transferred correctly and the player can be portalled to the other server. In case of a failure you can allow the player to run around again as the file transfer did not succeed. You should not portal the player over to the other server.</p>
+<p>The following example shows you how you can do implement a script to portal a player:</p>
+<code><pre>void main ()
+{
+   object oPC = GetEnteringObject();
+   int ret = PortalPC  (oPC, "nwn.someserver.org");
+   if (ret == VAULTSTER_OK) {
+      SendMessageToPC (oPC, "Portalling...");
+      DelayCommand (1.0f, ExecuteScript ("CheckStatus", oPC));
+   }
+   else
+       SendMessageToPC (oPC, "Failure with portalling.");
+}</pre></code>
+<p> The code above calls the PortalPC function with the object that entered a 
+transition. When the function returns successfull the CheckStatus script will be
+called after one second, which is given below.</p>
+<code><pre>void main ()
+{
+   object oPC = OBJECT_SELF;
+   int status = PortalStatus (oPC);
+   if (status == VAULTSTER_STATUS_OK)
+      // file was transferred successfully, so now portal the player
+      ActivatePortal (oPC, "nwn.someserver.com", "", "", TRUE);
+   else if (status == VAULTSTER_STATUS_BUSY) {
+      // vaultster is still busy with the transmission
+      SendMessageToPC (oPC, "Hold on..");
+      DelayAction (1.0f, ExecuteScript ("CheckStatus", oPC));
+   }
+   else {
+      // failure during transmission or not able to connect (see log file)
+      SendMessageToPC (oPC, "Failed to portal the character file.");
+   }
+}</pre></code>
+<p>This function is slightly more difficult to read, but I will explain it now. 
+First it calls the status function available from the vaultster_inc file. Depending
+on the status that is returned we do either 1) on success we send the player
+to the other server, 2) transmission is not finished, so we must wait a little 
+longer and 3) an error occured, you should take a look in the log file and see
+if there is an error message there.</p>
+
+<h2><a name="chap6">6. Security</a></h2>
+<p>Security is an important aspect for Vaultster. Currently there are two mechanisms available to protect your servervault against possible cheaters. The first and original mechanism is based on a secret password which should only be known between known servers. This password is should be given in the configuration file as 'password'. This password is send over the internet during the handshaking process. 
+</p>
+<p>Before it actually will be transferred it is first encrypted with the BlowFish algorithm. For this algorithm there is also a key needed to able to encrypt anything which also should be kept private between your known servers. You can supply the key in the configuration file in the 'key' option.
+</p>
+<p>Both the password and the key can have an arbitrary length. For the password it recommended to limit to 84 characters so there will be added enough noice.</p>
+
+<h2><a name="chap7">7. End marks</a></h2>
+<p>All named products (NWScript, NWServer, ect) are NOT written by me 
+and their developer has all rights. Also we are not responsible for any damage/loss 
+of data this NWNX Vaultster plugin, or any library that it depends on, does to your
+system. You use this software on your own risc. The source code is made publicly under
+the GNU license as the rest of NWNX is. See licence at <a href="licence.txt">here</a>.</p>
+
+<h2><a name="chap8">Todo</a></h2>
+<ul>
+<li>Public key encryption</li>
+</ul>
+
+<h2><a name="chap9">FAQ</a></h2>
+<p><b>1. Why can't I connect to Vaultster?</b>
+</p>
+<p>Make sure that Vaultster is loaded and that the Vaultster server is started. This should be listed in the <u>nwnx_vaultster.txt</u> log file. If you are behind a router or firewall, make sure that the port you listed in the configuration file is open and directed to the correct machine.
+</p>
+<p><b>2. Is Vaultster also available for Linux?</b>
+</p>
+<p>Read the documentation! ;) Yes, from this version Linux is also supported and you can now link Windows versions to Linux versions easily.</p>
+</td></tr>
+</table>
+</BODY>
+
+</HTML>
