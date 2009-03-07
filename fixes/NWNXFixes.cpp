@@ -29,6 +29,7 @@
 
 CNWNXFixes::CNWNXFixes()
 {
+	confKey = "FIXES";
 	bHooked = 0;
 }
 
@@ -43,13 +44,11 @@ BOOL CNWNXFixes::OnCreate (const char* LogDir)
 	sprintf (log, "%s\\nwnx_fixes.txt", LogDir);
 	if (!CNWNXBase::OnCreate(log))
 		return false;
-	fprintf(m_fFile, "NWNX Fixes V.1.0.4 for Windows\n");
-	fprintf(m_fFile, "(c) by virusman, 2007-2008\n");
+	fprintf(m_fFile, "NWNX Fixes V.1.0.5 for Windows\n");
+	fprintf(m_fFile, "(c) by virusman, 2007-2009\n");
 	fprintf(m_fFile, "visit us at http://www.nwnx.org\n\n");
 	
-	CIniFile iniFile ("nwnx.ini");
-
-	debuglevel = iniFile.ReadInteger("FIXES", "debuglevel", 0);
+	pluginConfig = new CIniFile("nwnx.ini");
 
 	if (FindHookFunctions())
 	{
@@ -83,4 +82,9 @@ BOOL CNWNXFixes::OnRelease ()
 	Log ("o Shutdown.\n");
 	// call base class function
 	return CNWNXBase::OnRelease();
+}
+
+int CNWNXFixes::GetConfInteger(const char *key)
+{
+	return pluginConfig->ReadInteger(confKey, key, 0);
 }

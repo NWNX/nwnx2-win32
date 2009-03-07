@@ -25,7 +25,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-//#include "NwnDefines.h"
+#include "../NWNXdll/IniFile.h"
 #include "FixesHooks.h"
 
 class CNWNXFixes : public CNWNXBase
@@ -38,7 +38,10 @@ public:
 	char* OnRequest(char* gameObject, char* Request, char* Parameters);
 	unsigned long OnRequestObject (char *gameObject, char* Request);
 	BOOL OnRelease();
+	int GetConfInteger(const char *key);
 	bool bHooked;
+
+	CIniFile *pluginConfig;
 
 private:
 

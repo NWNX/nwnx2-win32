@@ -34,48 +34,102 @@ unsigned long lastRet;
 
 //#################### FUNCTIONS ####################
 
-bool CompareVarLists(CNWObjectVarList *pVarList1, CNWObjectVarList *pVarList2)
-{
-	if(pVarList1->VarCount == 0) return 1;
-	for(unsigned int i=0; i<pVarList1->VarCount; i++)
-	{
+bool CompareVarLists (CNWObjectVarList *pVarList1, CNWObjectVarList *pVarList2) {
+    if (pVarList1->VarCount == 0 && pVarList2->VarCount == 0)
+        return true;
+
+    for (int i = 0; i < pVarList1->VarCount; i++) {
 		bool bFound = false;
 		CNWObjectVarListElement *pVar1 = &pVarList1->VarList[i];
-		for(unsigned int j=0; j<pVarList2->VarCount; j++)
-		{
+
+        for (int j = 0; j < pVarList2->VarCount; j++) {
 			CNWObjectVarListElement *pVar2 = &pVarList2->VarList[j];
-			if((strcmp(pVar1->sVarName.Text, pVar2->sVarName.Text) == 0) && (pVar1->nVarType == pVar2->nVarType))
-			{
+
+            if (pVar1->nVarType == pVar2->nVarType &&
+                strcmp(pVar1->sVarName.Text, pVar2->sVarName.Text) == 0) {
+
 				bFound = true;
+
 				//Compare values
-				switch(pVar1->nVarType)
-				{
+                switch (pVar1->nVarType) {
 				case 1:  //int
-					if((int)pVar1->nVarValue != (int)pVar2->nVarValue) return 0;
+                        if ((int)(pVar1->nVarValue) != (int)(pVar2->nVarValue)) {
+#ifdef NWNX_FIXES_DEBUG
+                            fixes.Log(3, "blocking merge: int value '%s' %d != %d\n", pVar1->sVarName.Text,
+                                      (int)(pVar1->nVarValue), (int)(pVar2->nVarValue));
+#endif
+                            return false;
+                        }
 					break;
+
 				case 2:  //float
-					if((float)pVar1->nVarValue != (float)pVar2->nVarValue) return 0;
+                        if ((float)(pVar1->nVarValue) != (float)(pVar2->nVarValue)) {
+#ifdef NWNX_FIXES_DEBUG
+                            fixes.Log(3, "blocking merge: float value '%s' %.04f != %.04f\n", pVar1->sVarName.Text,
+                                      (float)(pVar1->nVarValue), (float)(pVar2->nVarValue));
+#endif
+                            return false;
+                        }
 					break;
+
 				case 3:  //string
-					if(!(char **)pVar1->nVarValue && !(char **)pVar2->nVarValue) break;
-					if(!(char **)pVar1->nVarValue || !(char **)pVar2->nVarValue) return 0;
-					if(!*(char **)pVar1->nVarValue && !*(char **)pVar2->nVarValue) break;
-					if(!*(char **)pVar1->nVarValue || !*(char **)pVar2->nVarValue) return 0;
-					if(strcmp(*(char **)pVar1->nVarValue, *(char **)pVar2->nVarValue) != 0) return 0;
+                        // both pointers are equal or both are null
+                        if ((char **)(pVar1->nVarValue) == (char **)(pVar2->nVarValue))
 					break;
+                        if ((char **)(pVar1->nVarValue) == NULL || (char **)(pVar2->nVarValue) == NULL) {  //the variable is not set on one of the objects
+#ifdef NWNX_FIXES_DEBUG
+                            fixes.Log(3, "blocking merge: string value '%s' is not set on one of the objects\n", pVar1->sVarName.Text);
+#endif
+                            return false;
+                        }
+
+                        if (*(char **)(pVar1->nVarValue) == *(char **)(pVar2->nVarValue))  //equal pointers
+                            break;
+                        if (*(char **)(pVar1->nVarValue) == NULL || *(char **)(pVar2->nVarValue) == NULL) { //one of the variables is empty
+#ifdef NWNX_FIXES_DEBUG
+                            fixes.Log(3, "blocking merge: string value '%s' is not set on one of the objects\n", pVar1->sVarName.Text);
+#endif
+                            return false;
+                        }
+
+                        if (strcmp(*(char **)(pVar1->nVarValue), *(char **)(pVar2->nVarValue)) != 0) {  //string values are not equal
+#ifdef NWNX_FIXES_DEBUG
+                            fixes.Log(3, "blocking merge: string value '%s' '%s' != '%s'\n", pVar1->sVarName.Text,
+                                      *(char **)(pVar1->nVarValue), *(char **)(pVar2->nVarValue));
+#endif
+                            return false;
+                        }
+					break;
+
 				case 4:  //object
-					if((dword)pVar1->nVarValue != (dword)pVar2->nVarValue) return 0;
+                        if ((dword)(pVar1->nVarValue) != (dword)(pVar2->nVarValue)) {
+#ifdef NWNX_FIXES_DEBUG
+                            fixes.Log(3, "blocking merge: object value '%s' %08X != %08X\n", pVar1->sVarName.Text,
+                                      (dword)(pVar1->nVarValue), (dword)(pVar2->nVarValue));
+#endif
+                            return false;
+                        }
 					break;
+
 				case 5:  //location
 					break;
 				}
+
+                break;
 			}
 		}
-		if(!bFound) return 0;
+
+        if (!bFound) {
+#ifdef NWNX_FIXES_DEBUG
+            fixes.Log(3, "blocking merge: local variable '%s' not found on one of the objects", pVar1->sVarName.Text);
+#endif
+            return false;
 	}
 	return 1;
 }
 
+    return true;
+}
 
 //#################### HOOKED FUNCTIONS ####################
 
@@ -95,10 +149,16 @@ int __stdcall GetIsMergeableHookProc(void *pItem2)
 		CNWObjectVarList *pVarList1 = (CNWObjectVarList*)((char*)pItem1+0x10+0xD8);
 		CNWObjectVarList *pVarList2 = (CNWObjectVarList*)((char*)pItem2+0x10+0xD8);
 		if(!pVarList1 && !pVarList2) return 1;
-		if(!pVarList1 || !pVarList2) return 0;
+		if(!pVarList1 || !pVarList2) {
+#ifdef NWNX_FIXES_DEBUG
+                    fixes.Log(3, "blocking merge: one object has a variable list and the other does not\n");
+#endif
+                    return 0;
+                }
 		return (CompareVarLists(pVarList1, pVarList2) && CompareVarLists(pVarList2, pVarList1));
+		//return lastRet;
 	}
-	return lastRet;
+	else return lastRet;
 }
 
 
@@ -131,30 +191,34 @@ int FindHookFunctions()
 
 	char *pAIActionDialogObject = (char *) asmhelp.FindFunctionBySignature("64 A1 00 00 00 00 6A FF 68 ** ** ** ** 50 64 89 25 00 00 00 00 83 EC 3C 53 55 56 8B F1 8B 06 57 FF 50 30");
 	fixes.Log(2, "AIActionDialogObject: %08lX\n", pAIActionDialogObject);
+	char *pGetDead = (char *) asmhelp.FindFunctionBySignature("56 8B F1 8B 06 FF 50 30 85 C0 74 3C 8B 16 8B CE FF 52 30 8B 88 D8 0A 00 00 85 C9 75 0B 8B C8 E8");
+	fixes.Log(2, "GetDead: %08lX\n", pGetDead);
 
-	if(pSplitItem_Copy)
+	if(pSplitItem_Copy && fixes.GetConfInteger("copy_vars"))
 	{
+		fixes.Log(2, "copy_vars = 1\n");
 		d_enable_write((dword) pSplitItem_Copy);
 		if(pSplitItem_Copy[0x5D]==0x6A) pSplitItem_Copy[0x5E] = 0x1;
 		else fixes.Log(2, "Couldn't patch the SplitItem_Copy function\n");
 	}
 
-	if(pBuyItem)
+	if(pBuyItem && fixes.GetConfInteger("copy_vars"))
 	{
 		d_enable_write((dword) pBuyItem);
 		if(pBuyItem[0xA4]==0x6A) pBuyItem[0xA5] = 0x1;
 		else fixes.Log(2, "Couldn't patch the BuyItem function\n");
 	}
 
-	if(pMergeItems_RemoveItem)
+	if(pMergeItems_RemoveItem && fixes.GetConfInteger("copy_vars"))
 	{
 		d_enable_write((dword) pMergeItems_RemoveItem);
 		if(pMergeItems_RemoveItem[0xD]==0x6A) pMergeItems_RemoveItem[0xE] = 0x0;
 		else fixes.Log(2, "Couldn't patch the MergeItems_RemoveItem function\n");
 	}
 
-	if(pAIActionDialogObject)
+	if(pAIActionDialogObject && fixes.GetConfInteger("keep_hidden_in_conversation"))
 	{
+		fixes.Log(2, "keep_hidden_in_conversation = 1\n");
 		d_enable_write((dword) pAIActionDialogObject);
 		if(pAIActionDialogObject[0x15C] == 0x6A && pAIActionDialogObject[0x15D] == 0x00)
 		{
@@ -163,12 +227,23 @@ int FindHookFunctions()
 		else fixes.Log(2, "Couldn't patch the AIActionDialogObject function\n");
 	}
 
-	if(pGetIsMergeable)
+	if(pGetIsMergeable && fixes.GetConfInteger("compare_vars"))
 	{
+		fixes.Log(2, "compare_vars = 1\n");
 		int hook_success = HookCode((PVOID) pGetIsMergeable, GetIsMergeableHookProc, (PVOID*) &GetIsMergeableNextHook);
 		if(!hook_success)
 			fixes.Log(2, "Couldn't hook the GetIsMergeable function\n");
 	}
+
+	if(pGetDead && fixes.GetConfInteger("hp_limit"))
+	{
+		d_enable_write((dword) pGetDead);
+		char hpLimit = (char)fixes.GetConfInteger("hp_limit");
+		if (hpLimit > 0) hpLimit = -10;
+		fixes.Log(2, "HP limit = %d\n", hpLimit);
+		pGetDead[0x3F] = hpLimit;
+	}
+	
 	if(!(pGetIsMergeable && pSplitItem_Copy && pBuyItem && pMergeItems_RemoveItem))
 	{
 		fixes.Log(2, "Some of the functions could not be found\n");
