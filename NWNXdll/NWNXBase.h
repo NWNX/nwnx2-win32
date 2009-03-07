@@ -92,6 +92,7 @@ public:
 	//	Msg			: the format string
 	//  [argument]	: optional arguments
 	void Log (int debugPri, const char* Msg, ...);
+	void TimestampedLog (int debugPri, const char* Msg, ...);
 	void WriteLogHeader();
 
 	///////////////////////////////////////////////////////////////////////////
