@@ -161,6 +161,38 @@ int __stdcall GetIsMergeableHookProc(void *pItem2)
 	else return lastRet;
 }
 
+// This doesn't seem ideal, but VS6's inline asm syntax is less than intuitive.
+// Also I should really be using the nice struct definitions, but... it works!
+char* PlayerListNoDMHookjmp1 = (char*)0x004510c4;
+char* PlayerListNoDMHookjmp2 = (char*)0x00450f61;
+__declspec(naked) void PlayerListNoDMHook()
+{
+  __asm {
+  mov esi, eax
+  cmp esi, ebp
+  jz suppressresponse
+  // cs_is_dm
+  mov eax, [eax+0xC64]
+  mov eax, [eax+0x78]
+  test eax, eax
+  jnz suppressresponse
+  // cs_is_pc
+  mov eax, [esi+0xC64]
+  mov eax, [eax+0x74]
+  test eax, eax
+  jnz sendresponse
+  // cre_master_id
+  mov eax, [esi+0xB38]
+  cmp eax, 7
+  jnz sendresponse
+
+  suppressresponse:
+  jmp dword ptr [PlayerListNoDMHookjmp1]
+
+  sendresponse:
+  jmp dword ptr [PlayerListNoDMHookjmp2]
+  }
+}
 
 //#################### HOOK ####################
 
@@ -202,6 +234,7 @@ int FindHookFunctions()
 	char *pNoPortraitHook1Code = "\xB8\xFF\xFF\x00\x00\x90";
 	char *pNoPortraitHook2 = (char*)0x00450ff4;
 	char *pNoPortraitHook2Code = "\x6A\x10\x6A\x00\x68\x30\x32\x5F\x00\x68\x6F\x62\x6F\x64\x68\x70\x6F\x5F\x6E\x8B\xCF\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90";
+	char *pNoDMHook = (char*)0x00450f57;
 
 	if(fixes.GetConfInteger("hide_charlist_all"))
 	{
@@ -221,6 +254,12 @@ int FindHookFunctions()
 		memcpy(pNoPortraitHook1, pNoPortraitHook1Code, 6);
 		memcpy(pNoPortraitHook2, pNoPortraitHook2Code, 46);
 		fixes.Log(2, "* Disguising portraits in character list.\n");
+	}
+	if(fixes.GetConfInteger("hide_charlist_dms"))
+	{
+		d_enable_write((dword) pNoDMHook);
+		pNoDMHook[0] = (char)0xE9;
+		*((int*)(&pNoDMHook[1])) = (int)&PlayerListNoDMHook - (int)pNoDMHook - 5;
 	}
 
 	if(pSplitItem_Copy && fixes.GetConfInteger("copy_vars"))
