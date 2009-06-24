@@ -194,6 +194,35 @@ int FindHookFunctions()
 	char *pGetDead = (char *) asmhelp.FindFunctionBySignature("56 8B F1 8B 06 FF 50 30 85 C0 74 3C 8B 16 8B CE FF 52 30 8B 88 D8 0A 00 00 85 C9 75 0B 8B C8 E8");
 	fixes.Log(2, "GetDead: %08lX\n", pGetDead);
 
+	char *pPlayModCharList = (char*)0x00546570;
+	char *pPlayModCharListCode = "\xC2\x04\x00";
+	char *pNoClassesHook = (char*)0x0045102d;
+	char *pNoClassesHookCode = "\xB1\x00\x90\x90\x90\x90";
+	char *pNoPortraitHook1 = (char*)0x00450fd4;
+	char *pNoPortraitHook1Code = "\xB8\xFF\xFF\x00\x00\x90";
+	char *pNoPortraitHook2 = (char*)0x00450ff4;
+	char *pNoPortraitHook2Code = "\x6A\x10\x6A\x00\x68\x30\x32\x5F\x00\x68\x6F\x62\x6F\x64\x68\x70\x6F\x5F\x6E\x8B\xCF\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90";
+
+	if(fixes.GetConfInteger("hide_charlist_all"))
+	{
+		d_enable_write((dword) pPlayModCharList);
+		memcpy(pPlayModCharList, pPlayModCharListCode, 3);
+		fixes.Log(2, "* Suppressing character list response.\n");
+	}
+	if(fixes.GetConfInteger("hide_charlist_levels"))
+	{
+		d_enable_write((dword) pNoClassesHook);
+		memcpy(pNoClassesHook, pNoClassesHookCode, 6);
+		fixes.Log(2, "* Suppressing classes in character list.\n");
+	}
+	if(fixes.GetConfInteger("hide_charlist_portraits"))
+	{
+		d_enable_write((dword) pNoPortraitHook1);
+		memcpy(pNoPortraitHook1, pNoPortraitHook1Code, 6);
+		memcpy(pNoPortraitHook2, pNoPortraitHook2Code, 46);
+		fixes.Log(2, "* Disguising portraits in character list.\n");
+	}
+
 	if(pSplitItem_Copy && fixes.GetConfInteger("copy_vars"))
 	{
 		fixes.Log(2, "copy_vars = 1\n");
