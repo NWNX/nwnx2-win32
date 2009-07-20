@@ -161,10 +161,7 @@ int __stdcall GetIsMergeableHookProc(void *pItem2)
 	else return lastRet;
 }
 
-// This doesn't seem ideal, but VS6's inline asm syntax is less than intuitive.
-// Also I should really be using the nice struct definitions, but... it works!
-char* PlayerListNoDMHookjmp1 = (char*)0x004510c4;
-char* PlayerListNoDMHookjmp2 = (char*)0x00450f61;
+// I should really be using the nice struct definitions, but... it works!
 __declspec(naked) void PlayerListNoDMHook()
 {
   __asm {
@@ -183,14 +180,18 @@ __declspec(naked) void PlayerListNoDMHook()
   jnz sendresponse
   // cre_master_id
   mov eax, [esi+0xB38]
-  cmp eax, 7
+  cmp eax, 7 // DM possess
+  jz suppressresponse
+  cmp eax, 8 // DM possess full powers
   jnz sendresponse
 
   suppressresponse:
-  jmp dword ptr [PlayerListNoDMHookjmp1]
+  mov eax,0x004510c4
+  jmp eax
 
   sendresponse:
-  jmp dword ptr [PlayerListNoDMHookjmp2]
+  mov eax,0x00450f61
+  jmp eax
   }
 }
 
