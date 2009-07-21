@@ -161,36 +161,36 @@ int __stdcall GetIsMergeableHookProc(void *pItem2)
 	else return lastRet;
 }
 
-// I should really be using the nice struct definitions, but... it works!
 __declspec(naked) void PlayerListNoDMHook()
 {
+  CNWSCreature* cre;
+
   __asm {
   mov esi, eax
   cmp esi, ebp
   jz suppressresponse
-  // cs_is_dm
-  mov eax, [eax+0xC64]
-  mov eax, [eax+0x78]
-  test eax, eax
-  jnz suppressresponse
-  // cs_is_pc
-  mov eax, [esi+0xC64]
-  mov eax, [eax+0x74]
-  test eax, eax
-  jnz sendresponse
-  // cre_master_id
-  mov eax, [esi+0xB38]
-  cmp eax, 7 // DM possess
-  jz suppressresponse
-  cmp eax, 8 // DM possess full powers
-  jnz sendresponse
+  mov ebp, esp
+  mov cre, eax
+  }
+
+  if(cre->cre_stats->cs_is_dm)
+	  __asm { jmp suppressresponse }
+  if(cre->cre_stats->cs_is_pc)
+	  __asm { jmp sendresponse }
+  if(cre->cre_master_id == 7 || cre->cre_master_id == 8)
+  {
+    fixes.Log(4, "! TEST1: %08lX\n", cre->cre_master_id);
+    __asm { jmp suppressresponse }
+  }
+  fixes.Log(4, "! TEST2: %08lX\n", cre->cre_master_id);
+
+  __asm {
+  sendresponse:
+  mov eax,0x00450f61
+  jmp eax
 
   suppressresponse:
   mov eax,0x004510c4
-  jmp eax
-
-  sendresponse:
-  mov eax,0x00450f61
   jmp eax
   }
 }
