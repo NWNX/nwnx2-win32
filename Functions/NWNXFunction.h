@@ -22,9 +22,21 @@
 #define AFX_NWNXFUNCTION_H__925D298E_8775_4BBF_8D41_479D2179BABD__INCLUDED_
 
 #include "..\NWNXdll\NWNXBase.h"
+#include <winsock.h>
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+/* TODO: UGLY! */
+typedef unsigned long int uint32_t;
+typedef unsigned char uint8_t;
+struct CGameObject_s;                     typedef struct CGameObject_s                     CGameObject;
+struct CNWSCreature_s;                    typedef struct CNWSCreature_s                    CNWSCreature;
+struct CNWSPlayer_s;                      typedef struct CNWSPlayer_s                      CNWSPlayer;
+struct CServerExoApp_s;                   typedef struct CServerExoApp_s                   CServerExoApp;
+struct CServerExoAppInternal_s;           typedef struct CServerExoAppInternal_s           CServerExoAppInternal;
+struct CNetLayer_s;                       typedef struct CNetLayer_s                       CNetLayer;
+struct CAppManager_s;                     typedef struct CAppManager_s                     CAppManager;
 
 class CNWNXFunction : public CNWNXBase
 {
@@ -45,9 +57,48 @@ protected:
 	void GetDescription(char* value);
 	void SetIsPickPocketable(char* value);
 	void GetIsPickPocketable(char* value);
+	int GetPlayerPort (void *pSomeStruct, uint32_t nPlayerID);
+	void Func_GetPCPort (CGameObject *ob, char *value);
 
 private:
 	char* pGameObject;
+};
+
+struct CGameObject_s {
+    uint32_t            field_00;
+
+    uint32_t            id;
+};
+
+struct CNWSCreature_s {
+    uint8_t fields1[0xad8];
+    uint32_t                 cre_is_pc;
+};
+
+struct CNWSPlayer_s {
+	uint32_t			vftable;
+    uint32_t            pl_id;
+};
+
+struct CServerExoApp_s {
+    uint32_t                   unknown;
+
+    CServerExoAppInternal      *srv_internal;
+};
+
+struct CServerExoAppInternal_s {
+    uint8_t                   unknown[0x10060];
+    CNetLayer                  *srv_network;            /* 10060 */
+};
+
+struct CNetLayer_s {
+    void               *unknown;
+};
+
+struct CAppManager_s {
+    uint32_t                   field_00;
+
+    CServerExoApp              *app_server;             /* 0004 */
 };
 
 #endif // !defined(AFX_NWNXFUNCTION_H__925D298E_8775_4BBF_8D41_479D2179BABD__INCLUDED_)

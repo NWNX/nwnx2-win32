@@ -35,8 +35,21 @@ CNWNXFunction::~CNWNXFunction()
 
 BOOL CNWNXFunction::OnCreate (const char* LogDir)
 {
-	// we do not need a log file, so just exit
+	// call the base class function
+	char log[MAX_PATH];
+	sprintf (log, "%s\\nwnx_functions.txt", LogDir);
+	if (!CNWNXBase::OnCreate(log))
+		return false;
+	fprintf(m_fFile, "NWNX Functions V.1.1.0 for Windows\n");
+	fprintf(m_fFile, "(c) virusman 2007-2009, Zebranky 2009\n");
+	fprintf(m_fFile, "visit us at http://www.nwnx.org\n\n");
+	
+	fflush(m_fFile);
+
 	return true;
+	// we do not need a log file, so just exit
+	// WRONG -- Zeb
+	//return true;
 }
 
 void CNWNXFunction::SetLockDC(char* value)
@@ -144,9 +157,73 @@ void CNWNXFunction::SetIsPickPocketable(char* value)
 	}
 }
 
+/* TODO: ugly */
+CNWSPlayer* (__stdcall *CServerExoApp__GetClientObjectByObjectId)(uint32_t) = (CNWSPlayer *(__stdcall *)(unsigned long))0x0042cd20;
+CAppManager **NWN_AppManager = (CAppManager**)0x0066c050;
+
+int CNWNXFunction::GetPlayerPort (void *pNetLayer, uint32_t nPlayerID)
+{
+    int i;
+    uint32_t nNum;
+    void *pClientStruct, *pNetLayerInternal, *pExoNet, *pExoNetInternal;
+
+    pNetLayerInternal = *(void **)pNetLayer;
+    pExoNet = *(void **)((char*)pNetLayerInternal+0x4);
+        if(!pExoNet) return -1;
+    pExoNetInternal = *(void **)pExoNet;
+        if(!pExoNetInternal) return -2;
+
+    /* Yes, this is ugly. But I don't want to describe 4 or 5 nested structures. :) */
+    for (i = 0; i < 0x60; i++) {
+        pClientStruct = (void *)((char *)pNetLayerInternal + 0xC + i*0x91C);
+
+        if(*(uint32_t *)((char*)pClientStruct+0x8) == 1) {
+            if(*(uint32_t *)((char*)pClientStruct+0xC) == nPlayerID) {
+                nNum = *(uint32_t *)((char*)pClientStruct+0x14);
+
+                uint8_t *pFlagList = *(uint8_t **)((char*)pExoNetInternal+0x3c);
+                if(!pFlagList || !pFlagList[nNum]) return -3;
+
+				char* pNetInfoBase = *(char**)((char*)pExoNetInternal+0x44);
+				struct sockaddr_in *pIP = (struct sockaddr_in *)(pNetInfoBase+nNum*16);
+                if(!pIP) return -4;
+
+                return pIP->sin_port;
+            }
+        }
+    }
+    return -5;
+}
+
+void CNWNXFunction::Func_GetPCPort (CGameObject *ob, char *value)
+{
+    CNWSPlayer *pl;
+    CNWSCreature *cre = (CNWSCreature*)ob;
+
+    if (!ob || !cre->cre_is_pc) {
+        _snprintf(value, strlen(value), "0");
+        return;
+    }
+
+	CServerExoApp* app_server = (*NWN_AppManager)->app_server;
+	uint32_t objid = ob->id;
+	__asm { mov ecx, app_server }
+    pl = CServerExoApp__GetClientObjectByObjectId(objid);
+    if (pl == NULL) {
+        _snprintf(value, strlen(value), "0");
+        return;
+    }
+
+	int port = GetPlayerPort((*NWN_AppManager)->app_server->srv_internal->srv_network, pl->pl_id);
+
+    _snprintf(value, strlen(value), "%d", port);
+
+    /* TODO: describe all nested structures */
+}
 
 char* CNWNXFunction::OnRequest (char *gameObject, char* Request, char* Parameters)
 {
+	Log("* A request! %s|%s\n", Request, Parameters);
 	this->pGameObject = gameObject;
 
 	if (strncmp(Request, "SETLOCKDC", 9) == 0) 	
@@ -187,6 +264,14 @@ char* CNWNXFunction::OnRequest (char *gameObject, char* Request, char* Parameter
 	else if (strncmp(Request, "SETISPICKPOCKETABLE", 19) == 0) 	
 	{
 		SetIsPickPocketable(Parameters);
+		return NULL;
+	}
+	else if (strncmp(Request, "GETPCPORT", 9) == 0) 	
+	{
+		/* TODO: figure out why this is necessary -- nwserver was triggering
+		 * GETPCPORT again on disconnect. Haven't seen that before. */
+		if(Parameters[0] == ' ')
+			Func_GetPCPort((CGameObject*)gameObject, Parameters);
 		return NULL;
 	}
 	return NULL;
