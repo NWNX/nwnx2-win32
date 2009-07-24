@@ -166,23 +166,35 @@ __declspec(naked) void PlayerListNoDMHook()
   CNWSCreature* cre;
 
   __asm {
+  // run code overwritten by hook
   mov esi, eax
   cmp esi, ebp
   jz suppressresponse
+  // hook code
   mov ebp, esp
   mov cre, eax
   }
 
+  // obvious enough: if DM, don't list
   if(cre->cre_stats->cs_is_dm)
-	  __asm { jmp suppressresponse }
-  if(cre->cre_stats->cs_is_pc)
-	  __asm { jmp sendresponse }
-  if(cre->cre_master_id == 7 || cre->cre_master_id == 8)
   {
-    fixes.Log(4, "! TEST1: %08lX\n", cre->cre_master_id);
+	__asm { jmp suppressresponse }
+  }
+  // DMs are also PCs, but they've been handled above, so this is mortal PCs only
+  else if(cre->cre_stats->cs_is_pc)
+  {
+	__asm { jmp sendresponse }
+  }
+  // 7 is DM possess, 8 is DM possess full powers
+  else if(cre->cre_master_id == 7 || cre->cre_master_id == 8)
+  {
+    fixes.Log(4, "* NoDMHook Suppress (cre_master_id): %08lX\n", cre->cre_master_id);
     __asm { jmp suppressresponse }
   }
-  fixes.Log(4, "! TEST2: %08lX\n", cre->cre_master_id);
+  else
+  {
+	fixes.Log(4, "* NoDMHook Send (default): %08lX\n", cre->cre_master_id);
+  }
 
   __asm {
   sendresponse:
