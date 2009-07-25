@@ -185,8 +185,8 @@ __declspec(naked) void PlayerListNoDMHook()
   {
 	__asm { jmp sendresponse }
   }
-  // 7 is DM possess, 8 is DM possess full powers
-  else if(cre->cre_master_id == 7 || cre->cre_master_id == 8)
+	// 7 is DM possess, 8 is DM possess full powers, 0x7fffffff is WTF
+	else if(cre->cre_master_id == 7 || cre->cre_master_id == 8 || cre->cre_master_id == 0x7fffffff)
   {
     fixes.Log(4, "* NoDMHook Suppress (cre_master_id): %08lX\n", cre->cre_master_id);
     __asm { jmp suppressresponse }
