@@ -158,7 +158,8 @@ void CNWNXFunction::SetIsPickPocketable(char* value)
 }
 
 /* TODO: ugly */
-CNWSPlayer* (__stdcall *CServerExoApp__GetClientObjectByObjectId)(uint32_t) = (CNWSPlayer *(__stdcall *)(unsigned long))0x0042cd20;
+CNWSPlayer* (__stdcall *CServerExoApp__GetClientObjectByObjectId)(uint32_t) = (CNWSPlayer *(__stdcall *)(uint32_t))0x0042cd20;
+int (__stdcall *CNetLayer__DisconnectPlayer)(uint32_t,uint32_t,int)  = (int (__stdcall *)(uint32_t,uint32_t,int))0x0041f490;
 CAppManager **NWN_AppManager = (CAppManager**)0x0066c050;
 
 int CNWNXFunction::GetPlayerPort (void *pNetLayer, uint32_t nPlayerID)
@@ -221,9 +222,25 @@ void CNWNXFunction::Func_GetPCPort (CGameObject *ob, char *value)
     /* TODO: describe all nested structures */
 }
 
+void Func_BootPCWithMessage (CGameObject *ob, char *value) {
+    CNWSPlayer *pl;
+
+	CServerExoApp* app_server = (*NWN_AppManager)->app_server;
+	uint32_t objid = ob->id;
+	__asm { mov ecx, app_server }
+    pl = CServerExoApp__GetClientObjectByObjectId(objid);
+    if (pl != NULL)
+	{
+		CNetLayer* netlayer = (*NWN_AppManager)->app_server->srv_internal->srv_network;
+		uint32_t pl_id = pl->pl_id;
+		int iVal = atoi(value);
+		__asm { mov ecx, netlayer }
+        CNetLayer__DisconnectPlayer(pl_id, iVal, 1);
+	}
+}
+
 char* CNWNXFunction::OnRequest (char *gameObject, char* Request, char* Parameters)
 {
-	Log("* A request! %s|%s\n", Request, Parameters);
 	this->pGameObject = gameObject;
 
 	if (strncmp(Request, "SETLOCKDC", 9) == 0) 	
@@ -272,6 +289,11 @@ char* CNWNXFunction::OnRequest (char *gameObject, char* Request, char* Parameter
 		 * GETPCPORT again on disconnect. Haven't seen that before. */
 		if(Parameters[0] == ' ')
 			Func_GetPCPort((CGameObject*)gameObject, Parameters);
+		return NULL;
+	}
+	else if (strncmp(Request, "BOOTPCWITHMESSAGE", 17) == 0) 	
+	{
+		Func_BootPCWithMessage((CGameObject*)gameObject, Parameters);
 		return NULL;
 	}
 	return NULL;
