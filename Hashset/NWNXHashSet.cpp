@@ -39,32 +39,26 @@ CNWNXHashSet::~CNWNXHashSet()
 BOOL CNWNXHashSet::OnCreate (const char* LogDir)
 {
 	// call the base class function
-	#ifdef _DEBUG
 	char log[MAX_PATH];
 	sprintf (log, "%s\\nwnx_hashset.txt", LogDir);
 	if (!CNWNXBase::OnCreate(log))
 		return false;
 
-	Log("NWNX HashSet V.1.0\n");
-	Log("(c) 2003 by Ingmar Stieger (Papillon)\n");
-	Log("visit us at http://www.nwnx.org\n\n");
-	#endif
+	Log(0, "NWNX HashSet V.1.0\n");
+	Log(0, "(c) 2003 by Ingmar Stieger (Papillon)\n");
+	Log(0, "visit us at http://www.nwnx.org\n\n");
 
 	// create hash table with space for 5000 entries
 	// this hash will contain the pointers to our HashSets
 	pHashSets = new CHashTable(5000);
 	if (pHashSets->getSize() == 0)
 	{
-		#ifdef _DEBUG
-		Log("* Critical error: creation of hash table failed!\n");
-		#endif
+		Log(1, "* Critical error: creation of hash table failed!\n");
 		return false;
 	}
 	else 
 	{
-		#ifdef _DEBUG
-		Log("* Module loaded successfully.\n");
-		#endif
+		Log(1, "* Module loaded successfully.\n");
 		return true;
 	}
 }
@@ -102,18 +96,14 @@ char* CNWNXHashSet::OnRequest (char* gameObject, char* Request, char* Parameters
 				// return empty string
 				pResult = ""; 
 			}
-			#ifdef _DEBUG
-			Log("-> lookup request on hashset %s, key %s, answering with %s\n", pUniqueHashSet, pKey, pResult);
-			#endif
+			Log(2, "-> lookup request on hashset %s, key %s, answering with %s\n", pUniqueHashSet, pKey, pResult);
 		}
 	}
 	else if (strcmp(Request, "INSERT") == 0)
 	{
 		if (GetKeyAndValue(pReminder, &pKey, &pValue))
 		{
-			#ifdef _DEBUG
 			Log("-> insert request on hashset %s, key %s, value %s\n", pUniqueHashSet, pKey, pValue);
-			#endif
 			// Create a copy of the supplied value and insert that into the hashset
 			Insert(pUniqueHashSet, pKey, _strdup(pValue));
 			iLastOperation = HashSet_SUCCESS;
@@ -125,9 +115,7 @@ char* CNWNXHashSet::OnRequest (char* gameObject, char* Request, char* Parameters
 	{
 		if (GetKey(pReminder, &pKey))
 		{
-			#ifdef _DEBUG
-			Log("-> delete request on hashset %s, key %s\n", pUniqueHashSet, pKey);
-			#endif
+			Log(2, "-> delete request on hashset %s, key %s\n", pUniqueHashSet, pKey);
 			Delete(pUniqueHashSet, pKey);
 			iLastOperation = HashSet_SUCCESS;
 		}
@@ -146,9 +134,7 @@ char* CNWNXHashSet::OnRequest (char* gameObject, char* Request, char* Parameters
 	{
 		if (GetKey(pReminder, &pKey))
 		{
-			#ifdef _DEBUG
-			Log("-> valid request on hashset %s\n", pUniqueHashSet);
-			#endif
+			Log(2, "-> valid request on hashset %s\n", pUniqueHashSet);
 			if (Valid(pUniqueHashSet))
 				pResult = "1";
 			else
@@ -159,9 +145,7 @@ char* CNWNXHashSet::OnRequest (char* gameObject, char* Request, char* Parameters
 	{
 		if (GetKey(pReminder, &pKey))
 		{
-			#ifdef _DEBUG
-			Log("-> exists request on hashset %s, key %s\n", pUniqueHashSet, pKey);
-			#endif
+			Log(2, "-> exists request on hashset %s, key %s\n", pUniqueHashSet, pKey);
 			if (Exists(pUniqueHashSet, pKey))
 				pResult = "1";
 			else
@@ -170,9 +154,7 @@ char* CNWNXHashSet::OnRequest (char* gameObject, char* Request, char* Parameters
 	}
 	else if (strcmp(Request, "GETFIRSTKEY") == 0)
 	{
-		#ifdef _DEBUG
-		Log("-> getfirstkey request on hashset %s\n", pUniqueHashSet);
-		#endif
+		Log(2, "-> getfirstkey request on hashset %s\n", pUniqueHashSet);
 		pResult = GetFirstKey(pUniqueHashSet);
 		if (pResult)
 			iLastOperation = HashSet_SUCCESS;
@@ -185,9 +167,7 @@ char* CNWNXHashSet::OnRequest (char* gameObject, char* Request, char* Parameters
 	}
 	else if (strcmp(Request, "GETNEXTKEY") == 0)
 	{
-		#ifdef _DEBUG
-		Log("-> getnextkey request on hashset %s\n", pUniqueHashSet);
-		#endif
+		Log(2, "-> getnextkey request on hashset %s\n", pUniqueHashSet);
 		pResult = GetNextKey(pUniqueHashSet);
 		if (pResult)
 			iLastOperation = HashSet_SUCCESS;
@@ -200,9 +180,7 @@ char* CNWNXHashSet::OnRequest (char* gameObject, char* Request, char* Parameters
 	}
 	else if (strcmp(Request, "GETCURRENTKEY") == 0)
 	{
-		#ifdef _DEBUG
-		Log("-> getcurrentkey request on hashset %s\n", pUniqueHashSet);
-		#endif
+		Log(2, "-> getcurrentkey request on hashset %s\n", pUniqueHashSet);
 		pResult = GetCurrentKey(pUniqueHashSet);
 		if (pResult)
 			iLastOperation = HashSet_SUCCESS;
@@ -216,9 +194,7 @@ char* CNWNXHashSet::OnRequest (char* gameObject, char* Request, char* Parameters
 	else if (strcmp(Request, "GETNTHKEY") == 0)
 	{
 		iIndex = atoi(pReminder);
-		#ifdef _DEBUG
-		Log("-> getnthkey request on hashset %s, key number %d\n", pUniqueHashSet, iIndex);
-		#endif
+		Log(2, "-> getnthkey request on hashset %s, key number %d\n", pUniqueHashSet, iIndex);
 		pResult = GetNthKey(pUniqueHashSet, iIndex);
 		if (pResult)
 			iLastOperation = HashSet_SUCCESS;
@@ -231,9 +207,7 @@ char* CNWNXHashSet::OnRequest (char* gameObject, char* Request, char* Parameters
 	}
 	else if (strcmp(Request, "HASNEXT") == 0)
 	{
-		#ifdef _DEBUG
-		Log("-> hasnext request on hashset %s\n", pUniqueHashSet);
-		#endif
+		Log(2, "-> hasnext request on hashset %s\n", pUniqueHashSet);
 		if (HasNext(pUniqueHashSet))
 			pResult = "1";
 		else
@@ -241,26 +215,20 @@ char* CNWNXHashSet::OnRequest (char* gameObject, char* Request, char* Parameters
 	}
 	else if (strcmp(Request, "GETSIZE") == 0)
 	{
-		#ifdef _DEBUG
-		Log("-> size request on hashset %s\n", pUniqueHashSet);
-		#endif
+		Log(2, "-> size request on hashset %s\n", pUniqueHashSet);
 		sprintf(cLastValue, "%d", GetSize(pUniqueHashSet));
 		pResult = cLastValue;
 	}
 	else if (strcmp(Request, "DESTROY") == 0)
 	{
-		#ifdef _DEBUG
-		Log("* Destroy hashset %s\n", pUniqueHashSet);
-		#endif
+		Log(2, "* Destroy hashset %s\n", pUniqueHashSet);
 		Create(pUniqueHashSet, 0);
 		iLastOperation = HashSet_SUCCESS;
 	}
 	else if (strcmp(Request, "CREATE") == 0)
 	{
 		iIndex = atoi(pReminder);
-		#ifdef _DEBUG
-		Log("* Create HashSet '%s' with size : %d\n", pUniqueHashSet, iIndex);
-		#endif
+		Log(2, "* Create HashSet '%s' with size : %d\n", pUniqueHashSet, iIndex);
 		Create(pUniqueHashSet, iIndex);
 		iLastOperation = HashSet_SUCCESS;
 	}
