@@ -74,7 +74,6 @@ char* GetLogDir()
 void RotateLogs()
 {
 	char tmpNo[3] = {0};
-	char oldDirNo;
 	char baseDirName[256] = {0};
 	char oldDirName[256] = {0};
 	char newDirName[256] = {0};
@@ -88,59 +87,30 @@ void RotateLogs()
 	strcat(baseDirName, GetLogDir());
 	strcat(baseDirName, "\\");
 
-	// Delete directory '9'
-	strcpy(oldDirName, baseDirName);
-	strcat(oldDirName, "9");
+    time_t curtime;
+    tm now;
+    time(&curtime);
+    now = *localtime(&curtime);
+    sprintf(newDirName, "%s%d-%d-%d--%d-%d-%d", baseDirName, now.tm_year+1900, now.tm_mon+1, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec);
 
-	SHFILEOPSTRUCT fileOp;
-	fileOp.hwnd = 0;
-	fileOp.wFunc = FO_DELETE;
-	fileOp.pFrom = oldDirName;
-	fileOp.pTo = NULL;
-	fileOp.fFlags = FOF_NOERRORUI + FOF_NOCONFIRMATION;
-    fileOp.fAnyOperationsAborted = NULL;
-    fileOp.hNameMappings = NULL;
-    fileOp.lpszProgressTitle = NULL;
+    // Create directory from filename
+    CreateDirectory(newDirName, NULL);
 
-	SHFileOperation(&fileOp);
-
-	// Age directories 1-8
-	for (oldDirNo = 99; oldDirNo > 0; oldDirNo--)
+    // Move previous log files to new directory
+    sprintf(tmpFileName, "%s*.txt", baseDirName);
+    WIN32_FIND_DATA wfd;
+    HANDLE h_find = FindFirstFile(tmpFileName, &wfd);
+    while (h_find != INVALID_HANDLE_VALUE)
 	{
-		strcpy(oldDirName, baseDirName);
-		itoa(oldDirNo, tmpNo, 10);
-		strcat(oldDirName, tmpNo);
-		strcpy(newDirName, baseDirName);
-		itoa(oldDirNo + 1, tmpNo, 10);
-		strcat(newDirName, tmpNo);
-		MoveFile(oldDirName, newDirName);
-	}
-
-	// Create youngest directory '1'
-	CreateDirectory(oldDirName, NULL);
-
-	// Move current log files to '1'
-	strcpy(oldDirName, baseDirName);
-	strcat(oldDirName, "nwnx.txt");
-	strcpy(newDirName, baseDirName);
-	strcat(newDirName, "1\\nwnx.txt");
-	MoveFile(oldDirName, newDirName);
-	strcpy(oldDirName, baseDirName);
-	strcat(oldDirName, "nwserverlog1.txt");
-	strcpy(newDirName, baseDirName);
-	strcat(newDirName, "1\\nwserverlog1.txt");
-	MoveFile(oldDirName, newDirName);
-	strcpy(oldDirName, baseDirName);
-	strcat(oldDirName, "nwserverError1.txt");
-	strcpy(newDirName, baseDirName);
-	strcat(newDirName, "1\\nwserverError1.txt");
-	MoveFile(oldDirName, newDirName);
-
-	strcpy(oldDirName, baseDirName);
-	strcat(oldDirName, "nwnx_odbc.txt");
-	strcpy(newDirName, baseDirName);
-	strcat(newDirName, "1\\nwnx_odbc.txt");
-	MoveFile(oldDirName, newDirName);
+      sprintf(oldDirName, "%s%s", baseDirName, wfd.cFileName);
+      sprintf(newDirName, "%s%d-%d-%d--%d-%d-%d\\%s", baseDirName, now.tm_year+1900, now.tm_mon+1, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec, wfd.cFileName);
+      MoveFile(oldDirName, newDirName);
+      if (!FindNextFile(h_find, &wfd))
+	  {
+        FindClose(h_find);
+        h_find = INVALID_HANDLE_VALUE;
+      }
+   }
 }
 
 void StartServerProcess(LPTSTR cl, STARTUPINFO* si, PROCESS_INFORMATION* pi)
