@@ -330,7 +330,72 @@ int FindHookFunctions()
 		fixes.Log(2, "Some of the functions could not be found\n");
 		return false;
 	}
+
+	// begin cap hooks
+	int cap_ability_inc = fixes.GetConfInteger("cap_ability_inc");
+	char* cap_ability_inc_h1 = (char*)0x004ad081;
+	char* cap_ability_inc_h2 = (char*)0x004ad088;
+	int cap_ability_dec = fixes.GetConfInteger("cap_ability_dec");
+	char* cap_ability_dec_h1 = (char*)0x004ad092;
+	char* cap_ability_dec_h2 = (char*)0x004ad096;
+	int cap_atkbonus_inc = fixes.GetConfInteger("cap_atkbonus_inc");
+	char* cap_atkbonus_inc_h1 = (char*)0x004ab5fa;
+	char* cap_atkbonus_inc_h2 = (char*)0x004ab5fe;
+	int cap_atkbonus_dec = fixes.GetConfInteger("cap_atkbonus_dec");
+	char* cap_atkbonus_dec_h1 = (char*)0x004ab604;
+	char* cap_atkbonus_dec_h2 = (char*)0x004ab608;
+	int cap_skill_inc = fixes.GetConfInteger("cap_skill_inc");
+	char* cap_skill_inc_h1 = (char*)0x004ad479;
+	char* cap_skill_inc_h2 = (char*)0x004ad47d;
+	int cap_skill_dec = fixes.GetConfInteger("cap_skill_dec");
+	char* cap_skill_dec_h1 = (char*)0x004ad483;
+	char* cap_skill_dec_h2 = (char*)0x004ad487;
+
+	if(cap_ability_inc > 0)
+	{
+		d_enable_write((dword)cap_ability_inc_h1);
+		d_enable_write((dword)cap_ability_inc_h2);
+		*cap_ability_inc_h1 = (char)cap_ability_inc;
+		*cap_ability_inc_h2 = (uint8_t)cap_ability_inc;
+		fixes.Log(2, "Ability increase cap changed to %d\n", cap_ability_inc);
+	}
+	if(cap_ability_dec > 0)
+	{
+		d_enable_write((dword)cap_ability_dec_h1);
+		*cap_ability_dec_h1 = (uint8_t)cap_ability_dec;
+		*cap_ability_dec_h2 = (uint8_t)cap_ability_dec;
+		fixes.Log(2, "Ability decrease cap changed to %d\n", cap_ability_dec);
+	}
+	if(cap_atkbonus_inc > 0)
+	{
+		d_enable_write((dword)cap_atkbonus_inc_h1);
+		*cap_atkbonus_inc_h1 = (uint8_t)cap_atkbonus_inc;
+		*cap_atkbonus_inc_h2 = (uint8_t)cap_atkbonus_inc;
+		fixes.Log(2, "AB increase cap changed to %d\n", cap_atkbonus_inc);
+	}
+	if(cap_atkbonus_dec > 0)
+	{
+		d_enable_write((dword)cap_atkbonus_dec_h1);
+		*cap_atkbonus_dec_h1 = (uint8_t)cap_atkbonus_dec;
+		*cap_atkbonus_dec_h2 = (uint8_t)cap_atkbonus_dec;
+		fixes.Log(2, "AB decrease cap changed to %d\n", cap_atkbonus_dec);
+	}
+	if(cap_skill_inc > 0)
+	{
+		d_enable_write((dword)cap_skill_inc_h1);
+		*cap_skill_inc_h1 = (uint8_t)cap_skill_inc;
+		*cap_skill_inc_h2 = (uint8_t)cap_skill_inc;
+		fixes.Log(2, "Skill increase cap changed to %d\n", cap_skill_inc);
+	}
+	if(cap_skill_dec > 0)
+	{
+		d_enable_write((dword)cap_skill_dec_h1);
+		*cap_skill_dec_h1 = (uint8_t)cap_skill_dec;
+		*cap_skill_dec_h2 = (uint8_t)cap_skill_dec;
+		fixes.Log(2, "Skill decrease cap changed to %d\n", cap_skill_dec);
+	}
+	// end cap hooks
+
 	fixes.Log(2, "All functions set\n");
 	return true;
 }
-
