@@ -353,6 +353,7 @@ int FindHookFunctions()
 
 	if(cap_ability_inc > 0)
 	{
+		if(cap_ability_inc > 255) cap_ability_inc = 255;
 		d_enable_write((dword)cap_ability_inc_h1);
 		d_enable_write((dword)cap_ability_inc_h2);
 		*cap_ability_inc_h1 = (char)cap_ability_inc;
@@ -361,6 +362,7 @@ int FindHookFunctions()
 	}
 	if(cap_ability_dec > 0)
 	{
+		if(cap_ability_dec > 255) cap_ability_dec = 255;
 		d_enable_write((dword)cap_ability_dec_h1);
 		*cap_ability_dec_h1 = (uint8_t)cap_ability_dec;
 		*cap_ability_dec_h2 = (uint8_t)cap_ability_dec;
@@ -368,6 +370,7 @@ int FindHookFunctions()
 	}
 	if(cap_atkbonus_inc > 0)
 	{
+		if(cap_atkbonus_inc > 255) cap_atkbonus_inc = 255;
 		d_enable_write((dword)cap_atkbonus_inc_h1);
 		*cap_atkbonus_inc_h1 = (uint8_t)cap_atkbonus_inc;
 		*cap_atkbonus_inc_h2 = (uint8_t)cap_atkbonus_inc;
@@ -375,6 +378,7 @@ int FindHookFunctions()
 	}
 	if(cap_atkbonus_dec > 0)
 	{
+		if(cap_atkbonus_dec > 255) cap_atkbonus_dec = 255;
 		d_enable_write((dword)cap_atkbonus_dec_h1);
 		*cap_atkbonus_dec_h1 = (uint8_t)cap_atkbonus_dec;
 		*cap_atkbonus_dec_h2 = (uint8_t)cap_atkbonus_dec;
@@ -382,6 +386,7 @@ int FindHookFunctions()
 	}
 	if(cap_skill_inc > 0)
 	{
+		if(cap_skill_inc > 255) cap_skill_inc = 255;
 		d_enable_write((dword)cap_skill_inc_h1);
 		*cap_skill_inc_h1 = (uint8_t)cap_skill_inc;
 		*cap_skill_inc_h2 = (uint8_t)cap_skill_inc;
@@ -389,6 +394,7 @@ int FindHookFunctions()
 	}
 	if(cap_skill_dec > 0)
 	{
+		if(cap_skill_dec > 255) cap_skill_dec = 255;
 		d_enable_write((dword)cap_skill_dec_h1);
 		*cap_skill_dec_h1 = (uint8_t)cap_skill_dec;
 		*cap_skill_dec_h2 = (uint8_t)cap_skill_dec;
