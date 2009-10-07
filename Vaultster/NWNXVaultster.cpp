@@ -35,6 +35,8 @@
 #include "nwnxvaultster.h"
 #include "..\NWNXDll\inifile.h"
 
+#pragma warning (disable: 4786)
+
 CNWNXVaultster::CNWNXVaultster(void)
 {
 }
@@ -140,8 +142,17 @@ TCHAR* CNWNXVaultster::GetLastErrorMessage(DWORD last_error)
    return errmsg;
 }
 
+// TODO: ugly
+CAppManager **NWN_AppManager = (CAppManager**)0x0066c050;
+
 char* CNWNXVaultster::OnRequest(char* gameObject, char* request, char* parameters)
 {
+	// TODO: also ugly
+	if(!strncmp(request, "GETEXPORTPENDING", 16))
+	{
+		sprintf(parameters, "%d", (*NWN_AppManager)->app_server->srv_internal->srv_pc_export_pending);
+		return NULL;
+	}
 	Functions cmd = (stricmp(request,"GET") == 0 ? Get : (stricmp(request,"SEND") == 0 ? Put : Status));
 	if (cmd == Status) {
 		// return status about current client
@@ -218,4 +229,3 @@ char* CNWNXVaultster::OnRequest(char* gameObject, char* request, char* parameter
 	}
 	*/
 }
-

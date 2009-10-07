@@ -40,3 +40,27 @@ private:
    CServer server;
    HANDLE hServer;
 };
+
+/* TODO: UGLY! */
+typedef unsigned long int uint32_t;
+typedef unsigned char uint8_t;
+struct CAppManager_s;                     typedef struct CAppManager_s                     CAppManager;
+struct CServerExoApp_s;                   typedef struct CServerExoApp_s                   CServerExoApp;
+struct CServerExoAppInternal_s;           typedef struct CServerExoAppInternal_s           CServerExoAppInternal;
+
+struct CServerExoApp_s {
+    uint32_t                   unknown;
+
+    CServerExoAppInternal      *srv_internal;
+};
+
+struct CServerExoAppInternal_s {
+    uint8_t                   unknown[0x100D0];
+    uint32_t                  srv_pc_export_pending;            /* 100D0 */
+};
+
+struct CAppManager_s {
+    uint32_t                   field_00;
+
+    CServerExoApp              *app_server;             /* 0004 */
+};
