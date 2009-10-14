@@ -30,6 +30,8 @@ AssemblyHelper asmhelp;
 int (*pGetIsMergeable)(void *pItem1, void *pItem2);
 
 void (*GetIsMergeableNextHook)();
+void (*AdjustSpellUsesPerDayNextHook)();
+void (*LoadServerCharacterNextHook)();
 unsigned long lastRet;
 
 //#################### FUNCTIONS ####################
@@ -231,6 +233,36 @@ __declspec(naked) void SIHBPHook()
   }
 }
 
+bool bInLoadServerChar = FALSE;
+__declspec(naked) void LoadServerCharacterHookProc()
+{
+	bInLoadServerChar = TRUE;
+	__asm {
+		push [esp+0x14] // push the args for LSC
+		push [esp+0x14] // TODO: cleaner way to do this?
+		push [esp+0x14]
+		push [esp+0x14]
+		push [esp+0x14]
+		call LoadServerCharacterNextHook
+	}
+	bInLoadServerChar = FALSE;
+	__asm {
+		retn 0x14
+	}
+}
+
+__declspec(naked) void AdjustSpellUsesPerDayHookProc()
+{
+	if(bInLoadServerChar)
+	__asm {
+		retn
+	}
+	else
+	__asm {
+		jmp AdjustSpellUsesPerDayNextHook
+	}
+}
+
 //#################### HOOK ####################
 
 void
@@ -278,6 +310,18 @@ int FindHookFunctions()
 	char *pHealKitHookCode = "\xC7\x44\x24\x14\xFF\xFF\xFF\x00\x8B\xC8\xC7\x44\x24\x62\x00\x00\x00\x00\xB8\x01\x00\x00\x00\x90\x90\x90";
 
 	char *pSpawnInHBPercept = (char*)0x00494b6b;
+	char *pAdjustSpellUsesPerDay = (char*)0x0048b920;
+	char *pLoadServerCharacter = (char*)0x00430730;
+
+	if(fixes.ini_spelluses_fix)
+	{
+		int AdjSpellHook = HookCode((PVOID) pAdjustSpellUsesPerDay, AdjustSpellUsesPerDayHookProc, (PVOID*) &AdjustSpellUsesPerDayNextHook);
+		int LSCHook = HookCode((PVOID) pLoadServerCharacter, LoadServerCharacterHookProc, (PVOID*) &LoadServerCharacterNextHook);
+		if(AdjSpellHook && LSCHook)
+			fixes.Log(2, "* spelluses_fix hook successful.\n");
+		else
+			fixes.Log(0, "! spelluses_fix hook failed!\n");
+	}
 
 	if(fixes.ini_healkit_disease)
 	{

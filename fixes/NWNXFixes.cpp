@@ -76,6 +76,7 @@ BOOL CNWNXFixes::OnCreate (const char* LogDir)
 	ini_cap_skill_dec = iniFile.ReadInteger("FIXES", "cap_skill_dec", -1);
 	ini_compare_vars_ignore_prefix[0] = '\0';
 	iniFile.ReadString("FIXES", "compare_vars_ignore_prefix", ini_compare_vars_ignore_prefix, 16, "");
+	ini_spelluses_fix = iniFile.ReadInteger("FIXES", "spelluses_fix", 0);
 
 	if (FindHookFunctions())
 	{
