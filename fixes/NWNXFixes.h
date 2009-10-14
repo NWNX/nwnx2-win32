@@ -38,10 +38,9 @@ public:
 	char* OnRequest(char* gameObject, char* Request, char* Parameters);
 	unsigned long OnRequestObject (char *gameObject, char* Request);
 	BOOL OnRelease();
-	int GetConfInteger(const char *key);
 	bool bHooked;
-
-	CIniFile *pluginConfig;
+	int ini_stacking, ini_stealthconvo, ini_portalcrash, ini_healkit_disease, ini_healkit_poison, ini_hide_charlist_all, ini_hide_charlist_levels, ini_hide_charlist_portraits, ini_hide_charlist_dms, ini_copy_vars, ini_keep_hidden_in_conversation, ini_compare_vars, ini_hp_limit, ini_cap_ability_inc, ini_cap_ability_dec, ini_cap_atkbonus_inc, ini_cap_atkbonus_dec, ini_cap_skill_inc, ini_cap_skill_dec;
+	char ini_compare_vars_ignore_prefix[16];
 
 private:
 

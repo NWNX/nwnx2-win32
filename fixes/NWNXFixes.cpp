@@ -29,7 +29,6 @@
 
 CNWNXFixes::CNWNXFixes()
 {
-	confKey = "FIXES";
 	bHooked = 0;
 }
 
@@ -45,10 +44,38 @@ BOOL CNWNXFixes::OnCreate (const char* LogDir)
 	if (!CNWNXBase::OnCreate(log))
 		return false;
 	fprintf(m_fFile, "NWNX Fixes V.1.0.5 for Windows\n");
-	fprintf(m_fFile, "(c) by virusman, 2007-2009\n");
+	fprintf(m_fFile, "Copyright 2007-2009 virusman, 2008-2009 Zebranky\n");
 	fprintf(m_fFile, "visit us at http://www.nwnx.org\n\n");
 	
-	pluginConfig = new CIniFile("nwnx.ini");
+	CIniFile iniFile ("nwnx.ini");
+
+	debuglevel = iniFile.ReadInteger("FIXES", "debuglevel", 0);
+
+	// Crash fixes -- default to ON
+	// Zebranky hooks:
+	ini_portalcrash = iniFile.ReadInteger("FIXES", "portalcrash", 1);
+
+	// Functionality changes -- default to OFF
+	// virusman hooks:
+	ini_copy_vars = iniFile.ReadInteger("FIXES", "copy_vars", 0);
+	ini_keep_hidden_in_conversation = iniFile.ReadInteger("FIXES", "keep_hidden_in_conversation", 0);
+	ini_compare_vars = iniFile.ReadInteger("FIXES", "compare_vars", 0);
+	ini_hp_limit = iniFile.ReadInteger("FIXES", "hp_limit", -10);
+	// Zebranky hooks:
+	ini_healkit_disease = iniFile.ReadInteger("FIXES", "healkit_disease", 0);
+	ini_healkit_poison = iniFile.ReadInteger("FIXES", "healkit_poison", 0);
+	ini_hide_charlist_all = iniFile.ReadInteger("FIXES", "hide_charlist_all", 0);
+	ini_hide_charlist_levels = iniFile.ReadInteger("FIXES", "hide_charlist_levels", 0);
+	ini_hide_charlist_portraits = iniFile.ReadInteger("FIXES", "hide_charlist_portraits", 0);
+	ini_hide_charlist_dms = iniFile.ReadInteger("FIXES", "hide_charlist_dms", 0);
+	ini_cap_ability_inc = iniFile.ReadInteger("FIXES", "cap_ability_inc", -1);
+	ini_cap_ability_dec = iniFile.ReadInteger("FIXES", "cap_ability_dec", -1);
+	ini_cap_atkbonus_inc = iniFile.ReadInteger("FIXES", "cap_atkbonus_inc", -1);
+	ini_cap_atkbonus_dec = iniFile.ReadInteger("FIXES", "cap_atkbonus_dec", -1);
+	ini_cap_skill_inc = iniFile.ReadInteger("FIXES", "cap_skill_inc", -1);
+	ini_cap_skill_dec = iniFile.ReadInteger("FIXES", "cap_skill_dec", -1);
+	ini_compare_vars_ignore_prefix[0] = '\0';
+	iniFile.ReadString("FIXES", "compare_vars_ignore_prefix", ini_compare_vars_ignore_prefix, 16, "");
 
 	if (FindHookFunctions())
 	{
@@ -82,9 +109,4 @@ BOOL CNWNXFixes::OnRelease ()
 	Log ("o Shutdown.\n");
 	// call base class function
 	return CNWNXBase::OnRelease();
-}
-
-int CNWNXFixes::GetConfInteger(const char *key)
-{
-	return pluginConfig->ReadInteger(confKey, key, 0);
 }

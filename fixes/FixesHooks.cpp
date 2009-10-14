@@ -41,6 +41,12 @@ bool CompareVarLists (CNWObjectVarList *pVarList1, CNWObjectVarList *pVarList2) 
     for (int i = 0; i < pVarList1->VarCount; i++) {
 		bool bFound = false;
 		CNWObjectVarListElement *pVar1 = &pVarList1->VarList[i];
+		// Only check variables that start with an underscore. 
+		// This lets us control whether or not a variable should block stacking.
+		if (fixes.ini_compare_vars_ignore_prefix[0] &&
+			!strncmp(pVar1->sVarName.Text, fixes.ini_compare_vars_ignore_prefix, strlen(fixes.ini_compare_vars_ignore_prefix))) {
+			continue;
+		}
 
         for (int j = 0; j < pVarList2->VarCount; j++) {
 			CNWObjectVarListElement *pVar2 = &pVarList2->VarList[j];
@@ -207,6 +213,24 @@ __declspec(naked) void PlayerListNoDMHook()
   }
 }
 
+__declspec(naked) void SIHBPHook()
+{
+  __asm {
+  test eax, eax
+  jz errorlanding
+  lea ecx, [esp+0x20]
+  push ecx
+  mov ecx,0x00494b70
+  jmp ecx
+  errorlanding:
+  }
+  fixes.Log("* Intercepted crash in CNWSCreature::SpawnInHeartbeatPerception.\n");
+  __asm {
+  mov ecx,0x00494bcf
+  jmp ecx
+  }
+}
+
 //#################### HOOK ####################
 
 void
@@ -249,33 +273,57 @@ int FindHookFunctions()
 	char *pNoPortraitHook2Code = "\x6A\x10\x6A\x00\x68\x30\x32\x5F\x00\x68\x6F\x62\x6F\x64\x68\x70\x6F\x5F\x6E\x8B\xCF\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90";
 	char *pNoDMHook = (char*)0x00450f57;
 
-	if(fixes.GetConfInteger("hide_charlist_all"))
+	char *pHeal_DiseaseCheck = (char*)0x004ca8c6;
+	char *pHeal_PoisonCheck = (char*)0x004ca865;
+	char *pHealKitHookCode = "\xC7\x44\x24\x14\xFF\xFF\xFF\x00\x8B\xC8\xC7\x44\x24\x62\x00\x00\x00\x00\xB8\x01\x00\x00\x00\x90\x90\x90";
+
+	char *pSpawnInHBPercept = (char*)0x00494b6b;
+
+	if(fixes.ini_healkit_disease)
+	{
+		fixes.Log(2, "Implementing healing kit disease fix. Set healkit_disease=0 to disable.\n");
+		d_enable_write((dword) pHeal_DiseaseCheck);
+		memcpy(pHeal_DiseaseCheck, pHealKitHookCode, 26);
+	}
+	else
+		fixes.Log(2, "Skipping healing kit disease fix. Set healkit_disease=1 to enable.\n");
+
+	if(fixes.ini_healkit_poison)
+	{
+		fixes.Log(2, "Implementing healing kit poison fix. Set healkit_poison=0 to disable.\n");
+		d_enable_write((dword) pHeal_PoisonCheck);
+		memcpy(pHeal_PoisonCheck, pHealKitHookCode, 26);
+	}
+	else
+		fixes.Log(2, "Skipping healing kit poison fix. Set healkit_poison=1 to enable.\n");
+
+	if(fixes.ini_hide_charlist_all)
 	{
 		d_enable_write((dword) pPlayModCharList);
 		memcpy(pPlayModCharList, pPlayModCharListCode, 3);
 		fixes.Log(2, "* Suppressing character list response.\n");
 	}
-	if(fixes.GetConfInteger("hide_charlist_levels"))
+	if(fixes.ini_hide_charlist_levels)
 	{
 		d_enable_write((dword) pNoClassesHook);
 		memcpy(pNoClassesHook, pNoClassesHookCode, 6);
 		fixes.Log(2, "* Suppressing classes in character list.\n");
 	}
-	if(fixes.GetConfInteger("hide_charlist_portraits"))
+	if(fixes.ini_hide_charlist_portraits)
 	{
 		d_enable_write((dword) pNoPortraitHook1);
 		memcpy(pNoPortraitHook1, pNoPortraitHook1Code, 6);
 		memcpy(pNoPortraitHook2, pNoPortraitHook2Code, 46);
 		fixes.Log(2, "* Disguising portraits in character list.\n");
 	}
-	if(fixes.GetConfInteger("hide_charlist_dms"))
+	if(fixes.ini_hide_charlist_dms)
 	{
 		d_enable_write((dword) pNoDMHook);
 		pNoDMHook[0] = (char)0xE9;
 		*((int*)(&pNoDMHook[1])) = (int)&PlayerListNoDMHook - (int)pNoDMHook - 5;
 	}
 
-	if(pSplitItem_Copy && fixes.GetConfInteger("copy_vars"))
+	if(pSplitItem_Copy && fixes.ini_copy_vars)
 	{
 		fixes.Log(2, "copy_vars = 1\n");
 		d_enable_write((dword) pSplitItem_Copy);
@@ -283,21 +331,21 @@ int FindHookFunctions()
 		else fixes.Log(2, "Couldn't patch the SplitItem_Copy function\n");
 	}
 
-	if(pBuyItem && fixes.GetConfInteger("copy_vars"))
+	if(pBuyItem && fixes.ini_copy_vars)
 	{
 		d_enable_write((dword) pBuyItem);
 		if(pBuyItem[0xA4]==0x6A) pBuyItem[0xA5] = 0x1;
 		else fixes.Log(2, "Couldn't patch the BuyItem function\n");
 	}
 
-	if(pMergeItems_RemoveItem && fixes.GetConfInteger("copy_vars"))
+	if(pMergeItems_RemoveItem && fixes.ini_copy_vars)
 	{
 		d_enable_write((dword) pMergeItems_RemoveItem);
 		if(pMergeItems_RemoveItem[0xD]==0x6A) pMergeItems_RemoveItem[0xE] = 0x0;
 		else fixes.Log(2, "Couldn't patch the MergeItems_RemoveItem function\n");
 	}
 
-	if(pAIActionDialogObject && fixes.GetConfInteger("keep_hidden_in_conversation"))
+	if(pAIActionDialogObject && fixes.ini_keep_hidden_in_conversation)
 	{
 		fixes.Log(2, "keep_hidden_in_conversation = 1\n");
 		d_enable_write((dword) pAIActionDialogObject);
@@ -308,7 +356,7 @@ int FindHookFunctions()
 		else fixes.Log(2, "Couldn't patch the AIActionDialogObject function\n");
 	}
 
-	if(pGetIsMergeable && fixes.GetConfInteger("compare_vars"))
+	if(pGetIsMergeable && fixes.ini_compare_vars)
 	{
 		fixes.Log(2, "compare_vars = 1\n");
 		int hook_success = HookCode((PVOID) pGetIsMergeable, GetIsMergeableHookProc, (PVOID*) &GetIsMergeableNextHook);
@@ -316,42 +364,36 @@ int FindHookFunctions()
 			fixes.Log(2, "Couldn't hook the GetIsMergeable function\n");
 	}
 
-	if(pGetDead && fixes.GetConfInteger("hp_limit"))
+	if(pGetDead && fixes.ini_hp_limit <= 0)
 	{
 		d_enable_write((dword) pGetDead);
-		char hpLimit = (char)fixes.GetConfInteger("hp_limit");
+		char hpLimit = (char)fixes.ini_hp_limit;
 		if (hpLimit > 0) hpLimit = -10;
 		fixes.Log(2, "HP limit = %d\n", hpLimit);
 		pGetDead[0x3F] = hpLimit;
 	}
 	
-	if(!(pGetIsMergeable && pSplitItem_Copy && pBuyItem && pMergeItems_RemoveItem))
-	{
-		fixes.Log(2, "Some of the functions could not be found\n");
-		return false;
-	}
-
 	// begin cap hooks
-	int cap_ability_inc = fixes.GetConfInteger("cap_ability_inc");
+	int cap_ability_inc = fixes.ini_cap_ability_inc;
 	char* cap_ability_inc_h1 = (char*)0x004ad081;
 	char* cap_ability_inc_h2 = (char*)0x004ad088;
-	int cap_ability_dec = fixes.GetConfInteger("cap_ability_dec");
+	int cap_ability_dec = fixes.ini_cap_ability_dec;
 	char* cap_ability_dec_h1 = (char*)0x004ad092;
 	char* cap_ability_dec_h2 = (char*)0x004ad096;
-	int cap_atkbonus_inc = fixes.GetConfInteger("cap_atkbonus_inc");
+	int cap_atkbonus_inc = fixes.ini_cap_atkbonus_inc;
 	char* cap_atkbonus_inc_h1 = (char*)0x004ab5fa;
 	char* cap_atkbonus_inc_h2 = (char*)0x004ab5fe;
-	int cap_atkbonus_dec = fixes.GetConfInteger("cap_atkbonus_dec");
+	int cap_atkbonus_dec = fixes.ini_cap_atkbonus_dec;
 	char* cap_atkbonus_dec_h1 = (char*)0x004ab604;
 	char* cap_atkbonus_dec_h2 = (char*)0x004ab608;
-	int cap_skill_inc = fixes.GetConfInteger("cap_skill_inc");
+	int cap_skill_inc = fixes.ini_cap_skill_inc;
 	char* cap_skill_inc_h1 = (char*)0x004ad479;
 	char* cap_skill_inc_h2 = (char*)0x004ad47d;
-	int cap_skill_dec = fixes.GetConfInteger("cap_skill_dec");
+	int cap_skill_dec = fixes.ini_cap_skill_dec;
 	char* cap_skill_dec_h1 = (char*)0x004ad483;
 	char* cap_skill_dec_h2 = (char*)0x004ad487;
 
-	if(cap_ability_inc > 0)
+	if(cap_ability_inc >= 0)
 	{
 		if(cap_ability_inc > 255) cap_ability_inc = 255;
 		d_enable_write((dword)cap_ability_inc_h1);
@@ -360,7 +402,7 @@ int FindHookFunctions()
 		*cap_ability_inc_h2 = (uint8_t)cap_ability_inc;
 		fixes.Log(2, "Ability increase cap changed to %d\n", cap_ability_inc);
 	}
-	if(cap_ability_dec > 0)
+	if(cap_ability_dec >= 0)
 	{
 		if(cap_ability_dec > 255) cap_ability_dec = 255;
 		d_enable_write((dword)cap_ability_dec_h1);
@@ -368,7 +410,7 @@ int FindHookFunctions()
 		*cap_ability_dec_h2 = (uint8_t)cap_ability_dec;
 		fixes.Log(2, "Ability decrease cap changed to %d\n", cap_ability_dec);
 	}
-	if(cap_atkbonus_inc > 0)
+	if(cap_atkbonus_inc >= 0)
 	{
 		if(cap_atkbonus_inc > 255) cap_atkbonus_inc = 255;
 		d_enable_write((dword)cap_atkbonus_inc_h1);
@@ -376,7 +418,7 @@ int FindHookFunctions()
 		*cap_atkbonus_inc_h2 = (uint8_t)cap_atkbonus_inc;
 		fixes.Log(2, "AB increase cap changed to %d\n", cap_atkbonus_inc);
 	}
-	if(cap_atkbonus_dec > 0)
+	if(cap_atkbonus_dec >= 0)
 	{
 		if(cap_atkbonus_dec > 255) cap_atkbonus_dec = 255;
 		d_enable_write((dword)cap_atkbonus_dec_h1);
@@ -384,7 +426,7 @@ int FindHookFunctions()
 		*cap_atkbonus_dec_h2 = (uint8_t)cap_atkbonus_dec;
 		fixes.Log(2, "AB decrease cap changed to %d\n", cap_atkbonus_dec);
 	}
-	if(cap_skill_inc > 0)
+	if(cap_skill_inc >= 0)
 	{
 		if(cap_skill_inc > 255) cap_skill_inc = 255;
 		d_enable_write((dword)cap_skill_inc_h1);
@@ -392,7 +434,7 @@ int FindHookFunctions()
 		*cap_skill_inc_h2 = (uint8_t)cap_skill_inc;
 		fixes.Log(2, "Skill increase cap changed to %d\n", cap_skill_inc);
 	}
-	if(cap_skill_dec > 0)
+	if(cap_skill_dec >= 0)
 	{
 		if(cap_skill_dec > 255) cap_skill_dec = 255;
 		d_enable_write((dword)cap_skill_dec_h1);
@@ -401,6 +443,33 @@ int FindHookFunctions()
 		fixes.Log(2, "Skill decrease cap changed to %d\n", cap_skill_dec);
 	}
 	// end cap hooks
+
+	if(fixes.ini_portalcrash)
+	{
+		fixes.Log(2, "Implementing portal crash fix. Set portalcrash=0 to disable.\n");
+		if(pSpawnInHBPercept)
+		{
+			d_enable_write((dword) pSpawnInHBPercept);
+			if((char)pSpawnInHBPercept[0] == (char)0x8D)
+			{
+				pSpawnInHBPercept[0] = (char)0xE9;
+				*((int*)(&pSpawnInHBPercept[1])) = (int)&SIHBPHook - (int)pSpawnInHBPercept - 5;
+			}
+			else
+			{
+				fixes.Log(2, "Couldn't patch the SpawnInHeartbeatPerception function.\n");
+			}
+
+		}
+	}
+	else
+		fixes.Log(2, "Skipping portal crash fix.\n");
+
+	if(!(pGetIsMergeable && pSplitItem_Copy && pBuyItem && pMergeItems_RemoveItem))
+	{
+		fixes.Log(2, "Some of the functions could not be found\n");
+		return false;
+	}
 
 	fixes.Log(2, "All functions set\n");
 	return true;
