@@ -39,7 +39,7 @@ public:
 	virtual ~CNWNXEvents();
 	BOOL OnCreate(const char* LogDir);
 	char* OnRequest(char* gameObject, char* Request, char* Parameters);
-	unsigned long OnRequestObject (char *gameObject, char* Request);
+	//unsigned long OnRequestObject (char *gameObject, char* Request);
 	BOOL OnRelease();
 	void LoadConfiguration();
 	void WriteLogHeader();
@@ -47,6 +47,7 @@ public:
 	char *pGameObject;
 	dword nGameObjectID;
 	int nEventID;
+	int nVictim;
 	dword oTarget;
 
 	enum ELogLevel {logNothing, logScripter, logAll};
@@ -60,5 +61,6 @@ private:
 #define EVENT_SAVE_CHAR 1
 #define EVENT_PICKPOCKET 2
 #define EVENT_ATTACK 3
+#define EVENT_EXAMINE 6
 
 #endif

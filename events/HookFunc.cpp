@@ -257,8 +257,51 @@ DWORD FindRunScript()
 			(ptr[7] == (char) 0x14) &&
 			(ptr[8] == (char) 0x8B) &&
  			(ptr[9] == (char) 0xF1) &&
- 			(ptr[10] == (char) 0x8B) &&
- 			(ptr[11] == (char) 0xCF)
+ 			(ptr[0xA] == (char) 0x8B) &&
+ 			(ptr[0xB] == (char) 0xCF) &&
+			(ptr[0xC] == (char) 0xE8) &&
+			(ptr[0x11] == (char) 0x85) &&
+			(ptr[0x12] == (char) 0xC0)
+			)
+			return (DWORD) ptr;
+		else
+			ptr++;
+	}
+	//64 A1 00 00 00 00 6A FF 68 ** ** ** ** 50 64 89 25 00 00 00 00 83 EC 1C 53 8B 5C 24 30
+	ptr = (char*) 0x400000;
+	while (ptr < (char*) 0x600000)
+	{
+		if ((ptr[0] == (char) 0x64) &&
+			(ptr[1] == (char) 0xA1) &&
+			(ptr[2] == (char) 0x00) &&
+			(ptr[3] == (char) 0x00) &&
+			(ptr[4] == (char) 0x00) &&
+			(ptr[5] == (char) 0x00) &&
+			(ptr[6] == (char) 0x6A) &&
+			(ptr[7] == (char) 0xFF) &&
+			(ptr[8] == (char) 0x68) &&
+			(ptr[0xD] == (char) 0x50) &&
+ 			(ptr[0xE] == (char) 0x64) &&
+ 			(ptr[0xF] == (char) 0x89) &&
+			(ptr[0x10] == (char) 0x25) &&
+			(ptr[0x11] == (char) 0x00) &&
+			(ptr[0x12] == (char) 0x00) &&
+			(ptr[0x13] == (char) 0x00) &&
+			(ptr[0x14] == (char) 0x00) &&
+			(ptr[0x15] == (char) 0x83) &&
+			(ptr[0x16] == (char) 0xEC) &&
+			(ptr[0x17] == (char) 0x1C) &&
+			(ptr[0x18] == (char) 0x53) &&
+			(ptr[0x19] == (char) 0x8B) &&
+			(ptr[0x1A] == (char) 0x5C) &&
+			(ptr[0x1B] == (char) 0x24) &&
+			(ptr[0x1C] == (char) 0x30) &&
+			//8D 8E 70 01 00 00
+			(ptr[0x3B] == (char) 0x8D) &&
+			(ptr[0x3C] == (char) 0x8E) &&
+			(ptr[0x3D] == (char) 0x70) &&
+			(ptr[0x3E] == (char) 0x01) &&
+			(ptr[0x3F] == (char) 0x00)
 			)
 			return (DWORD) ptr;
 		else
@@ -271,7 +314,8 @@ void RunScript(char * sname, int ObjID)
 {
   int sptr[4];
   sptr[1] = strlen(sname);
-  _asm {
+  _asm
+  {
     lea  edx, sptr
     mov  eax, sname
     mov  [edx], eax
@@ -310,31 +354,29 @@ int HookFunctions()
 	}
 
 	if (org_SaveChar && success1)
-		fprintf(events.m_fFile, "! SaveChar hooked at %x.\n", org_SaveChar);
+		fprintf(events.m_fFile, "! DownloadCharacter().....hooked at %08lx.\n", org_SaveChar);
 	else
-		fprintf(events.m_fFile, "X Could not find SaveChar function or hook failed: %x\n", org_SaveChar);
+		fprintf(events.m_fFile, "X Could not find DownloadCharacter() function or hook failed: %08lx\n", org_SaveChar);
 
 	if (org_PickPocket && success2)
-		fprintf(events.m_fFile, "! ActPickPocket hooked at %x.\n", org_PickPocket);
+		fprintf(events.m_fFile, "! PickPocket()............hooked at %08lx.\n", org_PickPocket);
 	else
-		fprintf(events.m_fFile, "X Could not find ActPickPocket function or hook failed: %x\n", org_PickPocket);
+		fprintf(events.m_fFile, "X Could not find PickPocket() function or hook failed: %08lx\n", org_PickPocket);
 
 	if (org_Attack && success3)
-		fprintf(events.m_fFile, "! ActAttack hooked at %x.\n", org_Attack);
+		fprintf(events.m_fFile, "! Attack()................hooked at %08lx.\n", org_Attack);
 	else
-		fprintf(events.m_fFile, "X Could not find ActAttack function or hook failed: %x\n", org_Attack);
+		fprintf(events.m_fFile, "X Could not find Attack() function or hook failed: %08lx\n", org_Attack);
 
 	if (org_Run) {
 		*(dword*)&pRunScript = org_Run;
-		fprintf(events.m_fFile, "! RunProc located at %x.\n", org_Run);
+		fprintf(events.m_fFile, "! ExecuteScript().........hooked at %08lx.\n", org_Run);
 	}
 	else
-		fprintf(events.m_fFile, "X Could not find Run function: %x\n", org_Run);
+		fprintf(events.m_fFile, "X Could not find ExecuteScript() function or hook failed: %08lx\n", org_Run);
 
 	fprintf(events.m_fFile, "\n");
 	fflush(events.m_fFile);
 
 	return (org_SaveChar && org_Run && pServThis && pScriptThis);
 }
-
-
