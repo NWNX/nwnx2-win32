@@ -239,6 +239,34 @@ void Func_BootPCWithMessage (CGameObject *ob, char *value) {
 	}
 }
 
+uint16_t soundset = 0; // declare out here to make life easier in the ugly asm-heavy function
+// TODO: ugly
+void __declspec(naked) Func_GetSoundSet (CGameObject *ob, char *value) {
+    __asm {
+		push ebp
+		mov ebp, esp
+		pushad
+		mov ecx, [ob]
+		mov eax, [ecx]
+		call [eax+0x30]
+		test eax,eax
+		jz not_a_creature
+		mov eax,[eax+0xADC]
+		mov soundset, ax
+		jmp print
+		not_a_creature:
+		xor eax,eax
+		mov soundset, 0
+		print:
+	}
+	_snprintf(value, strlen(value), "%hu", soundset);
+	__asm {
+		popad
+		leave
+		retn
+	}
+}
+
 char* CNWNXFunction::OnRequest (char *gameObject, char* Request, char* Parameters)
 {
 	this->pGameObject = gameObject;
@@ -294,6 +322,11 @@ char* CNWNXFunction::OnRequest (char *gameObject, char* Request, char* Parameter
 	else if (strncmp(Request, "BOOTPCWITHMESSAGE", 17) == 0) 	
 	{
 		Func_BootPCWithMessage((CGameObject*)gameObject, Parameters);
+		return NULL;
+	}
+	else if (strncmp(Request, "GETSOUNDSET", 11) == 0)
+	{
+		Func_GetSoundSet((CGameObject*)gameObject, Parameters);
 		return NULL;
 	}
 	return NULL;

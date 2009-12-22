@@ -29,6 +29,7 @@
 
 /* TODO: UGLY! */
 typedef unsigned long int uint32_t;
+typedef unsigned short uint16_t;
 typedef unsigned char uint8_t;
 struct CGameObject_s;                     typedef struct CGameObject_s                     CGameObject;
 struct CNWSCreature_s;                    typedef struct CNWSCreature_s                    CNWSCreature;
