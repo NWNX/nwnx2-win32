@@ -26,6 +26,10 @@ extern CNWNXEvents events;
 void (*SaveCharNextHook)();
 void (*PickPocketNextHook)();
 void (*AttackNextHook)();
+void (*ExamineItemNextHook)();
+void (*ExamineCreatureNextHook)();
+void (*ExaminePlaceableNextHook)();
+void (*ExamineDoorNextHook)();
 
 void (*pRunScript)();
 
@@ -106,6 +110,105 @@ void __declspec(naked) AttackHookProc()
   _asm { jmp AttackNextHook }
 }
 
+void __declspec(naked) ExamineItemHookProc()
+{
+	_asm { pushad }
+	if (!scriptRun)
+	{
+		_asm
+		{
+			//Get oPC
+			mov eax, [esp+0x24]
+			mov eax, [eax+0x30]
+			mov oPC, eax
+
+			//Get oTarget
+			mov eax, [esp+0x28]  //0x24+0x4
+			mov oTarget_b, eax
+		}
+		events.oTarget = oTarget_b;
+		
+		events.FireEvent(oPC, EVENT_EXAMINE);
+	}
+	_asm { popad }
+	//_asm { leave }
+	_asm { jmp ExamineItemNextHook };
+}
+
+void __declspec(naked) ExamineCreatureHookProc()
+{
+	_asm { pushad }
+	if (!scriptRun)
+	{
+		_asm
+		{
+			//Get oPC
+			mov eax, [esp+0x24]
+			mov eax, [eax+0x30]
+			mov oPC, eax
+
+			//Get oTarget
+			mov eax, [esp+0x28]  //0x24+0x4
+			mov oTarget_b, eax
+		}
+		events.oTarget = oTarget_b;
+		
+		events.FireEvent(oPC, EVENT_EXAMINE);
+	}
+	_asm { popad }
+	//_asm { leave }
+	_asm { jmp ExamineCreatureNextHook };
+}
+
+void __declspec(naked) ExaminePlaceableHookProc()
+{
+	_asm { pushad }
+	if (!scriptRun)
+	{
+		_asm
+		{
+			//Get oPC
+			mov eax, [esp+0x24]
+			mov eax, [eax+0x30]
+			mov oPC, eax
+
+			//Get oTarget
+			mov eax, [esp+0x28]  //0x24+0x4
+			mov oTarget_b, eax
+		}
+		events.oTarget = oTarget_b;
+		
+		events.FireEvent(oPC, EVENT_EXAMINE);
+	}
+	_asm { popad }
+	//_asm { leave }
+	_asm { jmp ExaminePlaceableNextHook };
+}
+
+void __declspec(naked) ExamineDoorHookProc()
+{
+	_asm { pushad }
+	if (!scriptRun)
+	{
+		_asm
+		{
+			//Get oPC
+			mov eax, [esp+0x24]
+			mov eax, [eax+0x30]
+			mov oPC, eax
+
+			//Get oTarget
+			mov eax, [esp+0x28]  //0x24+0x4
+			mov oTarget_b, eax
+		}
+		events.oTarget = oTarget_b;
+		
+		events.FireEvent(oPC, EVENT_EXAMINE);
+	}
+	_asm { popad }
+	//_asm { leave }
+	_asm { jmp ExamineDoorNextHook };
+}
 
 DWORD FindSaveChar()
 {
@@ -333,10 +436,15 @@ void RunScript(char * sname, int ObjID)
 int HookFunctions()
 {
 	int success1 = 0, success2 = 0, success3 = 0;
-	DWORD org_SaveChar = FindSaveChar();
-	DWORD org_Run  = FindRunScript();
-	DWORD org_PickPocket = FindPickPocket();
-	DWORD org_Attack = FindAttack();
+	int success6_1 = 0, success6_2 = 0, success6_3 = 0, success6_4 = 0;
+	DWORD org_SaveChar    = FindSaveChar();
+	DWORD org_Run         = FindRunScript();
+	DWORD org_PickPocket  = FindPickPocket();
+	DWORD org_Attack      = FindAttack();
+	DWORD org_ExamineItem      = 0x446F60;
+	DWORD org_ExamineCreature  = 0x446B00;
+	DWORD org_ExaminePlaceable = 0x4474B0;
+	DWORD org_ExamineDoor      = 0x447970;
 
 	if (org_SaveChar)
 	{
@@ -344,14 +452,25 @@ int HookFunctions()
 		pScriptThis = pServThis - 8;
 		success1 = HookCode((PVOID) org_SaveChar, SaveCharHookProc, (PVOID*) &SaveCharNextHook);
 	}
+	
 	if (org_PickPocket)
-	{
-        success2 = HookCode((PVOID) org_PickPocket, PickPocketHookProc, (PVOID*) &PickPocketNextHook);
-	}
+	    success2 = HookCode((PVOID) org_PickPocket, PickPocketHookProc, (PVOID*) &PickPocketNextHook);
+	
 	if (org_Attack)
-	{
-        success3 = HookCode((PVOID) org_Attack, AttackHookProc, (PVOID*) &AttackNextHook);
-	}
+	    success3 = HookCode((PVOID) org_Attack, AttackHookProc, (PVOID*) &AttackNextHook);
+	
+	if (org_ExamineItem)
+		success6_1 = HookCode((PVOID) org_ExamineItem, ExamineItemHookProc, (PVOID*) &ExamineItemNextHook);
+
+	if (org_ExamineCreature)
+		success6_2 = HookCode((PVOID) org_ExamineCreature, ExamineCreatureHookProc, (PVOID*) &ExamineCreatureNextHook);
+
+	if (org_ExaminePlaceable)
+		success6_3 = HookCode((PVOID) org_ExaminePlaceable, ExaminePlaceableHookProc, (PVOID*) &ExaminePlaceableNextHook);
+
+	if (org_ExamineDoor)
+		success6_4 = HookCode((PVOID) org_ExamineDoor, ExamineDoorHookProc, (PVOID*) &ExamineDoorNextHook);
+
 
 	if (org_SaveChar && success1)
 		fprintf(events.m_fFile, "! DownloadCharacter().....hooked at %08lx.\n", org_SaveChar);
@@ -368,7 +487,28 @@ int HookFunctions()
 	else
 		fprintf(events.m_fFile, "X Could not find Attack() function or hook failed: %08lx\n", org_Attack);
 
-	if (org_Run) {
+	if (org_ExamineItem && success6_1)
+		fprintf(events.m_fFile, "! ExamineItem()...........hooked at %08lx.\n", org_ExamineItem);
+	else
+		fprintf(events.m_fFile, "X Could not find ExamineItem() function or hook failed: %08lx\n", org_ExamineItem);
+
+	if (org_ExamineCreature && success6_2)
+		fprintf(events.m_fFile, "! ExamineCreature().......hooked at %08lx.\n", org_ExamineCreature);
+	else
+		fprintf(events.m_fFile, "X Could not find ExamineCreature() function or hook failed: %08lx\n", org_ExamineCreature);
+
+	if (org_ExaminePlaceable && success6_3)
+		fprintf(events.m_fFile, "! ExaminePlaceable()......hooked at %08lx.\n", org_ExaminePlaceable);
+	else
+		fprintf(events.m_fFile, "X Could not find ExaminePlaceable() function or hook failed: %08lx\n", org_ExaminePlaceable);
+
+	if (org_ExamineDoor && success6_4)
+		fprintf(events.m_fFile, "! ExamineDoor()...........hooked at %08lx.\n", org_ExamineDoor);
+	else
+		fprintf(events.m_fFile, "X Could not find ExamineDoor() function or hook failed: %08lx\n", org_ExamineDoor);
+
+	if (org_Run)
+	{
 		*(dword*)&pRunScript = org_Run;
 		fprintf(events.m_fFile, "! ExecuteScript().........hooked at %08lx.\n", org_Run);
 	}

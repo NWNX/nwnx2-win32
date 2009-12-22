@@ -39,7 +39,6 @@ public:
 	virtual ~CNWNXEvents();
 	BOOL OnCreate(const char* LogDir);
 	char* OnRequest(char* gameObject, char* Request, char* Parameters);
-	//unsigned long OnRequestObject (char *gameObject, char* Request);
 	BOOL OnRelease();
 	void LoadConfiguration();
 	void WriteLogHeader();
@@ -61,6 +60,11 @@ private:
 #define EVENT_SAVE_CHAR 1
 #define EVENT_PICKPOCKET 2
 #define EVENT_ATTACK 3
+#define EVENT_USE_ITEM 4
+#define EVENT_QUICKCHAT 5
 #define EVENT_EXAMINE 6
+#define EVENT_USE_SKILL 7
+#define EVENT_USE_FEAT 8
+#define EVENT_TOGGLE_MODE 9
 
 #endif

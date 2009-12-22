@@ -118,6 +118,8 @@ void CNWNXEvents::FireEvent(const int pObj, int nEvID)
 		Log( "o EVENT_PICKPOCKET (%d):...OBJECT_SELF: %08lx TARGET: %08lx.\n", nEventID, pObj, oTarget);
 	else if( nEventID == EVENT_ATTACK ) 
 		Log( "o EVENT_ATTACK (%d):.......OBJECT_SELF: %08lx TARGET: %08lx.\n", nEventID, pObj, oTarget);
+	else if( nEventID == EVENT_EXAMINE ) 
+		Log( "o EVENT_EXAMINE (%d):......OBJECT_SELF: %08lx TARGET: %08lx.\n", nEventID, pObj, oTarget);
 	
 	RunScript(eventScript, pObj);
 
