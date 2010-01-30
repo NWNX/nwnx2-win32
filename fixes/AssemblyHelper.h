@@ -21,7 +21,7 @@
 #define ASSEMBLYHELPER_H_
 
 #define SEARCH_START_ADDRESS 0x400000
-#define SEARCH_END_ADDRESS   0x600000
+#define SEARCH_END_ADDRESS   0x900000
 
 struct sigbyte
 {

@@ -72,7 +72,7 @@ _asm{
 }
 */
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 // 43bdc0:
 		if ((ptr[0] == (char) 0x6A) &&
@@ -100,7 +100,7 @@ DWORD FindGetPCobjByOID ()
 {
     char *ptr = (char *) 0x400000;
 
-    while (ptr < (char *) 0x600000)
+    while (ptr < (char *) 0x900000)
     {
         if ((ptr[0] == (char) 0x53) &&
             (ptr[1] == (char) 0x8B) &&
@@ -125,7 +125,7 @@ DWORD FindGetPCobjByOID ()
 DWORD FindRunScript()
 {
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x53) &&
 			(ptr[1] == (char) 0x55) &&
@@ -149,7 +149,7 @@ DWORD FindRunScript()
 	}
 	//64 A1 00 00 00 00 6A FF 68 ** ** ** ** 50 64 89 25 00 00 00 00 83 EC 1C 53 8B 5C 24 30
 	ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x64) &&
 			(ptr[1] == (char) 0xA1) &&

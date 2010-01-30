@@ -398,7 +398,7 @@ char* GetLogDir()
 DWORD FindHook()
 {
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x8b) &&
 			(ptr[1] == (char) 0x44) &&
@@ -420,7 +420,7 @@ DWORD FindHook()
 DWORD FindObjectHook()
 {
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x8b) &&
 			(ptr[1] == (char) 0x44) &&

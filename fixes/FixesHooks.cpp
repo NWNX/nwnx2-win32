@@ -40,7 +40,7 @@ bool CompareVarLists (CNWObjectVarList *pVarList1, CNWObjectVarList *pVarList2) 
     if (pVarList1->VarCount == 0 && pVarList2->VarCount == 0)
         return true;
 
-    for (int i = 0; i < pVarList1->VarCount; i++) {
+    for (unsigned int i = 0; i < pVarList1->VarCount; i++) {
 		bool bFound = false;
 		CNWObjectVarListElement *pVar1 = &pVarList1->VarList[i];
 		// Only check variables that start with an underscore. 
@@ -50,7 +50,7 @@ bool CompareVarLists (CNWObjectVarList *pVarList1, CNWObjectVarList *pVarList2) 
 			continue;
 		}
 
-        for (int j = 0; j < pVarList2->VarCount; j++) {
+        for (unsigned int j = 0; j < pVarList2->VarCount; j++) {
 			CNWObjectVarListElement *pVar2 = &pVarList2->VarList[j];
 
             if (pVar1->nVarType == pVar2->nVarType &&

@@ -213,7 +213,7 @@ void __declspec(naked) ExamineDoorHookProc()
 DWORD FindSaveChar()
 {
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x6A) &&
 			(ptr[1] == (char) 0xFF) &&
@@ -249,7 +249,7 @@ DWORD FindSaveChar()
 DWORD FindPickPocket()
 {
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x51) &&
 			(ptr[1] == (char) 0x56) &&
@@ -286,7 +286,7 @@ DWORD FindPickPocket()
 DWORD FindAttack()
 {
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x64) &&
 			(ptr[1] == (char) 0xA1) &&
@@ -314,7 +314,7 @@ DWORD FindAttack()
 			ptr++;
 	}
 	ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x6A) &&
 			(ptr[1] == (char) 0xFF) &&
@@ -348,7 +348,7 @@ DWORD FindAttack()
 DWORD FindRunScript()
 {
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x53) &&
 			(ptr[1] == (char) 0x55) &&

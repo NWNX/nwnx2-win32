@@ -139,7 +139,7 @@ void NWNXDestroyArea(void *pModule, dword nAreaID)
 DWORD FindSaveChar()
 {
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x6A) &&
 			(ptr[1] == (char) 0xFF) &&

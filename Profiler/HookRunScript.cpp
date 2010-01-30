@@ -558,7 +558,7 @@ cleanup:
 DWORD FindHookRunScript()
 {
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[24] == (char) 0x53) &&
 			(ptr[25] == (char) 0x55) &&
@@ -602,7 +602,7 @@ DWORD FindHookCrossAreaPathFind()
 	*/
 
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x83) &&
 			(ptr[1] == (char) 0xEC) &&
@@ -662,7 +662,7 @@ DWORD FindHookPathFind()
 	*/
 
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x83) &&
 			(ptr[1] == (char) 0xEC) &&

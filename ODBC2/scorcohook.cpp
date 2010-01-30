@@ -157,7 +157,7 @@ void HookRCO(FILE* logFile, char* logFileName)
 DWORD FindHookSCO()
 {
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x8b) &&
 			(ptr[1] == (char) 0x09) &&
@@ -176,7 +176,7 @@ DWORD FindHookSCO()
 DWORD FindHookRCO()
 {
 	char* ptr = (char*) 0x400000;
-	while (ptr < (char*) 0x600000)
+	while (ptr < (char*) 0x900000)
 	{
 		if ((ptr[0] == (char) 0x8b) &&
 			(ptr[1] == (char) 0x09) &&
