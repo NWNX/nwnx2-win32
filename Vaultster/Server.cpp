@@ -98,7 +98,7 @@ bool CServerClient::run ()
    // receive & process the filename
    memset (filename, 0, MAX_PATH);
    if (!getFileName (filename)) {
-	  vaultster.Log ("o Failure in sending over file name!\n");
+	  vaultster.TimestampedLog ("o Failure in sending over file name!\n");
       client.Close ();
       return false;
    }
@@ -161,7 +161,7 @@ bool CServerClient::getFileName (char* filename)
    client.Receive (encrypted, length);
    fish.Decode (encrypted, (uchar*)character, length);
 
-   vaultster.Log ("o Character: %s - %s - %s\n", serverVault, gamespy, character);
+   vaultster.TimestampedLog ("o Character: %s - %s - %s\n", serverVault, gamespy, character);
 
    // build up the path
    if (cmd == CMD_SEND) {
@@ -170,7 +170,7 @@ bool CServerClient::getFileName (char* filename)
      client.Send (INFO_ACK);
    }
    else {
-     vaultster.Log ("o File not found here.\n");
+     vaultster.TimestampedLog ("o File not found here.\n");
      // file name wasn't found
      client.Send (INFO_NACK);
      return false;
@@ -268,13 +268,13 @@ bool CServer::run ()
 	sprintf(mutexname, "VAULTSTER%d", port);
 	HANDLE mutex = CreateMutex (NULL, TRUE, mutexname);
 	if (GetLastError () == ERROR_ALREADY_EXISTS) {
-		vaultster.Log("o Failed to run server; mutex already exists.\n");
+		vaultster.TimestampedLog("o Failed to run server; mutex already exists.\n");
 		return true;
 	}
 
 	// try to open the port
 	if (!socket.Create (port)) {
-		vaultster.Log("o Failed to run server; could not open socket on port.\n");
+		vaultster.TimestampedLog("o Failed to run server; could not open socket on port.\n");
 		return false;
 	}
 	socket.Listen ();
@@ -296,7 +296,7 @@ bool CServer::run ()
 						if(hThread == NULL)
 						{
 							DWORD dw = GetLastError();
-							vaultster.Log ("o Failed to start serverclient thread (GetLastError returned %d - \"%s\")!\n", dw, vaultster.GetLastErrorMessage(dw));
+							vaultster.TimestampedLog ("o Failed to start serverclient thread (GetLastError returned %d - \"%s\")!\n", dw, vaultster.GetLastErrorMessage(dw));
 						}
 						break;
 					}
@@ -344,19 +344,25 @@ bool CServer::isValidClient (sockaddr_in& client)
 				struct in_addr *address = (struct in_addr *) host->h_addr;
 				string server_addr = inet_ntoa(*address);
 				if (addr == server_addr)
+				{
+					vaultster.TimestampedLog ("o Connection from known host %s.\n", (*it).c_str());
 					return true;
+				}
 			}
 			else
-				vaultster.Log ("* Warning(!!): could not retrieve IP address for host %s; error code: %d.\n", addr.c_str(), WSAGetLastError());
+				vaultster.TimestampedLog ("* Warning(!!): could not retrieve IP address for host %s; error code: %d.\n", addr.c_str(), WSAGetLastError());
 		}
 		else {
 			if ((*it) == addr)
+			{
+				vaultster.TimestampedLog ("o Connection from known host %s.\n", (*it).c_str());
 				return true;
+			}
 		}
 	}
 
 	// if we get here the client is not known, so reject
-	vaultster.Log ("* Invalid client tries to connect: %s\n" , addr.c_str());
+	vaultster.TimestampedLog ("* Invalid client tries to connect: %s\n" , addr.c_str());
 	return false;
 }
 

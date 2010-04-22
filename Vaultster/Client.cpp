@@ -112,11 +112,11 @@ DWORD CClient::thread (LPVOID param)
 
    if (!client->run ()) {
       client->setStatus (STATUS_ERROR);
-	  vaultster.Log ("o There was an error during the transmission.\n");
+	  vaultster.TimestampedLog ("o There was an error during the transmission.\n");
    }
    else {
       client->setStatus (STATUS_OK);
-	  vaultster.Log ("o Portal successfully finished.\n");
+	  vaultster.TimestampedLog ("o Portal successfully finished.\n");
    }
 
    int stat = client->getStatus ();
@@ -136,38 +136,38 @@ bool CClient::run ()
 
 	// try to find the latest file
 	createPattern (pattern);
-	vaultster.Log ("o Start searching for %s\n", pattern);
+	vaultster.TimestampedLog ("o Start searching for %s\n", pattern);
 	if (!findLatestFile (pattern, filename)) {
-		vaultster.Log ("o Could not find latest file for %s\\%s!\n", gamespy, character);
+		vaultster.TimestampedLog ("o Could not find latest file for %s\\%s!\n", gamespy, character);
 		return false;
 	}
 
 	// make it linux compatible again:
 	strlwr (character);
 
-	vaultster.Log ("o Trying to connect to server %s...\n", server);
+	vaultster.TimestampedLog ("o Trying to connect to server %s...\n", server);
 	// try to connect to the server
 	socket.Create ();
 	if (!socket.Connect (server, port)) {
-		vaultster.Log ("o Could not connect to %s on port %d.\n", server, port);
+		vaultster.TimestampedLog ("o Could not connect to %s on port %d.\n", server, port);
 		return false;
 	}
 
 	if (!handShake ()) {
 		// wrong password, bail out!
-		vaultster.Log ("o Wrong password, can not finish job.\n");
+		vaultster.TimestampedLog ("o Wrong password, can not finish job.\n");
 		socket.Close ();
 		return false;
 	}
-	vaultster.Log ("o Ready for file transmission.\n");
+	vaultster.TimestampedLog ("o Ready for file transmission.\n");
 
 	if (!transmitFile (filename)) {
 		// to bad! it failed
-		vaultster.Log ("o Failed to send over file '%s'.\n", filename);
+		vaultster.TimestampedLog ("o Failed to send over file '%s'.\n", filename);
 		socket.Close ();
 		return false;
 	}
-	vaultster.Log ("o Job ready\n");
+	vaultster.TimestampedLog ("o Job ready\n");
 
 	socket.Close ();
 	return true;
@@ -198,7 +198,7 @@ bool CClient::findLatestFile (char* pattern, char* filename)
 
 	// try to find the first file in the dir
 	sprintf (path, "%s\\%s\\%s", serverVault, gamespy, pattern);
-	vaultster.Log ("o Searching for %s\n", path);
+	vaultster.TimestampedLog ("o Searching for %s\n", path);
 	HANDLE hSearch = FindFirstFile (path, &Search);
 	if (hSearch != INVALID_HANDLE_VALUE) {
 		FILETIME latestFT;
@@ -216,11 +216,11 @@ bool CClient::findLatestFile (char* pattern, char* filename)
 		}
 		else
 		{
-			vaultster.Log("o Name of found file too long: %s\n", Search.cFileName);
+			vaultster.TimestampedLog("o Name of found file too long: %s\n", Search.cFileName);
 			return false;
 		}
 
-		vaultster.Log ("o Found at least one file.\n");
+		vaultster.TimestampedLog ("o Found at least one file.\n");
 				
 		// check the rest of the files (if any)
 		while (FindNextFile (hSearch, &Search)) {
@@ -236,7 +236,7 @@ bool CClient::findLatestFile (char* pattern, char* filename)
 				}
 				else
 				{
-					vaultster.Log("o Name of found file too long: %s\n", Search.cFileName);
+					vaultster.TimestampedLog("o Name of found file too long: %s\n", Search.cFileName);
 					return false;
 				}
 			}
@@ -298,10 +298,10 @@ bool CClient::transmitFile (char* localFile)
 	// now perform the requested job
 	switch (command) {
 	case CMD_SEND:
-		vaultster.Log ("o Sending file\n");
+		vaultster.TimestampedLog ("o Sending file\n");
 		return socket.SendFile (localFile);
 	case CMD_GET:
-		vaultster.Log ("o Receiving file\n");
+		vaultster.TimestampedLog ("o Receiving file\n");
 		return socket.ReceiveFile (localFile);
 	}
 

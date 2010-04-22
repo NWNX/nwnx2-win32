@@ -257,7 +257,7 @@ BOOL CSock::SendFile (char* File, BOOL bCompress)
 	// send the data size
    if (TIMEOUT (Send (actualDataSize))) return FALSE;
 
-   vaultster.Log ("o Sending data part of the file (%d bytes).\n", actualDataSize);
+   vaultster.TimestampedLog ("o Sending data part of the file (%d bytes).\n", actualDataSize);
 
 	int iSendData = 0, nBytesToSend = 0;
 	while (iSendData < actualDataSize)
@@ -267,15 +267,15 @@ BOOL CSock::SendFile (char* File, BOOL bCompress)
 		nSend = Send (&sendData[iSendData], nBytesToSend);
 		if (nSend == SOCKET_ERROR) {
 			int error = WSAGetLastError ();
-			vaultster.Log ("o WinSock error %d!!\n", error);
+			vaultster.TimestampedLog ("o WinSock error %d!!\n", error);
 			return FALSE;
 		}
 		else if (TIMEOUT (nSend)) {
-			vaultster.Log ("o Time out during transmission.\n");
+			vaultster.TimestampedLog ("o Time out during transmission.\n");
 			return FALSE;
 		}
 		else
-			vaultster.Log ("o Send %d bytes of data.\n", nSend);
+			vaultster.TimestampedLog ("o Send %d bytes of data.\n", nSend);
 		iSendData += nSend;
 	}
 
@@ -308,7 +308,7 @@ BOOL CSock::ReceiveFile (char* File, BOOL bCompressed)
 		iReceivedData += nReceived;
 	}
 
-	vaultster.Log ("o Receiving file: %s\n", File);
+	vaultster.TimestampedLog ("o Receiving file: %s\n", File);
 
    // try to open the file
 	FILE* f = fopen (File, "wb");
@@ -317,7 +317,7 @@ BOOL CSock::ReceiveFile (char* File, BOOL bCompressed)
       char* pos = strrchr (File, '\\');
       pos[0] = 0;
 
-	  vaultster.Log ("o Trying to create dir: %s\n", File);
+	  vaultster.TimestampedLog ("o Trying to create dir: %s\n", File);
 
       if (!CreateDirectory (File, NULL)) {
          Send (0);

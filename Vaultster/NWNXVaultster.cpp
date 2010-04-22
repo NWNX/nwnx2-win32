@@ -158,7 +158,7 @@ char* CNWNXVaultster::OnRequest(char* gameObject, char* request, char* parameter
 		// return status about current client
 		int job = atoi (parameters);
 		int status = clients[job].getStatus ();
-		Log ("o Retreived status for %s\\%s = %d\n", clients[job].gamespy, clients[job].character, status);
+		TimestampedLog ("o Retreived status for %s\\%s = %d\n", clients[job].gamespy, clients[job].character, status);
 		if (status == STATUS_ERROR)
 			clients[job].setStatus (STATUS_OK);
 		sprintf (parameters, "%d", status);
@@ -176,7 +176,7 @@ char* CNWNXVaultster::OnRequest(char* gameObject, char* request, char* parameter
 		}
 
 		if (i == maxClients) {
-			Log ("o Too many clients already.\n");
+			TimestampedLog ("o Too many clients already.\n");
 			// can not help this client yet
 			sprintf (parameters, "-2");
 			return NULL;
@@ -188,7 +188,7 @@ char* CNWNXVaultster::OnRequest(char* gameObject, char* request, char* parameter
 		pos[1] = strchr (&pos[0][1], '|');
 		pos[2] = strchr (&pos[1][1], '|');
 		if (!pos[0] || !pos[1] || !pos[2]) {
-			Log ("o Invalid parameter (%s)!\n", parameters);
+			TimestampedLog ("o Invalid parameter (%s)!\n", parameters);
 			clients[i].setStatus (STATUS_ERROR);
 			sprintf (parameters, "-4");
 			return NULL;
@@ -208,7 +208,7 @@ char* CNWNXVaultster::OnRequest(char* gameObject, char* request, char* parameter
 		clients[i].hThread = CreateThread (NULL, 0, CClient::thread, &clients[i], 0, &id);
 		if (clients[i].hThread == NULL) {
 			DWORD dw = GetLastError();
-			Log ("o Failed to start client thread (GetLastError returned %d - \"%s\")!\n", dw, GetLastErrorMessage(dw));
+			TimestampedLog ("o Failed to start client thread (GetLastError returned %d - \"%s\")!\n", dw, GetLastErrorMessage(dw));
 			clients[i].setStatus (STATUS_ERROR);
 			sprintf (parameters, "-1");
 		}
@@ -218,7 +218,7 @@ char* CNWNXVaultster::OnRequest(char* gameObject, char* request, char* parameter
 		return NULL;
 	}
 	else {
-		Log ("o Invalid command.\n");
+		TimestampedLog ("o Invalid command.\n");
 		return NULL;
 	}
 	/*

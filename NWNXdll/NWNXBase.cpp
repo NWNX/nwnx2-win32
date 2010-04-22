@@ -122,6 +122,29 @@ void CNWNXBase::Log(int priority, const char *pcMsg, ...)
 	}
 }
 
+void CNWNXBase::TimestampedLog(const char *pcMsg, ...)
+{
+	va_list argList;
+	char acBuffer[2048], acTime[128], acDate[128];
+
+	if (m_fFile)
+	{  
+		_strtime (acTime);
+		_strdate (acDate);
+
+		// build up the string
+		va_start(argList, pcMsg);
+		_vsnprintf(acBuffer, 2047, pcMsg, argList);
+		acBuffer[2047] = 0;
+		va_end(argList);
+
+		// log string in file
+		fprintf (m_fFile, "[%s %s] ", acDate, acTime);
+		fprintf (m_fFile, "%s", acBuffer);
+		fflush (m_fFile);
+	}
+}
+
 void CNWNXBase::TimestampedLog(int priority, const char *pcMsg, ...)
 {
 	va_list argList;
