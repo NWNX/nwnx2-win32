@@ -1,0 +1,301 @@
+v 0.0.1 (initial release)
+	StringToObject: The reverse of ObjectToString
+	GetFirstArea / GetNextArea, GetAreaByPosition, : Allows looping through all area objects of a module.
+	GetFirstLocalVar / GetNextLocalVar, GetLocalVariableByPosition: Allows looping through all local variables of an object.
+	SetLastEffectSpellID / SetLastEffectCreator: Allows changing of the spell id and creator (as returned by GetEffectSpellID and GetEffectCreator respectively) of the last effect that was applied to an object.
+
+v 0.0.2
+	Added functions:
+		NWNXFuncs_AddFeat
+		NWNXFuncs_SetAbilityScore
+		NWNXFuncs_SetBaseAttackBonus
+		NWNXFuncs_Set/GetXP
+		NWNXFuncs_SetGet/BaseAC
+		NWNXFuncs_Set/GetBonusAC
+		NWNXFuncs_Set/GetPenaltyAC
+		NWNXFuncs_Set/GetSavedSkillPoints
+		NWNXFuncs_Set/GetArmorCheckPenalty
+		NWNXFuncs_GetMovementRate
+		NWNXFuncs_SetFamiliarType
+		NWNXFuncs_SetAnimalCompanionType
+		NWNXFuncs_SetGold
+
+v 0.0.3
+	Added functions:
+		NWNXFuncs_Set/ModSkill
+		NWNXFuncs_Set/ModSkillByLevel
+
+v 0.0.4
+	Added functions:
+		NWNXFuncs_GetTotalAreas
+		NWNXFuncs_GetTotalLocalVariables
+		NWNXFuncs_GetHasLocalVariable
+		NWNXFuncs_ModAbilityScore
+		NWNXFuncs_SetCreatureSize
+		NWNXFuncs_Set/GetCreatureEventScript
+
+v 0.0.5
+	Added functions:
+		NWNXFuncs_GetEquippedWeight
+		NWNXFuncs_ModSavedSkillPoints
+		NWNXFuncs_RemoveFeat
+		NWNXFuncs_GetFeatKnown
+		NWNXFuncs_RemoveAllFeats
+		NWNXFuncs_GetAllKnownFeats
+		NWNXFuncs_SetAllSkillsToZero
+		NWNXFuncs_AddKnownSpell
+		NWNXFuncs_RemoveKnownSpell
+		NWNXFuncs_GetKnowsSpell
+		NWNXFuncs_RemoveAllSpells
+		NWNXFuncs_ModBaseAttackBonusOverride
+		NWNXFuncs_GetBaseAttackBonusOverride
+	
+	Fixed:
+		Set/ModSavedSkillPoints: Always set the amount of skillpoints to 10 times of what was specified regardless which function was used
+		
+	
+	Renamed Functions:
+		NWNXFuncs_GetTotalAreas -> NWNXFuncs_GetAreaCount
+		NWNXFuncs_GetTotalLocalVariables -> NWNXFuncs_GetLocalVariableCount
+		NWNXFuncs_GetFirstLocalVar -> NWNXFuncs_GetFirstLocalVariable
+		NWNXFuncs_GetNextLocalVar -> NWNXFuncs_GetNextLocalVariable
+		NWNXFuncs_SetBaseAttackBonus -> NWNXFuncs_SetBaseAttackBonusOverride
+	
+	Other
+		Renamed some parameters to make it more clear on what the function can be used (e.g.: oObject became oCreature if the function is supposed to be used on creatures)
+		Fixed incosistencies between function declaration and its definition
+		nwnx.ini settings:
+				[FUNCS]
+				; DebugLevel=[0|1|2|3]; defaults to 0
+				debugLevel=3
+				; The number of the last line in skills.2da
+				; for when a module uses custom skills.
+				; defaults to 27
+				Last_Skill_Number=27;
+
+			There's no real consistency in what is printed to the nwnx_funcs log file but the higher the level the more is logged.
+			DebugLevel=0 only prints output from the dumplocal and dumpeffects functions. Level 1 should be informational stuff, level 2 should be errors
+			and level 3 should be for stuff that I'm trying to debug (and subsequently forget to remove)
+			This has actually been there since the beginning, I just forgot to mention it.
+
+v 0.0.51
+	Fixed:
+		NWNXFuncs_SetLastEffectCreator crashing the server
+
+v 0.0.61
+	Added:
+		NWNXFuncs_Get/SetItemValue
+		NWNXFuncs_SetItemWeight
+		NWNXFuncs_SetItemCharges
+		NWNXFuncs_SetDomain
+		NWNXFuncs_GetDomain
+		NWNXFuncs_SetWizardSpecialization
+		NWNXFuncs_GetWizardSpecialization
+		NWNXFuncs_ReplaceKnownSpell
+		NWNXFuncs_GetRemainingSpellSlots
+		NWNXFuncs_SetRemainingSpellSlots
+		NWNXFuncs_GetMaxSpellSlots
+		NWNXFuncs_GetBonusSpellSlots
+		NWNXFuncs_GetMemorizedSpellSlot
+		NWNXFuncs_SetMemorizedSpellSlot
+		NWNXFuncs_RestoreMemorizedSpells
+		NWNXFuncs_GetFeatCount
+		NWNXFuncs_GetKnownSpells
+		NWNXFuncs_GetKnownSpellCount
+		NWNXFuncs_SetConversation
+		NWNXFuncs_GetConversation
+		NWNXFuncs_GetEffectRemainingDuration
+		NWNXFuncs_Get/SetBodyBag
+		NWNXFuncs_GetFeatsGainedAtLevel
+		NWNXFuncs_GetSkillRanksGainedAtLevel
+		NWNXFuncs_GetSpellsGainedAtLevel
+		NWNXFuncs_GetStatsGainedAtLevel
+	
+	Fixed:
+		The default number of skills (if not set in nwnx.ini) was 27 instead of 28
+
+	Changed:
+		NWNXFuncs_GetFirst/GetNextLocalVariable:
+			Plugin functions are prone to crashing the server. 
+			Script function GetNextLocalVariable now uses localvar_s struct returned by GetFirstLocalVariable as argument
+		
+		GetAllKnownFeats:
+			Spacer should be set to a valid length automatically and hopefully not cause problems in the toolset script editor anymore
+	
+
+		Init Function:
+			Call from OnModuleLoad!
+			This is necessary to get a pointer on the module itsef in order for GetEffectRemainingDuration to work
+
+v 0.0.62
+	Added:
+		NWNXFuncs_GetQuickslot
+		NWNXFuncs_SetQuickslot
+		NWNXFuncs_UpdateQuickbarGUI
+		NWNXFuncs_SetClassByPosition
+		NWNXFuncs_SetGender
+	
+	Fixed:
+		NWNXFuncs_StringToObject which in return should fix NWNXFuncs_GetFirst/GetNextArea, NWNXFuncs_GetAreaByPosition.
+				NWNXFuncs_StringToObject now looks for a local object variable on the module with the name "¬¬¬STRINGTOOBJECT¬¬¬". This is used for all functions returning objects.
+				Setting the local object is taken care of in NWNXFuncs_Init().
+		
+		NWNXFuncs_GetFirst/GetNextLocalVariable, NWNXFuncs_GetLocalVarByPosition
+			Reserved more space for values returned by the plugin which hopefully prevents crashes.
+	
+	Changed:
+		NWNXFuncs_Init
+			Sets the local object "¬¬¬STRINGTOOBJECT¬¬¬" to make StringToObject work reliably.
+			
+v 0.0.7
+	Added:
+		NWNXFuncs_GetWorldDate
+		NWNXFuncs_GetWorldTime
+		NWNXFuncs_SetWorldDateTime
+		NWNXFuncs_GetFactionID
+		NWNXFuncs_SetFactionID
+		NWNXFuncs_GetSoundSetID
+		NWNXFuncs_SetSoundSetID
+		NWNXFuncs_GetSavingThrowBonus
+		NWNXFuncs_JumpCreatureToLimbo
+		NWNXFuncs_SetClassLevel
+		NWNXFuncs_GetDamageImmunity
+		
+		New Effect handling routines (see fx_example.nss)
+			NWNXFuncs_GetFirst
+			NWNXFuncs_NextEffect
+			NWNXFuncs_GetEffectRemainingDuration
+			NWNXFuncs_GetEffectIntegers
+			NWNXFuncs_GetEffectInteger
+			NWNXFuncs_SetEffectInteger
+			NWNXFuncs_GetEffectID
+			NWNXFuncs_GetEffectType
+			NWNXFuncs_GetEffectSubType
+			NWNXFuncs_GetEffectCreator
+			NWNXFuncs_GetEffectSpellId
+			NWNXFuncs_GetEffectDurationType
+			NWNXFuncs_QueueRemoveEffect
+			NWNXFuncs_RemoveQueuedEffects
+			NWNXFuncs_GetHighestEffectID
+			NWNXFuncs_SetEffectCreatorByEffectID
+			NWNXFuncs_SetEffectSpellIDByEffectID
+			
+
+	Removed:
+		NWNXFuncs_SetLastEffectSpellID
+		NWNXFuncs_SetLastEffectCreator
+			It's safer and more flexible to use the new Effect routines
+	
+	Changed:
+		Put NWNXFuncs_ in front of all function names in changelog.txt, since some now have the same name as existing script functions
+	
+		Found out that GetLocalObject is hooked by nwnx as well
+			"¬¬¬STRINGTOOBJECT¬¬¬" is not used anymore and does not have to be initialized
+		
+		Removed some unnecessary stuff I was playing around with from the source
+		
+		Moved the header files to their own, separate folder
+		
+		nwnx.ini
+			Last_Skill_Number option changed to Number_of_Skills. (Because it kept confusing me! and it's probably one of those things I'll keep stumbling over)
+			It needs to be set to the total number of skills available (i.e.: last skills.2da rowid +1)
+		
+		NWNXFuncs_Init has become obsolete since GetWorldTime makes it unnecessary to save a pointer to the module (was needed for GetEffectRemainingDuration)
+		
+		Managed to get version information into the dll description
+		
+		Get/SetQuickslot should now be able to handle all quickslot types, except for items
+	
+		
+v 0.0.71
+	Added:
+		NWNXFuncs_ApplyVisualEffectForPC (Apply VFX_FNF_* and VFX_IMP_* effects for a specific PC only)
+		
+		New effect functions for use in a regular GetFirst/GetNextEffectLoop (the old ones have been renamed, see Changed section and updated fx_example)
+			NWNXFuncs_GetEffectIntegers
+			NWNXFuncs_GetEffectInteger
+			NWNXFuncs_SetEffectInteger
+			NWNXFuncs_GetEffectRemainingDuration
+			NWNXFuncs_GetEffectID
+			NWNXFuncs_GetEffectRealType
+		
+	Fixed:
+		NWNXFuncs_AddFeat should now correctly handle feats with Uses per Day (instead of having unlimited uses until the player relogs)
+	
+	Changed:
+		This update breaks existing scripts which use the following functions:
+				NWNXFuncs_GetEffectIntegers
+				NWNXFuncs_GetEffectInteger
+				NWNXFuncs_SetEffectInteger
+				NWNXFuncs_GetEffectRemainingDuration
+				NWNXFuncs_GetEffectID
+				NWNXFuncs_GetEffectRealType
+			They have been renamed (see below) and new functions with the same name have been created to be used with a regular GetFirst/NextEffect loop
+			I hope this doesn't cause too much headache
+		
+		NWNXFuncs_GetEffectRemainingDuration returns the remaining duration as a float
+			
+		The previously existing effect functions have been renamed:
+			NWNXFuncs_GetFirstEffect             -> NWNXFuncs_GetFirstEffectInternal
+			NWNXFuncs_GetNextEffect              -> NWNXFuncs_GetNextEffectInternal
+			NWNXFuncs_GetEffectRemainingDuration -> NWNXFuncs_GetEffectRemainingDurationInternal
+			NWNXFuncs_GetEffectIntegers          -> NWNXFuncs_GetEffectIntegersInternal
+			NWNXFuncs_GetEffectInteger           -> NWNXFuncs_GetEffectIntegerInternal
+			NWNXFuncs_SetEffectInteger           -> NWNXFuncs_SetEffectIntegerInternal
+			NWNXFuncs_GetEffectID                -> NWNXFuncs_GetEffectIDInternal
+			NWNXFuncs_GetEffectType              -> NWNXFuncs_GetEffectTypeInternal
+			NWNXFuncs_GetEffectSubType           -> NWNXFuncs_GetEffectSubTypeInternal
+			NWNXFuncs_GetEffectCreator           -> NWNXFuncs_GetEffectCreatorInternal
+			NWNXFuncs_GetEffectSpellId           -> NWNXFuncs_GetEffectSpellIdInternal
+			NWNXFuncs_GetEffectDurationType      -> NWNXFuncs_GetEffectDurationTypeInternal
+			NWNXFuncs_QueueRemoveEffect          -> NWNXFuncs_QueueRemoveEffectInternal
+			NWNXFuncs_RemoveQueuedEffects        -> NWNXFuncs_RemoveQueuedEffectsInternal
+			
+		NWNXFuncs_GetFirstEffectInternal and NWNXFuncs_GetNextEffectInternal will now cycle through all effects by default, not just through exposed ones
+		NWNXFuncs_GetEffectTypeInternal will return the "real" effect type by default
+		
+		
+v 0.0.72
+	Fixed:
+		NWNXFuncs_GetAllSpellsKnown will return an empty string on error or if no spells are found
+		Wrong data type for effect index used by effect functions could lead to server crash
+		Mismatch between prototype and implementation of NWNXFunsc_GetKnownSpells
+		NWNXFuncs_GetKnowsSpell should now work correctly
+		NWNXFuncs_GetKnownSpellCount wasn't passing any parameters
+
+v 0.0.8
+	Finally managed to hook and override functions (hence the version jump)
+	
+	Added:
+		NWNXFuncs_SetCustomTrapGeometry
+		NWNXFuncs_GetTrapGeometry
+		NWNXFuncs_RotateCustomTrapGeometry
+			(hope I didn't miss the part where this is already possible :-/)
+		
+		NWNXFuncs_GetSurfaceMaterial
+		NWNXFuncs_SetDebugLevel
+		NWNXFuncs_StartTimingbar
+		NWNXFuncs_StopTimingbar
+
+	NWNX.INI		
+		 New switch: HOOK_CustomTrapGeometry=[1|0]
+			Defaults to 0 (not hooked) if not found in the ini file (Needs to be 1 to use the new CustomTrapGeometry functionality)
+			
+
+v 0.0.81
+	Changed the lookup table from map to hash_map; should provide a small performance gain
+	
+	Added:
+		NWNXFuncs_SetAreaEventScript
+		NWNXFuncs_SetAge
+		
+	Fixed:
+		Put in the bodies for NWNXFuncs_StartTimingbar and NWNXFuncs_StopTimingbar (sorry about that)
+
+v 0.0.82
+	Added:
+		NWNXFuncs_SetTag
+		NWNXFuncs_SetPlaceableEventScript
+		NWNXFuncs_GetPlaceableEventScript
+		NWNXFuncs_GetAreaEventScript
+		NWNXFuncs_SetAreaofEffectEventScript
