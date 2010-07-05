@@ -124,9 +124,6 @@ void CNWNXFuncs::CreateFunctionLookup() {
 	i = 116;	pFunc[i] = &CNWNXFuncs::SetDebugLevel; FunctionLookup["SETDEBUGLEVEL"] = i;
 	i = 117;	pFunc[i] = &CNWNXFuncs::TimebarStart; FunctionLookup["TIMEBARSTART"] = i;
 	i = 118;	pFunc[i] = &CNWNXFuncs::TimebarStop; FunctionLookup["TIMEBARSTOP"] = i;
-	i = 119;	pFunc[i] = &CNWNXFuncs::SetAreaEventScript; FunctionLookup["SETAREAEVENTSCRIPT"] = i;
-	i = 120;	pFunc[i] = &CNWNXFuncs::SetAge; FunctionLookup["SETAGE"] = i;
-	i = 121;	pFunc[i] = &CNWNXFuncs::SetPlaceableEventScript; FunctionLookup["SETPLACEABLEEVENTSCRIPT"] = i;
-	i = 122;	pFunc[i] = &CNWNXFuncs::SetAoEEventScript; FunctionLookup["SETAOEEVENTSCRIPT"] = i;
-	i = 123;	pFunc[i] = &CNWNXFuncs::ModifyItem; FunctionLookup["MODIFYITEM"] = i;
+	i = 119;	pFunc[i] = &CNWNXFuncs::SetAge; FunctionLookup["SETAGE"] = i;
+	i = 120;	pFunc[i] = &CNWNXFuncs::ModifyItem; FunctionLookup["MODIFYITEM"] = i;
 }

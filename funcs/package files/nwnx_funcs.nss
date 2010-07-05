@@ -4,46 +4,98 @@ const int LV_TYPE_STR = 3;
 const int LV_TYPE_OBJ = 4;
 const int LV_TYPE_LOC = 5;
 
-const int EVENT_CREATURE_HEARTBEAT		= 1;
-const int EVENT_CREATURE_PERCEPTION		= 2;
-const int EVENT_CREATURE_SPELLCASTAT	= 3;
-const int EVENT_CREATURE_ATTACKED		= 4;
-const int EVENT_CREATURE_DAMAGED		= 5;
-const int EVENT_CREATURE_DISTURBED		= 6;
-const int EVENT_CREATURE_ENDCOMBAT		= 7;
-const int EVENT_CREATURE_DIALOG			= 8;
-const int EVENT_CREATURE_RESTED			= 9;
-const int EVENT_CREATURE_SPAWN			= 10;
-const int EVENT_CREATURE_DEATH			= 11;
-const int EVENT_CREATURE_USERDEFINDED	= 12;
-const int EVENT_CREATURE_BLOCKED		= 13;
-
-const int EVENT_AREA_HEARTBEAT			= 0;
-const int EVENT_AREA_USERDEFINED		= 1;
-const int EVENT_AREA_ONENTER			= 2;
-const int EVENT_AREA_ONEXIT				= 3;
-
-const int EVENT_PLACEABLE_CLOSED		= 0 ;
-const int EVENT_PLACEABLE_DAMAGED		= 1 ;
-const int EVENT_PLACEABLE_DEATH			= 2 ;
-const int EVENT_PLACEABLE_DISARM		= 3 ;
-const int EVENT_PLACEABLE_HEARTBEAT		= 4 ;
-const int EVENT_PLACEABLE_DISTURBED		= 5 ;
-const int EVENT_PLACEABLE_LOCK		= 6 ;
-const int EVENT_PLACEABLE_ATTACKED		= 7 ;
-const int EVENT_PLACEABLE_OPEN			= 8 ;
-const int EVENT_PLACEABLE_ONDIALOG		= 9 ;
-const int EVENT_PLACEABLE_SPELLCASTAT	= 10;
-const int EVENT_PLACEABLE_UNLOCK		= 11;
-const int EVENT_PLACEABLE_USED			= 12;
-const int EVENT_PLACEABLE_USERDEFINED	= 13;
-const int EVENT_PLACEABLE_TRAPTRIGGERED	= 14;
-const int EVENT_PLACEABLE_CLICK		= 15;
-
-const int EVENT_AOE_HEARTBEAT			= 0;
-const int EVENT_AOE_USERDEFINED			= 1;
-const int EVENT_AOE_ONENTER				= 2;
-const int EVENT_AOE_ONEXIT				= 3;
+const int EVENT_CREATURE_HEARTBEAT		=0;
+const int EVENT_CREATURE_PERCEPTION		=1;
+const int EVENT_CREATURE_SPELLCASTAT	=2;
+const int EVENT_CREATURE_ATTACKED		=3;
+const int EVENT_CREATURE_DAMAGED		=4;
+const int EVENT_CREATURE_DISTURBED		=5;
+const int EVENT_CREATURE_ENDCOMBAT		=6;
+const int EVENT_CREATURE_DIALOG			=7;
+const int EVENT_CREATURE_RESTED			=8;
+const int EVENT_CREATURE_SPAWN			=9;
+const int EVENT_CREATURE_DEATH			=10;
+const int EVENT_CREATURE_USERDEFINDED	=11;
+const int EVENT_CREATURE_BLOCKED		=12;
+                                         
+const int EVENT_AREA_HEARTBEAT			=0;
+const int EVENT_AREA_USERDEFINED		=1;
+const int EVENT_AREA_ENTER				=2;
+const int EVENT_AREA_EXIT				=3;
+                                         
+const int EVENT_PLACEABLE_CLOSED		=0;
+const int EVENT_PLACEABLE_DAMAGED		=1;
+const int EVENT_PLACEABLE_DEATH			=2;
+const int EVENT_PLACEABLE_DISARM		=3;
+const int EVENT_PLACEABLE_HEARTBEAT		=4;
+const int EVENT_PLACEABLE_DISTURBED		=5;
+const int EVENT_PLACEABLE_LOCK			=6;
+const int EVENT_PLACEABLE_ATTACKED		=7;
+const int EVENT_PLACEABLE_OPEN			=8;
+const int EVENT_PLACEABLE_SPELLCASTAT	=9;
+const int EVENT_PLACEABLE_TRAPTRIGGERED	=10;
+const int EVENT_PLACEABLE_UNLOCK		=11;
+const int EVENT_PLACEABLE_USED			=12;
+const int EVENT_PLACEABLE_USERDEFINED	=13;
+const int EVENT_PLACEABLE_DIALOG		=14;
+const int EVENT_PLACEABLE_CLICK			=15;
+                                         
+const int EVENT_AOE_HEARTBEAT			=0;
+const int EVENT_AOE_USERDEFINED			=1;
+const int EVENT_AOE_ENTER				=2;
+const int EVENT_AOE_EXIT				=3;
+                                         
+const int EVENT_DOOR_OPEN				=0;
+const int EVENT_DOOR_CLOSED				=1;
+const int EVENT_DOOR_DAMAGED			=2;
+const int EVENT_DOOR_DEATH				=3;
+const int EVENT_DOOR_DISARM				=4;
+const int EVENT_DOOR_HEARTBEAT			=5;
+const int EVENT_DOOR_LOCK				=6;
+const int EVENT_DOOR_ATTACKED			=7;
+const int EVENT_DOOR_SPELLCASTAT		=8;
+const int EVENT_DOOR_TRAPTRIGGERED		=9;
+const int EVENT_DOOR_UNLOCK				=10;
+const int EVENT_DOOR_USERDEFINED		=11;
+const int EVENT_DOOR_CLICK				=12;
+const int EVENT_DOOR_DIALOG				=13;
+const int EVENT_DOOR_FAILTOOPEN			=14;
+                                         
+const int EVENT_ENCOUNTER_ENTERED       =0;
+const int EVENT_ENCOUNTER_EXIT          =1;
+const int EVENT_ENCOUNTER_HEARTBEAT     =2;
+const int EVENT_ENCOUNTER_EXHAUSTED     =3;
+const int EVENT_ENCOUNTER_USERDEFINED   =4;
+                                         
+const int EVENT_MODULE_HEARTBEAT		=0;
+const int EVENT_MODULE_USRDEFINED		=1;
+const int EVENT_MODULE_MODLOAD			=2;
+const int EVENT_MODULE_MODSTART			=3;
+const int EVENT_MODULE_CLIENTENTR		=4;
+const int EVENT_MODULE_CLIENTLEAV		=5;
+const int EVENT_MODULE_ACTVTITEM		=6;
+const int EVENT_MODULE_ACQUIRITEM		=7;
+const int EVENT_MODULE_UNAQREITEM		=8;
+const int EVENT_MODULE_PLRDEATH			=9;
+const int EVENT_MODULE_PLRDYING			=10;
+const int EVENT_MODULE_SPAWNBTNDN		=11;
+const int EVENT_MODULE_PLRREST			=12;
+const int EVENT_MODULE_PLRLVLUP			=13;
+const int EVENT_MODULE_CUTSNABORT		=14;
+const int EVENT_MODULE_PLREQITM			=15;
+const int EVENT_MODULE_PLRUNEQITM		=16;
+const int EVENT_MODULE_PLRCHAT			=17;
+                                         
+const int EVENT_STORE_OPENSTORE			=0;
+const int EVENT_STORE_CLOSESTORE		=1;
+                                         
+const int EVENT_TRIGGER_HEARTBEAT		=0;
+const int EVENT_TRIGGER_ENTER		    =1;
+const int EVENT_TRIGGER_EXIT		    =2;
+const int EVENT_TRIGGER_USERDEFINED		=3;
+const int EVENT_TRIGGER_TRAPTRIGGERED	=4;
+const int EVENT_TRIGGER_DISARM			=5;
+const int EVENT_TRIGGER_CLICK			=6;
 
 
 const int ITEM_VALUE_IDENTIFIED = 1;
@@ -329,12 +381,6 @@ void NWNXFuncs_ModSkillByLevel(object oCreature, int iSkill, int iValue, int iLe
 // Changes the internal size of a creature to iSize (CREATURE_SIZE_*)
 // This does not change the physical size of the creature model as seen in game
 void NWNXFuncs_SetCreatureSize(object oCreature, int iSize = CREATURE_SIZE_MEDIUM);
-
-// Returns the name of the script used for the creature event iEvent
-string NWNXFuncs_GetCreatureEventScript(object oCreature, int iEvent = EVENT_CREATURE_HEARTBEAT);
-
-// Changes a creature event script to sEvent
-void NWNXFuncs_SetCreatureEventScript(object oCreature, string sEvent, int iEvent = EVENT_CREATURE_HEARTBEAT);
 
 // Returns the total weight of all items equiped by oCreature in tenth of pounds
 int  NWNXFuncs_GetEquippedWeight(object oCreature);
@@ -718,20 +764,12 @@ void NWNXFuncs_SetAge(object oCreature, int iAge);
 // Changes the Tag of an object
 void NWNXFuncs_SetTag(object oObject, string sTag);
 
-// Sets the event script of an area to sScript
-void NWNXFuncs_SetAreaEventScript(object oArea, string sScript, int iScript=EVENT_AREA_HEARTBEAT);
+// returns the name of an eventscript for an object
+string NWNXFuncs_GetEventScript(object oObject, int iEvent);
 
-// Sets the event script of a placeable to sScript
-void NWNXFuncs_SetPlaceableEventScript(object oPlaceable, string sScript, int iScript=EVENT_PLACEABLE_HEARTBEAT);
+// sets an eventscript for an object
+void NWNXFuncs_SetEventScript(object oObject, string sScript, int iEvent);
 
-// returns the name of an eventscript of a placeable
-string NWNXFuncs_GetPlaceableEventScript(object oPlaceable, int iEvent = EVENT_PLACEABLE_HEARTBEAT);
-
-// returns the name of an eventscript of an area
-string NWNXFuncs_GetAreaEventScript(object oArea, int iEvent = EVENT_AREA_HEARTBEAT);
-
-// Sets the event script of an AoE object to sScript
-void NWNXFuncs_SetAreaofEffectObjectEventScript(object oAoE, string sScript, int iScript=EVENT_AOE_HEARTBEAT);
 
 //*******************************************************************************************************************
 
@@ -1001,7 +1039,7 @@ string NWNXFuncs_GetCreatureEventScript(object oCreature, int iEvent = EVENT_CRE
 }
 
 void NWNXFuncs_SetCreatureEventScript(object oCreature, string sEvent, int iEvent = EVENT_CREATURE_HEARTBEAT) {
-	SetLocalString(oCreature, "NWNX!FUNCS!SETEVENT", IntToString(iEvent)+"¬"+sEvent);
+	SetLocalString(oCreature, "NWNX!FUNCS!SETEVENT", IntToString(iEvent)+" "+sEvent);
 	DeleteLocalString(oCreature, "NWNX!FUNCS!SETEVENT");
 }
 
@@ -1613,11 +1651,6 @@ void NWNXFuncs_StopTimingbar(object oPC) {
 	DeleteLocalString(oPC, "NWNX!FUNCS!TIMEBARSTOP");
 }
 
-void NWNXFuncs_SetAreaEventScript(object oArea, string sScript, int iScript=EVENT_AREA_HEARTBEAT) {
-	SetLocalString(oArea, "NWNX!FUNCS!SETAREAEVENTSCRIPT", IntToString(iScript)+" "+sScript);
-	DeleteLocalString(oArea, "NWNX!FUNCS!SETAREAEVENTSCRIPT");
-}
-
 void NWNXFuncs_SetAge(object oCreature, int iAge) {
 	SetLocalString(oCreature, "NWNX!FUNCS!SETAGE", IntToString(iAge));
 	DeleteLocalString(oCreature, "NWNX!FUNCS!SETAGE");
@@ -1628,26 +1661,14 @@ void NWNXFuncs_SetTag(object oObject, string sTag) {
 	DeleteLocalString(oObject, "NWNX!FUNCS!SETTAG");
 }
 
-void NWNXFuncs_SetPlaceableEventScript(object oPlaceable, string sScript, int iScript=EVENT_AREA_HEARTBEAT) {
-	SetLocalString(oPlaceable, "NWNX!FUNCS!SETPLACEABLEEVENTSCRIPT", IntToString(iScript)+" "+sScript);
-	DeleteLocalString(oPlaceable, "NWNX!FUNCS!SETPLACEABLEEVENTSCRIPT");
+void NWNXFuncs_SetEventScript(object oObject, string sScript, int iEvent) {
+	SetLocalString(oObject, "NWNX!FUNCS!SETEVENT", IntToString(iEvent)+" "+sScript);
+	DeleteLocalString(oObject, "NWNX!FUNCS!SETEVENT");
 }
 
-string NWNXFuncs_GetAreaEventScript(object oArea, int iEvent = EVENT_AREA_HEARTBEAT) {
-	SetLocalString(oArea, "NWNX!FUNCS!GETEVENT", IntToString(iEvent)+" -----------------");
-	string sRet = GetLocalString(oArea, "NWNX!FUNCS!GETEVENT");
-	DeleteLocalString(oArea, "NWNX!FUNCS!GETEVENT");
+string NWNXFuncs_GetEventScript(object oObject, int iEvent) {
+	SetLocalString(oObject, "NWNX!FUNCS!GETEVENT", IntToString(iEvent)+" -----------------");
+	string sRet = GetLocalString(oObject, "NWNX!FUNCS!GETEVENT");
+	DeleteLocalString(oObject, "NWNX!FUNCS!GETEVENT");
 	return sRet;
-}
-
-string NWNXFuncs_GetPlaceableEventScript(object oPlaceable, int iEvent = EVENT_PLACEABLE_HEARTBEAT) {
-	SetLocalString(oPlaceable, "NWNX!FUNCS!GETEVENT", IntToString(iEvent)+" -----------------");
-	string sRet = GetLocalString(oPlaceable, "NWNX!FUNCS!GETEVENT");
-	DeleteLocalString(oPlaceable, "NWNX!FUNCS!GETEVENT");
-	return sRet;
-}
-
-void NWNXFuncs_SetAreaofEffectObjectEventScript(object oAoE, string sScript, int iScript=EVENT_AOE_HEARTBEAT) {
-	SetLocalString(oAoE, "NWNX!FUNCS!SETAOEEVENTSCRIPT", IntToString(iScript)+" "+sScript);
-	DeleteLocalString(oAoE, "NWNX!FUNCS!SETAOEEVENTSCRIPT");
 }

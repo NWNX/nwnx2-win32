@@ -34,14 +34,6 @@ char* CNWNXFuncs::OnRequest(char *gameObject, char* Request, char* Parameters) {
 	else if (strcmp(Request, "SETWORLDTIME") == 0) nwn_SetWorldTime(P1, P2, P3);
 
 	else if (strcmp(Request, "TEST") == 0) {
-		CNWSItem *Item = CServerExoAppInternal__GetItemByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id);
-		if (Item) {
-			uint32_t oid=0;
-			sscanf(Params, "%08X", &oid);
-
-			CNWSItem__SetPossessor(Item, oid, 1, 1, 1);
-		}
-
 	}
 
 	else {sprintf(Params, "-1"); _log(1, "o Could not find requested function.\n");}
@@ -138,7 +130,7 @@ BOOL CNWNXFuncs::OnRelease() {
 
 void CNWNXFuncs::WriteLogHeader(int debug)
 {
-	fprintf(m_fFile, "Windows NWNX Funcs plugin v.0.0.8.1");
+	fprintf(m_fFile, "Windows NWNX Funcs plugin v.0.0.8.2");
 	if (!debug) fprintf(m_fFile, " [logging off]");
 	else fprintf(m_fFile, " [log level: %i]", debug);
 	fprintf(m_fFile, "\n");
@@ -331,21 +323,24 @@ int CNWNXFuncs::GetEventScriptInfo(int &ScriptNumber, std::string &ScriptName, i
 		std::string Param = Params;
 		int Space;
 		if ((Space = Param.find(" ")) != std::string::npos) {
-			std::string Script = Param.substr(Space+1, std::string::npos);
-			Param = Param.substr(0, Space);
-			int iScript = atoi(Param.c_str());
+			if (Param.length() > Space+1) {
+				std::string Script = Param.substr(Space+1, std::string::npos);
+				Param = Param.substr(0, Space);
+				int iScript = atoi(Param.c_str());
 
-			if (iScript >= 0 && iScript <= Max) {
-				CExoString sScriptName(Script.c_str());
-				CExoString__StripNonAlphaNumeric(&sScriptName, NULL, 1, 0, 0);
-				Param = sScriptName.text;
-				Param = Param.substr(0, 16);
+				if (iScript >= 0 && iScript <= Max) {
+					CExoString sScriptName(Script.c_str());
+					CExoString__StripNonAlphaNumeric(&sScriptName, NULL, 1, 0, 0);
+					Param = sScriptName.text;
+					Param = Param.substr(0, 16);
 
-				ScriptNumber = iScript;
-				ScriptName = Param;
-				return 1;
+					ScriptNumber = iScript;
+					ScriptName = Param;
+					return 1;
+				}
 			}
 		}
 	}
-	return 0;
+	ScriptNumber = atoi(Params);
+	return 1;
 }

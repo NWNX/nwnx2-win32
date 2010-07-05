@@ -295,7 +295,9 @@ v 0.0.81
 v 0.0.82
 	Added:
 		NWNXFuncs_SetTag
-		NWNXFuncs_SetPlaceableEventScript
-		NWNXFuncs_GetPlaceableEventScript
-		NWNXFuncs_GetAreaEventScript
-		NWNXFuncs_SetAreaofEffectEventScript
+		NWNXFuncs_GetEventScript
+		NWNXFuncs_SetEventScript
+
+	Changed
+		Replaced Individual Get/SetEventScript functions with two respective functions able to handle all object types with events:
+			Area, AreaOfEffectObject, Creature, Door, Encounter, Module, Placeable, Store, Trigger

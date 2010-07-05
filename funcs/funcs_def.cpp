@@ -952,69 +952,96 @@ int CNWNXFuncs::PrintLocalVars() {
 }
 
 int CNWNXFuncs::GetEvent() {
+	sprintf(Params, "-1");
 	switch (((CGenericObject*)oObject)->obj_type) {
 		case OBJECT_TYPE_CREATURE: {
 			CNWSCreature *cre = (CNWSCreature*)oObject;
-			switch (P1) {
-				case EVENT_CREATURE_HEARTBEAT:		sprintf(Params, "%s",cre->cre_events.onHeartbeat.text) ; break;
-				case EVENT_CREATURE_PERCEPTION:		sprintf(Params, "%s", cre->cre_events.onPerception.text); break;
-				case EVENT_CREATURE_SPELLCASTAT:	sprintf(Params, "%s", cre->cre_events.onSpellCastAt.text); break;
-				case EVENT_CREATURE_ATTACKED:		sprintf(Params, "%s", cre->cre_events.onAttacked.text); break;
-				case EVENT_CREATURE_DAMAGED:		sprintf(Params, "%s", cre->cre_events.onDisturbed.text); break;
-				case EVENT_CREATURE_DISTURBED:		sprintf(Params, "%s", cre->cre_events.onDamaged.text); break;
-				case EVENT_CREATURE_ENDCOMBAT:		sprintf(Params, "%s", cre->cre_events.onEndCombat.text); break;
-				case EVENT_CREATURE_DIALOG:			sprintf(Params, "%s", cre->cre_events.onDialog.text); break;
-				case EVENT_CREATURE_RESTED:			sprintf(Params, "%s", cre->cre_events.onRested.text); break;
-				case EVENT_CREATURE_SPAWN:			sprintf(Params, "%s", cre->cre_events.onSpawn.text); break;
-				case EVENT_CREATURE_DEATH:			sprintf(Params, "%s", cre->cre_events.onDeath.text); break;
-				case EVENT_CREATURE_USERDEFINDED:	sprintf(Params, "%s", cre->cre_events.onUserDefined.text); break;
-				case EVENT_CREATURE_BLOCKED:		sprintf(Params, "%s", cre->cre_events.onBlocked.text); break;
-				default: 
-					_log(2, "o Error (GetEvent): Could not get event for object type creature\n");
-					sprintf(Params, "-1");
-					return 0;
-				break;
+			if (P1 >= 0 && P1 < 16) {
+				void *p = ((char*)&cre->cre_events.onHeartbeat)+ P1 * 8;
+				sprintf(Params, "%s", ((CExoString*)p)->text);
+			}
+			else {
+				_log(2, "o Error (GetEvent): Could not get event for object type creature\n");
 			}
 		} break;
 		case OBJECT_TYPE_AREA: {
 			CNWSArea *Area = (CNWSArea*)oObject;
-			switch (P1) {
-				case EVENT_AREA_HEARTBEAT	: sprintf(Params, "%s", Area->are_script_hb.text); break;
-				case EVENT_AREA_USERDEFINED	: sprintf(Params, "%s", Area->are_script_userdefined.text); break;
-				case EVENT_AREA_ONENTER		: sprintf(Params, "%s", Area->are_script_onenter.text); break;
-				case EVENT_AREA_ONEXIT		: sprintf(Params, "%s", Area->are_script_onexit.text); break;
-				default: 
-					_log(2, "o Error (GetEvent): Could not get event for object type area\n");
-					sprintf(Params, "-1");
-					return 0;
-				break;
+			if (P1 >= 0 && P1 < 4) {
+				void *p = ((char*)&Area->are_script_hb)+ P1 * 8;
+				sprintf(Params, "%s", ((CExoString*)p)->text);
+			}
+			else {
+				_log(2, "o Error (GetEvent): Could not get event for area\n");
 			}
 		}break;
 		case OBJECT_TYPE_PLACEABLE: {
 			CNWSPlaceable *Plc = (CNWSPlaceable*)oObject;
-			_log(3, "plc: %08X\thb: %08X\n", Plc, &Plc->OnClosed);
-			switch (P1) {
-				case EVENT_PLACEABLE_CLOSED			: sprintf(Params, "%s", Plc->OnClosed.text); break;
-				case EVENT_PLACEABLE_DAMAGED		: sprintf(Params, "%s", Plc->OnDamaged.text); break;
-				case EVENT_PLACEABLE_DEATH			: sprintf(Params, "%s", Plc->OnDeath.text); break;
-				case EVENT_PLACEABLE_DISARM			: sprintf(Params, "%s", Plc->OnDisarm.text); break;
-				case EVENT_PLACEABLE_HEARTBEAT		: sprintf(Params, "%s", Plc->OnHeartbeat.text); break;
-				case EVENT_PLACEABLE_DISTURBED		: sprintf(Params, "%s", Plc->OnInvDisturbed.text); break;
-				case EVENT_PLACEABLE_ONLOCK			: sprintf(Params, "%s", Plc->OnLock.text); break;
-				case EVENT_PLACEABLE_ATTACKED		: sprintf(Params, "%s", Plc->OnMeleeAttacked.text); break;
-				case EVENT_PLACEABLE_OPEN			: sprintf(Params, "%s", Plc->OnOpen.text); break;
-				case EVENT_PLACEABLE_ONDIALOG		: sprintf(Params, "%s", Plc->OnDialog.text); break;
-				case EVENT_PLACEABLE_SPELLCASTAT	: sprintf(Params, "%s", Plc->OnSpellCastAt.text); break;
-				case EVENT_PLACEABLE_ONUNLOCK		: sprintf(Params, "%s", Plc->OnUnlock.text); break;
-				case EVENT_PLACEABLE_USED			: sprintf(Params, "%s", Plc->OnUsed.text); break;
-				case EVENT_PLACEABLE_USERDEFINED	: sprintf(Params, "%s", Plc->OnUserDefined.text); break;
-				case EVENT_PLACEABLE_TRAPTRIGGERED	: sprintf(Params, "%s", Plc->OnTrapTriggered.text); break;
-				case EVENT_PLACEABLE_ONCLICK		: sprintf(Params, "%s", Plc->OnClick.text); break;
-				default: 
-					_log(2, "o Error (GetEvent): Could not get event for object type placeable\n");
-					sprintf(Params, "-1");
-					return 0;
-				break;
+			if (P1 >= 0 && P1 < 17) {
+				void *p = ((char*)&Plc->OnClosed)+ P1 * 8;
+				sprintf(Params, "%s", ((CExoString*)p)->text);
+			}
+			else {
+				_log(2, "o Error (GetEvent): Could not get event for object type placeable\n");
+			}
+		}break;
+		case OBJECT_TYPE_AREA_OF_EFFECT: {
+			CNWSAreaOfEffectObject *AoE = (CNWSAreaOfEffectObject*)oObject;
+			if (P1 >= 0 && P1 < 4) {
+				void *p = ((char*)&AoE->OnHeartbeat)+ P1 * 8;
+				sprintf(Params, "%s", ((CExoString*)p)->text);
+			}
+			else {
+				_log(2, "o Error (GetEvent): Could not get event for object type AoE\n");
+			}
+		}break;
+		case OBJECT_TYPE_DOOR: {
+			CNWSDoor *Door = (CNWSDoor*)oObject;
+			if (P1 >= 0 && P1 < 15) {
+				void *p = ((char*)&Door->OnOpen)+ P1 * 8;
+				sprintf(Params, "%s", ((CExoString*)p)->text);
+			}
+			else {
+				_log(2, "o Error (GetEvent): Could not get event for object type Door\n");
+			}
+		}break;
+		case OBJECT_TYPE_ENCOUNTER: {
+			CNWSEncounter *Enc = (CNWSEncounter*)oObject;
+			if (P1 >= 0 && P1 < 5) {
+				void *p = ((char*)&Enc->OnEntered)+ P1 * 8;
+				sprintf(Params, "%s", ((CExoString*)p)->text);
+			}
+			else {
+				_log(2, "o Error (GetEvent): Could not get event for object type Encounter\n");
+			}
+		}break;
+		case OBJECT_TYPE_MODULE: {
+			CNWSModule *Mod = (CNWSModule*)oObject;
+			if (P1 >= 0 && P1 < 18) {
+				void *p = ((char*)&Mod->Mod_OnHeartbeat)+ P1 * 8;
+				sprintf(Params, "%s", ((CExoString*)p)->text);
+			}
+			else {
+				_log(2, "o Error (GetEvent): Could not get event for object type Module\n");
+			}
+		}break;
+		case OBJECT_TYPE_STORE: {
+			CNWSStore *Store = (CNWSStore*)oObject;
+			if (P1 >= 0 && P1 < 2) {
+				void *p = ((char*)&Store->OnOpenStore)+ P1 * 8;
+				sprintf(Params, "%s", ((CExoString*)p)->text);
+			}
+			else {
+				_log(2, "o Error (GetEvent): Could not get event for object type Store\n");
+			}
+		}break;
+		case OBJECT_TYPE_TRIGGER: {
+			CNWSTrigger *Trigger = (CNWSTrigger*)oObject;
+			if (P1 >= 0 && P1 < 7) {
+				void *p = ((char*)&Trigger->OnHeartbeat)+ P1 * 8;
+				sprintf(Params, "%s", ((CExoString*)p)->text);
+			}
+			else {
+				_log(2, "o Error (GetEvent): Could not get event for object type Trigger\n");
 			}
 		}break;
 		default: sprintf(Params, "-1"); return 0; break;
@@ -1025,49 +1052,102 @@ int CNWNXFuncs::GetEvent() {
 }
 
 int CNWNXFuncs::SetEvent() {
-	int iEvent;
-	sscanf(Params, "%d¬%s", &iEvent, Params);
-	_log(3, "o SetEvent: |%i|%s|\n", iEvent, Params);
-	
-	// check new event string for validity
-	_log(3, "o SetEvent: strspn [%i], strlen [%i]\n", strspn(Params, "abcdefghijklmnopqrstuvwxyz012345679_"), strlen(Params));
-	if ((strlen(Params) < 0 || strlen(Params)>16) ||
-	   (strspn(Params, "abcdefghijklmnopqrstuvwxyz012345679_") != strlen(Params)))
-	{
-		_log(2, "o Error (SetEvent): New event script name contains invalid characters or is too long.\n");
-		sprintf(Params, "-1");
-		return 0;
-	}
+	int iScript=0;
+	std::string ScriptName = "";
 
 	switch (((CGenericObject*)oObject)->obj_type) {
 		case OBJECT_TYPE_CREATURE: {
-			CNWSCreature *cre = (CNWSCreature*)oObject;
-			switch (iEvent) {
-				case EVENT_CREATURE_HEARTBEAT:		cre->cre_events.onHeartbeat = Params; break;
-				case EVENT_CREATURE_PERCEPTION:		cre->cre_events.onPerception = Params; break;
-				case EVENT_CREATURE_SPELLCASTAT:	cre->cre_events.onSpellCastAt = Params; break;
-				case EVENT_CREATURE_ATTACKED:		cre->cre_events.onAttacked = Params; break;
-				case EVENT_CREATURE_DAMAGED:		cre->cre_events.onDisturbed = Params; break;
-				case EVENT_CREATURE_DISTURBED:		cre->cre_events.onDamaged = Params; break;
-				case EVENT_CREATURE_ENDCOMBAT:		cre->cre_events.onEndCombat = Params; break;
-				case EVENT_CREATURE_DIALOG:			cre->cre_events.onDialog = Params; break;
-				case EVENT_CREATURE_RESTED:			cre->cre_events.onRested = Params; break;
-				case EVENT_CREATURE_SPAWN:			cre->cre_events.onSpawn = Params; break;
-				case EVENT_CREATURE_DEATH:			cre->cre_events.onDeath = Params; break;
-				case EVENT_CREATURE_USERDEFINDED:	cre->cre_events.onUserDefined = Params; break;
-				case EVENT_CREATURE_BLOCKED:		cre->cre_events.onBlocked = Params; break;
-				default: 
-					_log(2, "o Error (SetEvent): Could not set event for object type creature\n");
-					sprintf(Params, "-1");
-					return 0;
-				break;
+			CNWSCreature *cre;
+			if ((cre = CServerExoAppInternal__GetCreatureByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+				if (GetEventScriptInfo(iScript, ScriptName, 13)) {
+					CNWSCreature__SetScriptName(cre, NULL, iScript, CExoString(ScriptName.c_str()));
+				}
+				else _log(1, "o Error (SetCreatureEventScript): Invalid script name or constant\n");
 			}
-		} break;
-		default: 
-			sprintf(Params, "-1");
-			return 0;
-		break;
+			else _log(1, "o Error (SetCreatureEventScript): Invalid Creature\n");
+		}break;
+		case OBJECT_TYPE_AREA: {
+			CNWSArea *Area;
+			if ((Area = CServerExoAppInternal__GetAreaByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+				if (GetEventScriptInfo(iScript, ScriptName, 3)) {
+					CNWSArea__SetScriptName(Area, NULL, iScript, CExoString(ScriptName.c_str()));
+				}
+				else _log(1, "o Error (SetAreaEventScript): Invalid script name or constant\n");
+			}
+			else _log(1, "o Error (SetAreaEventScript): Invalid Area\n");
+		}break;
+		case OBJECT_TYPE_PLACEABLE: {
+			CNWSPlaceable *Plc;
+			if ((Plc = CServerExoAppInternal__GetPlaceableByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+				if (GetEventScriptInfo(iScript, ScriptName, 15)) {
+					CNWSPlaceable__SetScriptName(Plc, NULL, iScript, CExoString(ScriptName.c_str()));
+				}
+				else _log(1, "o Error (SetPlaceableEventScript): Invalid script name or constant\n");
+			}
+			else _log(1, "o Error (SetPlaceableEventScript): Invalid Placeable\n");
+		}break;
+		case OBJECT_TYPE_AREA_OF_EFFECT: {
+			CNWSAreaOfEffectObject *AoE;
+			if ((AoE = CServerExoAppInternal__GetAreaOfEffectByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+				if (GetEventScriptInfo(iScript, ScriptName, 3)) {
+					CNWSAreaOfEffectObject__SetScriptName(AoE, NULL, iScript, CExoString(ScriptName.c_str()));
+				}
+				else _log(1, "o Error (SetAoEEventScript): Invalid script name or constant\n");
+			}
+			else _log(1, "o Error (SetAoEEventScript): Invalid AoE\n");
+		}break;
+		case OBJECT_TYPE_DOOR: {
+			CNWSDoor *Door;
+			if ((Door = CServerExoAppInternal__GetDoorByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+				if (GetEventScriptInfo(iScript, ScriptName, 14)) {
+					CNWSDoor__SetScriptName(Door, NULL, iScript, CExoString(ScriptName.c_str()));
+				}
+				else _log(1, "o Error (SetDoorEventScript): Invalid script name or constant\n");
+			}
+			else _log(1, "o Error (SetDoorEventScript): Invalid Door\n");
+		}break;
+		case OBJECT_TYPE_ENCOUNTER: {
+			CNWSEncounter *Enc;
+			if ((Enc = CServerExoAppInternal__GetEncounterByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+				if (GetEventScriptInfo(iScript, ScriptName, 4)) {
+					CNWSEncounter__SetScriptName(Enc, NULL, iScript, CExoString(ScriptName.c_str()));
+				}
+				else _log(1, "o Error (SetEncounterEventScript): Invalid script name or constant\n");
+			}
+			else _log(1, "o Error (SetEncounterEventScript): Invalid Encounter\n");
+		}break;
+		case OBJECT_TYPE_MODULE: {
+			CNWSModule *Mod;
+			if ((Mod = CServerExoAppInternal__GetModule((*NWN_AppManager)->app_server->srv_internal, NULL))) {
+				if (GetEventScriptInfo(iScript, ScriptName, 17)) {
+					CNWSModule__SetScriptName(Mod, NULL, iScript, CExoString(ScriptName.c_str()));
+				}
+				else _log(1, "o Error (SetModuleEventScript): Invalid script name or constant\n");
+			}
+			else _log(1, "o Error (SetModuleEventScript): Invalid Module\n");
+		}break;
+		case OBJECT_TYPE_STORE: {
+			CNWSStore *Store;
+			if ((Store = CServerExoAppInternal__GetStoreByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+				if (GetEventScriptInfo(iScript, ScriptName, 1)) {
+					CNWSStore__SetScriptName(Store, NULL, iScript, CExoString(ScriptName.c_str()));
+				}
+				else _log(1, "o Error (SetStoreEventScript): Invalid script name or constant\n");
+			}
+			else _log(1, "o Error (SetStoreEventScript): Invalid Store\n");
+		}break;
+		case OBJECT_TYPE_TRIGGER: {
+			CNWSTrigger *Trigger;
+			if ((Trigger = CServerExoAppInternal__GetTriggerByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+				if (GetEventScriptInfo(iScript, ScriptName, 6)) {
+					CNWSTrigger__SetScriptName(Trigger, NULL, iScript, CExoString(ScriptName.c_str()));
+				}
+				else _log(1, "o Error (SetTriggerEventScript): Invalid script name or constant\n");
+			}
+			else _log(1, "o Error (SetTriggerEventScript): Invalid Trigger\n");
+		}break;
 	}
+
 	return 1;
 }
 
@@ -3177,26 +3257,6 @@ int CNWNXFuncs::TimebarStop() {
 	return 1;
 }
 
-int CNWNXFuncs::SetAreaEventScript() {
-	nwn_objid_t AreaID = ((CGenericObject*)oObject)->obj_id;
-	if (AreaID != OBJECT_INVALID) {
-		CNWSArea *Area = CServerExoAppInternal__GetAreaByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, AreaID);
-		if (Area) {
-			int iScript=0;
-			std::string ScriptName;
-			if (GetEventScriptInfo(iScript, ScriptName, 3)) {
-				(CNWSArea*)(char*)(Area+0xC4);
-				CNWSArea__SetScriptName(Area, NULL, iScript, CExoString(ScriptName.c_str()));
-			}
-			else _log(1, "o Error (SetAreaEventScript): Invalid script name or constant\n");
-		}
-		else _log(1, "o Error (SetAreaEventScript): Invalid Area\n");
-	}
-	else _log(1, "o Error (SetAreaEventScript): Invalid Area\n");
-
-	return 1;
-}
-
 int CNWNXFuncs::SetAge() {
 	if (!GetIsCreature()) {
 		_log(2, "o Error: SetAge used on non-creature object.\n");
@@ -3210,44 +3270,6 @@ int CNWNXFuncs::SetAge() {
 	return 1;
 }
 
-int CNWNXFuncs::SetPlaceableEventScript() {
-	nwn_objid_t PlcID = ((CGenericObject*)oObject)->obj_id;
-	if (PlcID != OBJECT_INVALID) {
-		CNWSPlaceable *Plc = CServerExoAppInternal__GetPlaceableByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, PlcID);
-		if (Plc) {
-			int iScript=0;
-			std::string ScriptName;
-			if (GetEventScriptInfo(iScript, ScriptName, 15)) {
-				CNWSPlaceable__SetScriptName(Plc, NULL, iScript, CExoString(ScriptName.c_str()));
-			}
-			else _log(1, "o Error (SetPlaceableEventScript): Invalid script name or constant\n");
-		}
-		else _log(1, "o Error (SetPlaceableEventScript): Invalid Placeable\n");
-	}
-	else _log(1, "o Error (SetPlaceableEventScript): Invalid Placeable\n");
-
-	return 1;
-}
-
-int CNWNXFuncs::SetAoEEventScript() {
-	nwn_objid_t AoEID = ((CGenericObject*)oObject)->obj_id;
-	if (AoEID != OBJECT_INVALID) {
-		CNWSAreaOfEffectObject *AoE = CServerExoAppInternal__GetAreaOfEffectByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, AoEID);
-		if (AoE) {
-			int iScript=0;
-			std::string ScriptName;
-			if (GetEventScriptInfo(iScript, ScriptName, 3)) {
-				CNWSAreaOfEffectObject__SetScriptName(AoE, NULL, iScript, CExoString(ScriptName.c_str()));
-			}
-			else _log(1, "o Error (SetAoEEventScript): Invalid script name or constant\n");
-		}
-		else _log(1, "o Error (SetAoEEventScript): Invalid AoE\n");
-	}
-	else _log(1, "o Error (SetAoEEventScript): Invalid AoE\n");
-
-	return 1;
-}
-
 int CNWNXFuncs::ModifyItem() {
 	CNWSItem *Item = CServerExoAppInternal__GetItemByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id);
 	if (Item) {
@@ -3255,3 +3277,54 @@ int CNWNXFuncs::ModifyItem() {
 	}
 	return 1;
 }
+
+
+
+
+/*
+	int iEvent;
+	sscanf(Params, "%d¬%s", &iEvent, Params);
+	_log(3, "o SetEvent: |%i|%s|\n", iEvent, Params);
+	
+	// check new event string for validity
+	_log(3, "o SetEvent: strspn [%i], strlen [%i]\n", strspn(Params, "abcdefghijklmnopqrstuvwxyz012345679_"), strlen(Params));
+	if ((strlen(Params) < 0 || strlen(Params)>16) ||
+	   (strspn(Params, "abcdefghijklmnopqrstuvwxyz012345679_") != strlen(Params)))
+	{
+		_log(2, "o Error (SetEvent): New event script name contains invalid characters or is too long.\n");
+		sprintf(Params, "-1");
+		return 0;
+	}
+
+	switch (((CGenericObject*)oObject)->obj_type) {
+		case OBJECT_TYPE_CREATURE: {
+			CNWSCreature *cre = (CNWSCreature*)oObject;
+			switch (iEvent) {
+				case EVENT_CREATURE_HEARTBEAT:		cre->cre_events.onHeartbeat = Params; break;
+				case EVENT_CREATURE_PERCEPTION:		cre->cre_events.onPerception = Params; break;
+				case EVENT_CREATURE_SPELLCASTAT:	cre->cre_events.onSpellCastAt = Params; break;
+				case EVENT_CREATURE_ATTACKED:		cre->cre_events.onAttacked = Params; break;
+				case EVENT_CREATURE_DAMAGED:		cre->cre_events.onDisturbed = Params; break;
+				case EVENT_CREATURE_DISTURBED:		cre->cre_events.onDamaged = Params; break;
+				case EVENT_CREATURE_ENDCOMBAT:		cre->cre_events.onEndCombat = Params; break;
+				case EVENT_CREATURE_DIALOG:			cre->cre_events.onDialog = Params; break;
+				case EVENT_CREATURE_RESTED:			cre->cre_events.onRested = Params; break;
+				case EVENT_CREATURE_SPAWN:			cre->cre_events.onSpawn = Params; break;
+				case EVENT_CREATURE_DEATH:			cre->cre_events.onDeath = Params; break;
+				case EVENT_CREATURE_USERDEFINDED:	cre->cre_events.onUserDefined = Params; break;
+				case EVENT_CREATURE_BLOCKED:		cre->cre_events.onBlocked = Params; break;
+				default: 
+					_log(2, "o Error (SetEvent): Could not set event for object type creature\n");
+					sprintf(Params, "-1");
+					return 0;
+				break;
+			}
+		} break;
+		default: 
+			sprintf(Params, "-1");
+			return 0;
+		break;
+	}
+	return 1;
+}
+*/

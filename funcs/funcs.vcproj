@@ -113,7 +113,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine=""
+				CommandLine="copy $(TargetPath) e:\games\nwn"
 			/>
 		</Configuration>
 		<Configuration
@@ -177,9 +177,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="madCHook.lib"
 				OutputFile=".\Debug\nwnx_funcs.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories=".\"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/nwnx_funcs.pdb"
 				GenerateMapFile="true"

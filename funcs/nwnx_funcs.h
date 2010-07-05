@@ -13,7 +13,7 @@
 
 #define PLAYER_ID_ALL_PLAYERS						0xFFFFFFF7
 
-#define FUNCTION_COUNT 124
+#define FUNCTION_COUNT 121
 
 class CNWNXFuncs : public CNWNXBase {
 public:
@@ -76,7 +76,6 @@ public:
 	uint32_t GetAreaByPosition(int iPos=-1);
 	uint32_t GetFirstArea();
 	uint32_t GetNextArea();
-	int SetAreaEventScript();
 
 	// creature stats
 	int SetGold();
@@ -185,10 +184,6 @@ public:
 	int ApplyVFXForPC();
 
 	int GetSurfaceMaterial();
-
-	int SetPlaceableEventScript();
-
-	int SetAoEEventScript();
 
 	int SetCustomGeometry();
 	int RotateCustomGeometry();
