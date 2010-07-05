@@ -41,46 +41,98 @@ typedef uint32_t implelemnt32;
 #define AC_SHIELD		3
 #define AC_DEFLECTION	4
 
-#define EVENT_CREATURE_HEARTBEAT		1
-#define EVENT_CREATURE_PERCEPTION		2
-#define EVENT_CREATURE_SPELLCASTAT		3
-#define EVENT_CREATURE_ATTACKED			4
-#define EVENT_CREATURE_DAMAGED			5
-#define EVENT_CREATURE_DISTURBED		6
-#define EVENT_CREATURE_ENDCOMBAT		7
-#define EVENT_CREATURE_DIALOG			8
-#define EVENT_CREATURE_RESTED			9
-#define EVENT_CREATURE_SPAWN			10
-#define EVENT_CREATURE_DEATH			11
-#define EVENT_CREATURE_USERDEFINDED		12
-#define EVENT_CREATURE_BLOCKED			13
-
+#define EVENT_CREATURE_HEARTBEAT		0
+#define EVENT_CREATURE_PERCEPTION		1
+#define EVENT_CREATURE_SPELLCASTAT		2
+#define EVENT_CREATURE_ATTACKED			3
+#define EVENT_CREATURE_DAMAGED			4
+#define EVENT_CREATURE_DISTURBED		5
+#define EVENT_CREATURE_ENDCOMBAT		6
+#define EVENT_CREATURE_DIALOG			7
+#define EVENT_CREATURE_RESTED			8
+#define EVENT_CREATURE_SPAWN			9
+#define EVENT_CREATURE_DEATH			10
+#define EVENT_CREATURE_USERDEFINDED		11
+#define EVENT_CREATURE_BLOCKED			12
+                                         
 #define EVENT_AREA_HEARTBEAT			0
 #define EVENT_AREA_USERDEFINED			1
-#define EVENT_AREA_ONENTER				2
-#define EVENT_AREA_ONEXIT				3
-
+#define EVENT_AREA_ENTER				2
+#define EVENT_AREA_EXIT					3
+                                         
 #define EVENT_PLACEABLE_CLOSED			0
 #define EVENT_PLACEABLE_DAMAGED			1
 #define EVENT_PLACEABLE_DEATH			2
 #define EVENT_PLACEABLE_DISARM			3
 #define EVENT_PLACEABLE_HEARTBEAT		4
 #define EVENT_PLACEABLE_DISTURBED		5
-#define EVENT_PLACEABLE_ONLOCK			6
+#define EVENT_PLACEABLE_LOCK			6
 #define EVENT_PLACEABLE_ATTACKED		7
 #define EVENT_PLACEABLE_OPEN			8
-#define EVENT_PLACEABLE_ONDIALOG		9
-#define EVENT_PLACEABLE_SPELLCASTAT		10
-#define EVENT_PLACEABLE_ONUNLOCK		11
+#define EVENT_PLACEABLE_SPELLCASTAT		9
+#define EVENT_PLACEABLE_TRAPTRIGGERED	10
+#define EVENT_PLACEABLE_UNLOCK			11
 #define EVENT_PLACEABLE_USED			12
 #define EVENT_PLACEABLE_USERDEFINED		13
-#define EVENT_PLACEABLE_TRAPTRIGGERED	14
-#define EVENT_PLACEABLE_ONCLICK			15
-
+#define EVENT_PLACEABLE_DIALOG			14
+#define EVENT_PLACEABLE_CLICK			15
+                                         
 #define EVENT_AOE_HEARTBEAT				0
 #define EVENT_AOE_USERDEFINED			1
-#define EVENT_AOE_ONENTER				2
-#define EVENT_AOE_ONEXIT				3
+#define EVENT_AOE_ENTER					2
+#define EVENT_AOE_EXIT					3
+                                         
+#define EVENT_DOOR_OPEN					0
+#define EVENT_DOOR_CLOSED				1
+#define EVENT_DOOR_DAMAGED				2
+#define EVENT_DOOR_DEATH				3
+#define EVENT_DOOR_DISARM				4
+#define EVENT_DOOR_HEARTBEAT			5
+#define EVENT_DOOR_LOCK					6
+#define EVENT_DOOR_ATTACKED				7
+#define EVENT_DOOR_SPELLCASTAT			8
+#define EVENT_DOOR_TRAPTRIGGERED		9
+#define EVENT_DOOR_UNLOCK				10
+#define EVENT_DOOR_USERDEFINED			11
+#define EVENT_DOOR_CLICK				12
+#define EVENT_DOOR_DIALOG				13
+#define EVENT_DOOR_FAILTOOPEN			14
+                                         
+#define EVENT_ENCOUNTER_ENTERED         0
+#define EVENT_ENCOUNTER_EXIT            1
+#define EVENT_ENCOUNTER_HEARTBEAT       2
+#define EVENT_ENCOUNTER_EXHAUSTED       3
+#define EVENT_ENCOUNTER_USERDEFINED     4
+                                         
+#define EVENT_MODULE_Heartbeat			0
+#define EVENT_MODULE_UsrDefined			1
+#define EVENT_MODULE_ModLoad			2
+#define EVENT_MODULE_ModStart			3
+#define EVENT_MODULE_ClientEntr			4
+#define EVENT_MODULE_ClientLeav			5
+#define EVENT_MODULE_ActvtItem			6
+#define EVENT_MODULE_AcquirItem			7
+#define EVENT_MODULE_UnAqreItem			8
+#define EVENT_MODULE_PlrDeath			9
+#define EVENT_MODULE_PlrDying			10
+#define EVENT_MODULE_SpawnBtnDn			11
+#define EVENT_MODULE_PlrRest			12
+#define EVENT_MODULE_PlrLvlUp			13
+#define EVENT_MODULE_CutsnAbort			14
+#define EVENT_MODULE_PlrEqItm			15
+#define EVENT_MODULE_PlrUnEqItm			16
+#define EVENT_MODULE_PlrChat			17
+                                         
+#define EVENT_STORE_OPENSTORE			0
+#define EVENT_STORE_CLOSESTORE			1
+                                         
+#define EVENT_TRIGGER_HEARTBEAT			0
+#define EVENT_TRIGGER_ENTER		    	1
+#define EVENT_TRIGGER_EXIT		    	2
+#define EVENT_TRIGGER_USERDEFINED		3
+#define EVENT_TRIGGER_TRAPTRIGGERED		4
+#define EVENT_TRIGGER_DISARM			5
+#define EVENT_TRIGGER_CLICK				6
 
 #define ITEM_VALUE_IDENTIFIED 1
 #define ITEM_VALUE_UNIDENTIFIED 2

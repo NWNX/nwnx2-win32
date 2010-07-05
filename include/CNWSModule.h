@@ -61,7 +61,29 @@ struct CNWSModule_s {
     uint32_t                    field_84;
     CNWSScriptVarTable          mod_vartable;	/* 0x0088 */
     
-    uint32_t					spacer1[40];					/* 0x0090 */
+    uint32_t                    field_90;
+    uint32_t                    field_94;
+
+	CExoString					Mod_OnHeartbeat;
+	CExoString					Mod_OnUsrDefined;
+	CExoString					Mod_OnModLoad;
+	CExoString					Mod_OnModStart;
+	CExoString					Mod_OnClientEntr;
+	CExoString					Mod_OnClientLeav;
+	CExoString					Mod_OnActvtItem;
+	CExoString					Mod_OnAcquirItem;
+	CExoString					Mod_OnUnAqreItem;
+	CExoString					Mod_OnPlrDeath;
+	CExoString					Mod_OnPlrDying;
+	CExoString					Mod_OnSpawnBtnDn;
+	CExoString					Mod_OnPlrRest;
+	CExoString					Mod_OnPlrLvlUp;
+	CExoString					Mod_OnCutsnAbort;
+	CExoString					Mod_OnPlrEqItm;
+	CExoString					Mod_OnPlrUnEqItm;
+	CExoString					Mod_OnPlrChat;    
+
+    uint32_t					spacer1[2];					/* 0x0090 */
     
     void						*mod_objlist;					/* 0x0130 */
     uint32_t					mod_objlist_len;				/* 0x0134 */

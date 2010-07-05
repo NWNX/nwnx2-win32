@@ -18,10 +18,10 @@ struct CNWSTrigger_s
   unsigned __int8 field_1D9;
   unsigned __int8 field_1DA;
   unsigned __int8 field_1DB;
-  CExoString ScriptHeartbeat;
-  CExoString ScriptOnEnter;
-  CExoString ScriptOnExit;
-  CExoString ScriptUserDefine;
+  CExoString OnHeartbeat;
+  CExoString OnEnter;
+  CExoString OnExit;
+  CExoString OnUserDefined;
   CExoString OnTrapTriggered;
   CExoString OnDisarm;
   CExoString OnClick;

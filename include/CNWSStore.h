@@ -1,33 +1,96 @@
-/*
- *  NWNeXalt - Empty File
- *  (c) 2007 Doug Swarin (zac@intertex.net)
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *  $Id$
- *  $HeadURL$
- *
- */
-
-#ifndef _NX_NWN_STRUCT_CNWSSTORE_
-#define _NX_NWN_STRUCT_CNWSSTORE_
+#ifndef _H_CNWSSTORE_H_
+#define _H_CNWSSTORE_H_
 
 struct CNWSStore_s {
-    void               *unknown;
+  CNWSObject obj;
+  CExoString OnOpenStore;
+  CExoString OnStoreClosed;
+  unsigned __int8 field_1D0;
+  unsigned __int8 field_1D1;
+  unsigned __int8 field_1D2;
+  unsigned __int8 field_1D3;
+  unsigned __int8 field_1D4;
+  unsigned __int8 field_1D5;
+  unsigned __int8 field_1D6;
+  unsigned __int8 field_1D7;
+  unsigned __int8 field_1D8;
+  unsigned __int8 field_1D9;
+  unsigned __int8 field_1DA;
+  unsigned __int8 field_1DB;
+  unsigned __int8 field_1DC;
+  unsigned __int8 field_1DD;
+  unsigned __int8 field_1DE;
+  unsigned __int8 field_1DF;
+  unsigned __int8 field_1E0;
+  unsigned __int8 field_1E1;
+  unsigned __int8 field_1E2;
+  unsigned __int8 field_1E3;
+  unsigned __int8 field_1E4;
+  unsigned __int8 field_1E5;
+  unsigned __int8 field_1E6;
+  unsigned __int8 field_1E7;
+  unsigned __int8 field_1E8;
+  unsigned __int8 field_1E9;
+  unsigned __int8 field_1EA;
+  unsigned __int8 field_1EB;
+  unsigned __int8 field_1EC;
+  unsigned __int8 field_1ED;
+  unsigned __int8 field_1EE;
+  unsigned __int8 field_1EF;
+  unsigned __int8 field_1F0;
+  unsigned __int8 field_1F1;
+  unsigned __int8 field_1F2;
+  unsigned __int8 field_1F3;
+  unsigned __int8 field_1F4;
+  unsigned __int8 field_1F5;
+  unsigned __int8 field_1F6;
+  unsigned __int8 field_1F7;
+  unsigned __int8 field_1F8;
+  unsigned __int8 field_1F9;
+  unsigned __int8 field_1FA;
+  unsigned __int8 field_1FB;
+  unsigned __int8 field_1FC;
+  unsigned __int8 field_1FD;
+  unsigned __int8 field_1FE;
+  unsigned __int8 field_1FF;
+  unsigned __int8 BlackMarket;
+  unsigned __int8 field_201;
+  unsigned __int8 field_202;
+  unsigned __int8 field_203;
+  int BM_MarkDown;
+  int MarkDown;
+  int MarkUp;
+  unsigned __int8 field_210;
+  unsigned __int8 field_211;
+  unsigned __int8 field_212;
+  unsigned __int8 field_213;
+  int StoreGold;
+  int IdentifyPrice;
+  int MaxBuyPrice;
+  unsigned __int8 field_220;
+  unsigned __int8 field_221;
+  unsigned __int8 field_222;
+  unsigned __int8 field_223;
+  unsigned __int8 field_224;
+  unsigned __int8 field_225;
+  unsigned __int8 field_226;
+  unsigned __int8 field_227;
+  unsigned __int8 field_228;
+  unsigned __int8 field_229;
+  unsigned __int8 field_22A;
+  unsigned __int8 field_22B;
+  unsigned __int8 field_22C;
+  unsigned __int8 field_22D;
+  unsigned __int8 field_22E;
+  unsigned __int8 field_22F;
+  unsigned __int8 field_230;
+  unsigned __int8 field_231;
+  unsigned __int8 field_232;
+  unsigned __int8 field_233;
+  unsigned __int8 field_234;
+  unsigned __int8 field_235;
+  unsigned __int8 field_236;
+  unsigned __int8 field_237;
 };
 
-#endif /* _NX_NWN_STRUCT_CNWSSTORE_ */
-
-/* vim: set sw=4: */
+#endif

@@ -78,6 +78,7 @@ extern signed int 			(__fastcall *CNWSCreature__RemoveItem)(CNWSCreature *pTHIS,
 extern void					(__fastcall *CNWSCreature__ResolveAttack)(CNWSCreature *pTHIS, void *pVOID, int a2_target_oid, signed int a3, int a4);
 extern int					(__fastcall *CNWSCreature__ResolveRangedAttack)(CNWSCreature *Attacker_this, void* pVOID, CNWSObject *Defender_a2, int nAttacks_a3, int a4);
 extern void 				(__fastcall *CNWSCreature__SendFeedbackMessage)(CNWSCreature *pTHIS, void* pVOID, unsigned short, void*, CNWSPlayer *);
+extern void *				(__fastcall *CNWSCreature__SetScriptName)(CNWSCreature *pTHIS, void *pVOID, signed int iScript, CExoString ScriptName);
 extern void					(__fastcall *CNWSCreature__StartGuiTimingBar)(CNWSCreature*, void*, unsigned long, unsigned char);
 extern void					(__fastcall *CNWSCreature__StopGuiTimingBar)(CNWSCreature*, void*);
 extern void 				(__fastcall *CNWSCreature__UpdateAutoMap)(CNWSCreature* pTHIS, void *pVOID, uint32_t areaid);
@@ -101,6 +102,10 @@ extern int 					(__fastcall *CNWSCreatureStats__HasFeat)(CNWSCreatureStats *Stat
 extern bool 				(__fastcall *CNWSCreatureStats__LevelUp)(CNWSCreatureStats *pTHIS, void *pVOID, CNWSStats_Level *a2, int a3, char a4, char a5, int a6);
 extern int 					(__fastcall *CNWSCreatureStats__ResolveSpecialAttackAttackBonus)(CNWSCreatureStats *pAttackerStats, void* pVOID, CNWSCreature *Defender);
 
+extern void 				(__fastcall *CNWSDoor__SetScriptName)(CNWSDoor *pTHIS, void *pVOID, int iScript, CExoString ScriptName);
+
+extern void 				(__fastcall *CNWSEncounter__SetScriptName)(CNWSEncounter *pTHIS, void *pVOID, int iScript, CExoString ScriptName);
+	
 extern uint32_t				(__fastcall *CNWSFaction__GetFactionMember)(CNWSFaction *pThis, void *pVoid, int nNth, int bNPCs);
 	
 extern CNWSItem *			(__fastcall *CNWSInventory__GetItemInSlot)(CNWSInventory* inventory, void* pVOID, unsigned long nSlot);
@@ -129,6 +134,7 @@ extern void					(__fastcall *CNWSModule__AddObjectToLimbo)(CNWSModule*, void*, u
 extern int 					(__fastcall *CNWSModule__AddObjectToLookupTable)(CNWSModule *pTHIS, void *pVOID, CExoString Tag, int a3, int oID);
 extern CNWSArea * 			(__fastcall *CNWSModule__GetArea)(CNWSModule *pTHIS, void *pVOID, nwn_objid_t);
 extern CNWSPlayerTURD* 		(__fastcall *CNWSModule__GetPlayerTURDFromList)(CNWSModule *pTHIS, void *pVOID, CNWSPlayer *);
+extern void 				(__fastcall *CNWSModule__SetScriptName)(CNWSModule *pTHIS, void *pVOID, int iScript, CExoString ScriptName);
 
 extern CNWSArea * 			(__fastcall *CNWSObject__GetArea)(CNWSObject *pTHIS, void*);
 extern char					(__fastcall *CNWSObject__GetDamageImmunityByFlags)(CNWSObject*, void*, uint16_t);
@@ -149,10 +155,14 @@ extern float 				(__fastcall *CNWSScriptVarTable__GetFloat)(CNWSScriptVarTable *
 extern int 					(__fastcall *CNWSScriptVarTable__GetInt)(CNWSScriptVarTable *pTHIS, void *pVOID, CExoString &VarName);
 extern void 				(__fastcall *CNWSScriptVarTable__SetInt)(CNWSScriptVarTable *pTHIS, void *pVOID, CExoString &VarName, int VarValue, int);
 extern CScriptLocation 		(__fastcall *CNWSScriptVarTable__GetLocation)(CNWSScriptVarTable *pTHIS, void *pVOID, CExoString &VarName);
+
+extern void 				(__fastcall *CNWSStore__SetScriptName)(CNWSStore *pTHIS, void *pVOID, int iScript, CExoString ScriptName);
 	
 extern int 					(__fastcall *CNWSTile__GetSurfaceMaterial)(CNWSTile *pTHIS, void *pVOID, float, float, float);
 extern void 				(__fastcall *CNWTile__GetLocation)(CNWTile* pTHIS, void *pVOID, int *, int *);
 
+extern void 				(__fastcall *CNWSTrigger__SetScriptName)(CNWSTrigger *pTHIS, void *pVOID, int iScript, CExoString ScriptName);
+	
 extern void 				(__fastcall *CNetLayer__SetConnectionsDisallowed)(CNetLayer *pTHIS, void* pVOID, int bDisAllowConnections);
 extern int 					(__fastcall *CNetLayer__SetGameMasterPassword)(CNetLayer *pTHIS, void *pVOID, CExoString dm_pwd);
 
@@ -168,14 +178,18 @@ extern void* 				(__fastcall *CServerExoApp__GetPlayerList)(CServerExoApp *pTHIS
 
 
 extern CNWSArea * 				(__fastcall *CServerExoAppInternal__GetAreaByGameObjectID)(CServerExoAppInternal *, void*, nwn_objid_t Area);
+extern CNWSAreaOfEffectObject*	(__fastcall *CServerExoAppInternal__GetAreaOfEffectByGameObjectID)(CServerExoAppInternal* pThis, void *pVoid, nwn_objid_t oID);
 extern CNWSCreature*			(__fastcall *CServerExoAppInternal__GetCreatureByGameObjectID)(CServerExoAppInternal*, void*, unsigned long);
+extern CNWSDoor * 				(__fastcall *CServerExoAppInternal__GetDoorByGameObjectID)(CServerExoAppInternal *pTHIS, void *pVOID, nwn_objid_t oID);
+extern CNWSEncounter * 			(__fastcall *CServerExoAppInternal__GetEncounterByGameObjectID)(CServerExoAppInternal *pTHIS, void *pVOID, nwn_objid_t oID);
 extern int 						(__fastcall *CServerExoAppInternal__GetFactionOfObject)(CServerExoAppInternal* pTHIS, void *pVOID, nwn_objid_t, uint32_t *ret_factionID);
 extern CGenericObject * 		(__fastcall *CServerExoAppInternal__GetGameObject)(CServerExoAppInternal* pTHIS, void *pVOID, nwn_objid_t oID);
 extern CNWSItem * 				(__fastcall *CServerExoAppInternal__GetItemByGameObjectID)(CServerExoAppInternal* pThis, void *pVoid, nwn_objid_t oID);
 extern CNWSModule*				(__fastcall *CServerExoAppInternal__GetModule)(CServerExoAppInternal *, void*);
 extern CNWSPlaceable * 			(__fastcall *CServerExoAppInternal__GetPlaceableByGameObjectID)(CServerExoAppInternal *, void*, nwn_objid_t Placeable);
 extern uint32_t					(__fastcall *CServerExoAppInternal__GetPlayerIDByGameObjectID)(CServerExoAppInternal* pThis, void *pVoid, nwn_objid_t oID);
-extern CNWSAreaOfEffectObject*	(__fastcall *CServerExoAppInternal__GetAreaOfEffectByGameObjectID)(CServerExoAppInternal* pThis, void *pVoid, nwn_objid_t oID);
+extern CNWSStore* 				(__fastcall *CServerExoAppInternal__GetStoreByGameObjectID)(CServerExoAppInternal* pThis, void *pVoid, nwn_objid_t oID);
+extern CNWSTrigger* 			(__fastcall *CServerExoAppInternal__GetTriggerByGameObjectID)(CServerExoAppInternal* pThis, void *pVoid, nwn_objid_t oID);
 		
 extern void					(__fastcall *CWorldTimer__GetWorldTime)(CWorldTimer*, void*, uint32_t *, uint32_t *);
 extern void					(__fastcall *CWorldTimer__SetWorldTime)(CWorldTimer*, void*, uint32_t, uint32_t, int);
