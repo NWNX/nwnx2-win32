@@ -9,6 +9,8 @@ struct CGameObjectArray_s
 	uint32_t PlayerPointer;
 	uint32_t field_10;
 	uint32_t field_14;
+	
+	uint8_t DEL(nwn_objid_t oID);
 };
 
 #endif

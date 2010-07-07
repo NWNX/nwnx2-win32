@@ -73,6 +73,11 @@
   unsigned __int32 DodgeTarget;
   unsigned __int32 **SchedActionList;
   CNWSCreature *org_nwcreature;
+
+	void		ClearAllAttacks();
+	CNWSItem *	GetCurrentAttackWeapon(uint32_t a2);
+	void		StartCombatRound(nwn_objid_t oidDefender);
+
 };
 
 #endif

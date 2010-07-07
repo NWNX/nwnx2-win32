@@ -43,6 +43,8 @@ struct CNWSAreaOfEffectObject_s {
   unsigned __int8 unknown_550;
   unsigned __int8 unknown_551;
   unsigned __int8 unknown_552;
+
+	void SetScriptName(int iScript, CExoString ScriptName);
 };
 
 #endif

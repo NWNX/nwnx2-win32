@@ -140,6 +140,26 @@ struct CNWSCreatureStats_s {
   CExoString cs_acomp_name;
   CExoString cs_famil_name;
   char *cs_deity;
+
+void 				AddExperience(uint32_t XP);
+char 				AddFeat(uint16_t Feat);
+char				GetACNaturalBase(int bTouchAttack);
+int 				GetAttackModifierVersus(CNWSCreature *Vs);
+//unsigned char 	GetAttacksPerRound();
+int 				GetBaseAttackBonus(int bPreEpicOnly);
+char 				GetDEXMod(int bMaxArmorDex);
+signed int 			GetEpicWeaponFocus(CNWSItem *weapon);
+int 				GetFavoredEnemyBonus(CNWSCreature *cre_enemy);
+int 				GetIsWeaponOfChoice(uint32_t BaseItemType);
+uint8_t				GetLevel(int bCountNegativeLevels);
+int					GetMeleeAttackBonus(int a1, int a2, int a3);
+int 				GetUseMonkAttackTables(int a1);
+signed int 			GetWeaponFinesse(CNWSItem *weapon);
+signed int 			GetWeaponFocus(CNWSItem *weapon);
+int 				HasFeat(uint16_t feat);
+bool 				LevelUp(CNWSStats_Level *a2, int a3, char a4, char a5, int a6);
+int 				ResolveSpecialAttackAttackBonus(CNWSCreature *Defender);
+
 };
 
 

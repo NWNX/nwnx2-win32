@@ -115,6 +115,10 @@ struct CNWSPlaceable_s {
     uint8_t                     field_38B;
     uint32_t                    plc_static;
     uint32_t                    plc_never_static;
+
+	int32_t	AcquireItem(CNWSItem **a2, unsigned int a3, int a4, int a5, int bSendFeedBack);
+	void 	SetScriptName(int iScript, CExoString ScriptName);
 };
-#endif /* _NX_NWN_STRUCT_CNWSPLACEABLE_ */
-/* vim: set sw=4: */
+
+
+#endif

@@ -141,6 +141,8 @@ struct CNWSEncounter_s
   unsigned __int8 field_2A5;
   unsigned __int8 field_2A6;
   unsigned __int8 field_2A7;
+
+	void SetScriptName(int iScript, CExoString ScriptName);
 };
 
 #endif

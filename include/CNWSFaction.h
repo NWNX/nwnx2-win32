@@ -12,6 +12,9 @@ struct CNWSFaction_s {
     uint32_t            first_nextCounter;
 
     char               *fac_name;
+
+	uint32_t GetFactionMember(int nNth, int bNPCs);
+
 };
 
 #endif

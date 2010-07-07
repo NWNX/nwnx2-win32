@@ -3,6 +3,8 @@
 
 struct CNWTile_s {
 	void *data;
+	
+	void GetLocation(int *a2, int *a3);
 };
 
 #endif

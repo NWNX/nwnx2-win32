@@ -4,8 +4,8 @@
 struct CNWBaseItemArray_s {
 	uint32_t			bitemarray_len;
     CNWBaseItem         *bitemarray_bitem;
+
+	CNWBaseItem *GetBaseItem(int BaseItem);
 };
 
-#endif /* _NX_NWN_STRUCT_CNWBASEITEMARRAY_ */
-
-/* vim: set sw=4: */
+#endif

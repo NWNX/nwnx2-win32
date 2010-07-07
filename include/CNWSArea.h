@@ -85,7 +85,23 @@ struct CNWSArea_s {
     uint32_t                    *transition_list;
     uint32_t                    transition_list_len;
     uint32_t                    transition_list_alloc;
+
+void Destructor();
+void CNWSArea(CResRef, int, unsigned long);
     
+signed int 	AddObjectToArea(unsigned int Object_ID, int bRunEnterScript);
+int 		ClearLineOfSight(Vector v1, Vector v2, Vector *v3, uint32_t *, nwn_objid_t, nwn_objid_t, uint8_t);
+long double ComputeHeight(float x, float y, float z);
+signed int 	ExploreArea(CNWSCreature *a2, int a3, int a4, int a5);
+signed int 	GetFirstObjectInArea(nwn_objid_t *oID);
+signed int 	GetNextObjectInArea(nwn_objid_t *oID);
+CNWTile*	GetTile(float x, float y, int z);
+int 		LoadArea(int);
+signed int 	RemoveObjectFromArea(unsigned int oID);
+void *		SetScriptName(int iScript, CExoString ScriptName);
+void		scalar_Destructor(char Flag);
+
+
 };
 
 #endif /* _NX_NWN_STRUCT_CNWSAREA_ */

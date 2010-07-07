@@ -1,26 +1,3 @@
-/*
- *  NWNeXalt - Empty File
- *  (c) 2007 Doug Swarin (zac@intertex.net)
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *  $Id$
- *  $HeadURL$
- *
- */
-
 #ifndef _NX_NWN_STRUCT_CSERVEREXOAPPINTERNAL_
 #define _NX_NWN_STRUCT_CSERVEREXOAPPINTERNAL_
 
@@ -131,8 +108,21 @@ struct CServerExoAppInternal_s {
     uint32_t                   field_10150;            /* 10150 */
     uint32_t                   field_10154;            /* 10154 */
     uint32_t                   field_10158;            /* 10158 */
+
+	CNWSArea * 				GetAreaByGameObjectID(nwn_objid_t oID);
+	CNWSAreaOfEffectObject*	GetAreaOfEffectByGameObjectID(nwn_objid_t oID);
+	CNWSCreature*			GetCreatureByGameObjectID(nwn_objid_t oID);
+	CNWSDoor * 				GetDoorByGameObjectID(nwn_objid_t oID);
+	CNWSEncounter * 		GetEncounterByGameObjectID(nwn_objid_t oID);
+	int 					GetFactionOfObject(nwn_objid_t oID, uint32_t *ret_factionID);
+	CGenericObject * 		GetGameObject(nwn_objid_t oID);
+	CNWSItem * 				GetItemByGameObjectID(nwn_objid_t oID);
+	CNWSModule*				GetModule();
+	CNWSPlaceable * 		GetPlaceableByGameObjectID(nwn_objid_t oID);
+	uint32_t				GetPlayerIDByGameObjectID(nwn_objid_t oID);
+	CNWSStore* 				GetStoreByGameObjectID(nwn_objid_t oID);
+	CNWSTrigger* 			GetTriggerByGameObjectID(nwn_objid_t oID);
+
 };
 
-#endif /* _NX_NWN_STRUCT_CSERVEREXOAPPINTERNAL_ */
-
-/* vim: set sw=4: */
+#endif

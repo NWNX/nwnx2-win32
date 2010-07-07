@@ -20,6 +20,10 @@ struct CExoResMan_s {
   /* 0x3C/60 */ unsigned long field_3C;
   /* 0x44/68 */ char rsvd1[4];
   /* 0x44/68 */ unsigned long field_44;
+
+	int Exists(CResRef *ResRef, unsigned short a2, unsigned long *a3);
+	int FreeChunk();
+
 };
 
 #endif

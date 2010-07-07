@@ -4,8 +4,11 @@
 struct CNWSScriptVarTable_s {
     CScriptVariable    *vt_list;
     uint32_t            vt_len;
+
+	float 				GetFloat(CExoString &VarName);
+	int 				GetInt(CExoString &VarName);
+	void 				SetInt(CExoString &VarName, int VarValue, int a3);
+	CScriptLocation 	GetLocation(CExoString &VarName);
 };
 
-#endif /* _NX_NWN_STRUCT_CNWSSCRIPTVARTABLE_ */
-
-/* vim: set sw=4: */
+#endif

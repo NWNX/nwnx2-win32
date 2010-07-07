@@ -98,6 +98,8 @@ struct CNWSTrigger_s
   unsigned __int16 LoadScreenID;
   unsigned __int8 field_2AE;
   unsigned __int8 field_2AF;
+
+	void SetScriptName(int iScript, CExoString ScriptName);
 };
 
 #endif

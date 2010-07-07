@@ -1,33 +1,22 @@
-/*
- *  NWNeXalt - Empty File
- *  (c) 2007 Doug Swarin (zac@intertex.net)
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *  $Id$
- *  $HeadURL$
- *
- */
-
 #ifndef _NX_NWN_STRUCT_CNWSMESSAGE_
 #define _NX_NWN_STRUCT_CNWSMESSAGE_
 
 struct CNWSMessage_s {
     void               *unknown;
+
+	int 	SendServerToPlayerArea_VisualEffect(CNWSPlayer* plyer, int VFX_number, float Px, float Py, float Pz);
+	int 	SendServerToPlayerChat_Party(unsigned long, unsigned long, char*, int);
+	int 	SendServerToPlayerChat_ServerTell(uint32_t Receiver_id, CExoString Msg);
+	int 	SendServerToPlayerChat_Shout(uint32_t Receiver, nwn_objid_t Sender, CExoString Msg);
+	int 	SendServerToPlayerChat_Tell(uint32_t Receiver, nwn_objid_t Sender, CExoString Msg);
+	int 	SendServerToPlayerChatMessage(uint8_t Channel, nwn_objid_t Sender, char* Msg, uint32_t msg_len, uint32_t player_id); 
+	int 	SendServerToPlayerDungeonMasterAreaList(CNWSPlayer *Player);
+	int		SendServerToPlayerGameObjUpdate(CNWSPlayer *);
+	int 	SendServerToPlayerGuiQuickbar_SetButton(CNWSPlayer*, uint8_t, int32_t);
+	int		SendServerToPlayerMessage(nwn_objid_t, uint8_t, uint8_t, uint8_t *, uint32_t);
+	void	WriteGameObjUpdate_UpdateAppearance(CNWSObject*, CLastUpdateObject*, uint32_t);
+	void	WriteGameObjUpdate_UpdateObject(CNWSPlayer*, CNWSObject*, CLastUpdateObject*, uint32_t, uint32_t);
+
 };
 
-#endif /* _NX_NWN_STRUCT_CNWSMESSAGE_ */
-
-/* vim: set sw=4: */
+#endif

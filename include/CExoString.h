@@ -23,6 +23,9 @@ public:
 	CExoString operator+(CExoString const &Op);
 	CExoString operator+(char const &Op);
 
+	int	AsTAG(CExoString *ExoString);
+	int StripNonAlphaNumeric(int a1, int a2, int a3);
+
 };
 
 #endif

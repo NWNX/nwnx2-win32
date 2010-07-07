@@ -1029,6 +1029,28 @@ struct CNWSCreature_s {
   	uint8_t 							spacer39;
   	uint8_t 							spacer40;
 	CNWSCreatureStats 				*cre_stats;			/* 0x0C64 */
+	
+	signed int 			AcquireItem(CNWSItem **a2, unsigned int a3, int a4, int a5, int bSendFeedBack);
+	int 				GetBlind();
+	bool 				GetFlanked(CNWSCreature *Target);
+	int 				GetFlatFooted();
+	int 				GetInvisible(CNWSObject* obj, int i);
+	int 				GetRangeWeaponEquipped();
+	int 				GetRelativeWeaponSize(CNWSItem *weapon);
+	int 				GetTotalEffectBonus(char a2, CNWSObject *obj_a, int a4, int a5, unsigned __int8 a6, unsigned __int8 a7, unsigned __int8 a8, unsigned __int8 a9, int a10);
+	CNWVisibilityNode *	GetVisibleListElement(unsigned long ul);
+	float 				MaxAttackRange(nwn_objid_t, int, int);
+	void 				PostProcess();
+	void				RemoveFromArea(int AreaID);
+	signed int 			RemoveItem(CNWSItem *a2, int a3, int bSendFeedBack, int a5, int a6);
+	void				ResolveAttack(int a2_target_oid, signed int a3, int a4);
+	int					ResolveRangedAttack(CNWSObject *Defender_a2, int nAttacks_a3, int a4);
+	void 				SendFeedbackMessage(unsigned short, void*, CNWSPlayer *);
+	void				*SetScriptName(signed int iScript, CExoString ScriptName);
+	void				StartGuiTimingBar(unsigned long, unsigned char);
+	void				StopGuiTimingBar();
+	void 				UpdateAutoMap(uint32_t areaid);
+	//void				Destructor(char c);
 };
 #endif /* _NX_NWN_STRUCT_CNWSCREATURE_ */
 /* vim: set sw=4: */

@@ -91,6 +91,8 @@ struct CNWSStore_s {
   unsigned __int8 field_235;
   unsigned __int8 field_236;
   unsigned __int8 field_237;
+	
+	void SetScriptName(int iScript, CExoString ScriptName);
 };
 
 #endif

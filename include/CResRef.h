@@ -3,6 +3,8 @@
 
 struct CResRef_s {
 	char resref[16];
+	
+	CResRef *CResRef(CExoString const &Ref);
 }; 
 
 #endif;

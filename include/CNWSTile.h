@@ -3,6 +3,8 @@
 
 struct CNWSTile_s {
 	void *data;
+	
+	int GetSurfaceMaterial(float x, float y, float z);
 };
 
 #endif

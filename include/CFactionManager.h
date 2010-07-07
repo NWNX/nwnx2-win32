@@ -23,6 +23,8 @@ struct CFactionManager_s {
 	unsigned __int8 field_12;
 	unsigned __int8 field_13;
 	unsigned __int32 field_14;
+
+	CNWSFaction *GetFaction(uint32_t FactionID);
 };
 
 
