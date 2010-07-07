@@ -114,15 +114,15 @@ void CTrinityXP::CreateParty(nwn_objid_t oID) {
 	_log(3, "\t<CreateParty>\n");
 	PartyLevel = 0;
 
-	CNWSCreature *cre = CServerExoAppInternal__GetCreatureByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, oID);
+	CNWSCreature *cre = ((*NWN_AppManager)->app_server->srv_internal)->GetCreatureByGameObjectID(oID);
 	if (cre) {
-		Area = CNWSObject__GetArea((CNWSObject*)cre, NULL);
+		Area = ((CNWSObject*)cre)->GetArea();
 		if (Area) {
 			Area = (CNWSArea*)((char*)Area+0xC4);
 			_log(3, "\t\tParty Area: %08X\n", Area->are_id);
 			uint32_t FactionID = cre->cre_stats->cs_faction_id;
 
-			CNWSFaction *Faction = CFactionManager__GetFaction((*NWN_AppManager)->app_server->srv_internal->srv_factions, NULL, FactionID);
+			CNWSFaction *Faction = (*NWN_AppManager)->app_server->srv_internal->srv_factions->GetFaction(FactionID);
 			if (Faction) {
 				int Length = Faction->members_len;
 				PlayerList.reserve(Length);
@@ -131,10 +131,10 @@ void CTrinityXP::CreateParty(nwn_objid_t oID) {
 				CNWSArea *MemberArea = NULL;
 				while (i < Length) {
 					MemberoID = Faction->members_oID[i];
-					cre = CServerExoAppInternal__GetCreatureByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, MemberoID);
+					cre = ((*NWN_AppManager)->app_server->srv_internal)->GetCreatureByGameObjectID(MemberoID);
 					if (cre && cre->cre_is_pc) {
 						_log(3, "\t\tMemberoID: %08X", MemberoID);
-						MemberArea = CNWSObject__GetArea((CNWSObject*)cre, NULL);
+						MemberArea = ((CNWSObject*)cre)->GetArea();
 						if (MemberArea) {
 							MemberArea = (CNWSArea*)((char*)MemberArea+0xC4);
 							_log(3, " | MemberArea %08X", MemberArea->are_id);
@@ -182,7 +182,7 @@ int CTrinityXP::GiveXPToCreature(CNWSCreature * cre, float fXP, float fLevel, fl
 		// penalty for uber equipment
 		if (fLevel < 20.0) {
 			VarName = "MC_NEQUIPMENT_AVERAGE";
-			float fAverageItemLevel = CNWSScriptVarTable__GetFloat(&((CNWSObject*)cre)->obj_vartable, NULL, VarName);
+			float fAverageItemLevel = ((CNWSObject*)cre)->obj_vartable.GetFloat(VarName);
 			_log(3, "\tAvg Item Level: %f", fAverageItemLevel);
 			if (fAverageItemLevel > fLevel+5.0) {
 				float fDiv = 1.0;
@@ -199,7 +199,7 @@ int CTrinityXP::GiveXPToCreature(CNWSCreature * cre, float fXP, float fLevel, fl
 	// fill up negative xp on the handbook first
 
 	int iOldXP = cre->cre_stats->cs_xp;
-	CNWSCreatureStats__AddExperience(cre->cre_stats, NULL, iFinalXP);
+	(cre->cre_stats)->AddExperience(iFinalXP);
 	int iNewXP = cre->cre_stats->cs_xp;
 
 	iFinalXP = iNewXP - iOldXP; //this is the amount of xp cre gets, figuring in multi class penalties (too lazy to calc them myself)
@@ -210,14 +210,14 @@ int CTrinityXP::GiveXPToCreature(CNWSCreature * cre, float fXP, float fLevel, fl
 	//and see if we need to fill up the negative xp first
 
 	CExoString sTag = "TRINITYHANDBOOK";
-	nwn_objid_t oidBook = CItemRepository__FindItemWithTag(cre->cre_inventory, NULL, &sTag);
+	nwn_objid_t oidBook = cre->cre_inventory->FindItemWithTag(&sTag);
 	if (oidBook != OBJECT_INVALID) {
-	CNWSItem *oBook = CServerExoAppInternal__GetItemByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, oidBook);
+	CNWSItem *oBook = ((*NWN_AppManager)->app_server->srv_internal)->GetItemByGameObjectID(oidBook);
 		if (oBook) {
 			CExoString VarName;
 			CNWSObject *objBook = ((CNWSObject*)((char*)(oBook)+0x10));
 			VarName = NWNXTrinity.NegXPVar;
-			int iNegativeXP = CNWSScriptVarTable__GetInt(&objBook->obj_vartable, NULL, VarName);
+			int iNegativeXP = objBook->obj_vartable.GetInt(VarName);
 			if (iNegativeXP < 0) {
 				iNegativeXP += iFinalXP;
 				if (iNegativeXP >= 0) {
@@ -227,7 +227,7 @@ int CTrinityXP::GiveXPToCreature(CNWSCreature * cre, float fXP, float fLevel, fl
 				else iFinalXP = 0;
 				_log(3, "\tNegative XP: %d", iNegativeXP);
 			}
-			CNWSScriptVarTable__SetInt(&objBook->obj_vartable, NULL, VarName, iNegativeXP, 0);
+			objBook->obj_vartable.SetInt(VarName, iNegativeXP, 0);
 		}
 	}
 
@@ -246,7 +246,7 @@ int CTrinityXP::GiveXP(nwn_objid_t oID, nwn_objid_t VictimoID) {
 
 	if (VictimoID == OBJECT_INVALID) return 0;
 
-	CNWSCreature *cre_Killed = CServerExoAppInternal__GetCreatureByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, VictimoID);
+	CNWSCreature *cre_Killed = ((*NWN_AppManager)->app_server->srv_internal)->GetCreatureByGameObjectID(VictimoID);
 	if (!cre_Killed) return 0;
 
 	CreateParty(oID);
@@ -254,7 +254,7 @@ int CTrinityXP::GiveXP(nwn_objid_t oID, nwn_objid_t VictimoID) {
 	if (MemberCount > 0) {
 		CExoString VarName("iOVERRIDE_CR");
 
-		int iCR = CNWSScriptVarTable__GetInt(&((CNWSObject*)cre_Killed)->obj_vartable, NULL, VarName);
+		int iCR = ((CNWSObject*)cre_Killed)->obj_vartable.GetInt(VarName);
 		if (iCR == 0) iCR = (int)floor(cre_Killed->cre_stats->cs_cr);
 		if (iCR > iCRCap) iCR = iCRCap;
 		else if (iCR < 1) iCR = 1;
@@ -271,7 +271,7 @@ int CTrinityXP::GiveXP(nwn_objid_t oID, nwn_objid_t VictimoID) {
 
 		std::vector<struct PartyMember_s>::iterator it = PlayerList.begin();
 		while (it != PlayerList.end()) {
-			if (it->bGiveXP && !CNWSObject__GetDead((CNWSObject*)it->pCreature, NULL)) {
+			if (it->bGiveXP && !((CNWSObject*)it->pCreature)->GetDead()) {
 
 				// Check if they have enough xp to take 2 levels
 				int iLevelFromXP = (int)floor(0.5 + sqrt(0.25 + ( (float)(it->pCreature->cre_stats->cs_xp) / 500.0 )));
@@ -301,11 +301,11 @@ int CTrinityXP::GiveXP(nwn_objid_t oID, nwn_objid_t VictimoID) {
 
 int CTrinityXP::GetLevels(CNWSCreature *cre) {
 	if (cre) {
-		int Level = CNWSCreatureStats__GetLevel(cre->cre_stats, NULL, 0);
+		int Level = (cre->cre_stats)->GetLevel(0);
 		CExoString VarName("MC_LL_LEVEL1");
-		int LL = CNWSScriptVarTable__GetInt(&((CNWSObject*)cre)->obj_vartable, NULL, VarName);
-		VarName = "MC_LL_LEVEL2"; LL += CNWSScriptVarTable__GetInt(&((CNWSObject*)cre)->obj_vartable, NULL, VarName);
-		VarName = "MC_LL_LEVEL3"; LL += CNWSScriptVarTable__GetInt(&((CNWSObject*)cre)->obj_vartable, NULL, VarName);
+		int LL = ((CNWSObject*)cre)->obj_vartable.GetInt(VarName);
+		VarName = "MC_LL_LEVEL2"; LL += ((CNWSObject*)cre)->obj_vartable.GetInt(VarName);
+		VarName = "MC_LL_LEVEL3"; LL += ((CNWSObject*)cre)->obj_vartable.GetInt(VarName);
 		return Level + LL;
 	}
 	return 0;

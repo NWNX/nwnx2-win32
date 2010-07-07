@@ -175,7 +175,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine=""
+				CommandLine="copy $(TargetPath) e:\games\nwn"
 			/>
 		</Configuration>
 	</Configurations>
@@ -227,19 +227,11 @@
 				Name="nwnxBase"
 				>
 				<File
-					RelativePath="..\include\CExoString.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\NWNXdll\IniFile.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\LogFile.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\nwn_internals.cpp"
 					>
 				</File>
 				<File
@@ -253,6 +245,58 @@
 							WarningLevel="2"
 						/>
 					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="nwn_internal"
+				>
+				<File
+					RelativePath="..\nwn_internals\CExoString.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CFactionManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CItemRepository.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSArea.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSCreature.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSCreatureStats.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSPlaceable.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSScriptVarTable.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CServerExoApp.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CServerExoAppInternal.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\nwn_internals.cpp"
+					>
 				</File>
 			</Filter>
 		</Filter>

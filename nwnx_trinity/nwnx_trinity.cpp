@@ -73,6 +73,15 @@ char* CNWNXTrinity::OnRequest(char *gameObject, char* Request, char* Parameters)
 		(*this.*pFunc[it->second])(gameObject, Parameters);
 	}
 
+	else if (strcmp(Request, "PUSH") == 0) {
+		StackPushInteger(atoi(Parameters));
+	}
+	else if (strcmp(Request, "TEST") == 0) {
+		CNWSCreature *cre = (CNWSCreature*)gameObject;
+
+		_log(3, "blind: %d\n", cre->GetBlind());
+	}
+
 
 	return NULL;
 }
@@ -82,11 +91,11 @@ void CNWNXTrinity::PLCTakeItem(char *gameObject, char* Parameters) {
 	int bFeedback = 0;
 	sscanf(Parameters, "%08X %08X %08X, %d", &oID_Placeable, &oId_Item, &oID_From, &bFeedback);
 	
-	CNWSItem *Item = (CNWSItem*)((char*)(CServerExoAppInternal__GetItemByGameObjectID((*NWN_AppManager)->app_server->srv_internal , NULL, oId_Item))+0x0);
-	CNWSPlaceable *plc = CServerExoAppInternal__GetPlaceableByGameObjectID((*NWN_AppManager)->app_server->srv_internal , NULL, oID_Placeable);
+	CNWSItem *Item = (CNWSItem*)((char*)(((*NWN_AppManager)->app_server->srv_internal)->GetItemByGameObjectID(oId_Item))+0x0);
+	CNWSPlaceable *plc = ((*NWN_AppManager)->app_server->srv_internal)->GetPlaceableByGameObjectID(oID_Placeable);
 
 	if (Item && plc)
-		CNWSPlaceable__AcquireItem(plc, NULL, &Item, oID_From, 1, 1, bFeedback);
+		plc->AcquireItem(&Item, oID_From, 1, 1, bFeedback);
 }
 
 void CNWNXTrinity::CreatureTakeItem(char *gameObject, char* Parameters) {
@@ -94,11 +103,11 @@ void CNWNXTrinity::CreatureTakeItem(char *gameObject, char* Parameters) {
 	int bFeedback = 0;
 	sscanf(Parameters, "%08X %08X %08X, %d", &oID_Cre, &oId_Item, &oID_From, &bFeedback);
 	
-	CNWSItem *Item = (CNWSItem*)((char*)(CServerExoAppInternal__GetItemByGameObjectID((*NWN_AppManager)->app_server->srv_internal , NULL, oId_Item))+0x0);
-	CNWSCreature *cre = CServerExoAppInternal__GetCreatureByGameObjectID((*NWN_AppManager)->app_server->srv_internal , NULL, oID_Cre);
+	CNWSItem *Item = (CNWSItem*)((char*)(((*NWN_AppManager)->app_server->srv_internal)->GetItemByGameObjectID(oId_Item))+0x0);
+	CNWSCreature *cre = ((*NWN_AppManager)->app_server->srv_internal)->GetCreatureByGameObjectID(oID_Cre);
 
 	if (Item && cre)
-		CNWSCreature__AcquireItem(cre, NULL, &Item, oID_From, -1, -1, bFeedback);
+		cre->AcquireItem(&Item, oID_From, -1, -1, bFeedback);
 }
 
 int CNWNXTrinity::PointInpoly(int nvert, float *vertx, float *verty, float &testx, float &testy)
@@ -134,7 +143,7 @@ nwn_objid_t CNWNXTrinity::GetCreatureInShapeByIndex(CNWSObject *obj) {
 	CNWSCreature *cre;
 	CNWSObject *cre_obj;
 	while  (ObjectIndex < Area->obj_list_len) {
-		cre = CServerExoAppInternal__GetCreatureByGameObjectID(ServInternal, NULL, Area->obj_list[ObjectIndex]);
+		cre = ServInternal->GetCreatureByGameObjectID(Area->obj_list[ObjectIndex]);
 		if (cre) {
 			if(obj->obj_generic.obj_id != (cre_obj = (CNWSObject*)cre)->obj_generic.obj_id) {
 				_log(3, "cre[%08X]: (%.2f|%.2f)\n", cre_obj, cre_obj->obj_position.x, cre_obj->obj_position.y);
@@ -167,7 +176,7 @@ unsigned long CNWNXTrinity::OnRequestObject (char *gameObject, char* Request) {
 				ObjectIndex = 0;
 				SetConeCoords(obj);
 
-				Area = CServerExoAppInternal__GetAreaByGameObjectID(ServInternal, NULL, AreaID);
+				Area = ServInternal->GetAreaByGameObjectID(AreaID);
 				if (Area) {
 					return GetAllCreaturesInShape(obj);
 				}
@@ -180,7 +189,7 @@ unsigned long CNWNXTrinity::OnRequestObject (char *gameObject, char* Request) {
 				sscanf(sAreaID.c_str(), "%08X", &AreaID);
 				SetConeCoords(obj);
 
-				Area = CServerExoAppInternal__GetAreaByGameObjectID(ServInternal, NULL, AreaID);
+				Area = ServInternal->GetAreaByGameObjectID(AreaID);
 				return GetAllCreaturesInShape(obj);
 			}
 		}
@@ -215,14 +224,14 @@ nwn_objid_t CNWNXTrinity::GetAllCreaturesInShape(CNWSObject *obj) {
 	v3.x = 0.0, v3.y = 0.0; v3.z = 0.0;
 	uint32_t temp;
 	while  (i < Area->obj_list_len) {
-		cre = CServerExoAppInternal__GetCreatureByGameObjectID(ServInternal, NULL, Area->obj_list[i]);
+		cre = ServInternal->GetCreatureByGameObjectID(Area->obj_list[i]);
 		if (cre) {
 			_log(3, "Cre Valid\n");
 			if(obj->obj_generic.obj_id != (cre_obj = (CNWSObject*)cre)->obj_generic.obj_id) {
 				v1 = obj->obj_position; v1.z += 1.0;
 				v2 = cre_obj->obj_position; v2.z += 1.0;
 				if (PointInpoly(5, &fx[0], &fy[0], cre_obj->obj_position.x, cre_obj->obj_position.y)
-					&& CNWSArea__ClearLineOfSight(Area, NULL, v1, v2, &v3, &temp, OBJECT_INVALID, OBJECT_INVALID, 1)
+					&& Area->ClearLineOfSight(v1, v2, &v3, &temp, OBJECT_INVALID, OBJECT_INVALID, 1)
 				) {
 					_log(3, "cre[%08X]: (%.2f|%.2f)\n", cre_obj, cre_obj->obj_position.x, cre_obj->obj_position.y);
 					oIDsInShape.push_back(cre_obj->obj_generic.obj_id);
@@ -252,14 +261,14 @@ nwn_objid_t CNWNXTrinity::GetCreatureInShape(CNWSObject *obj) {
 	v3.x = 0.0, v3.y = 0.0; v3.z = 0.0;
 	uint32_t temp;
 	while (oIDsInShape_it != oIDsInShape.end()) {
-		cre = CServerExoAppInternal__GetCreatureByGameObjectID(ServInternal, NULL, *oIDsInShape_it);
+		cre = ServInternal->GetCreatureByGameObjectID(*oIDsInShape_it);
 		if (cre) {
 			cre_obj = (CNWSObject*)cre;
 			_log(3, "cre[%08X]: (%.2f|%.2f)\n", cre_obj, cre_obj->obj_position.x, cre_obj->obj_position.y);
 			v1 = obj->obj_position; v1.z += 1.0;
 			v2 = cre_obj->obj_position; v2.z += 1.0;
 			if (PointInpoly(5, &fx[0], &fy[0], cre_obj->obj_position.x, cre_obj->obj_position.y)
-				&& CNWSArea__ClearLineOfSight(Area, NULL, v1, v2, &v3, &temp, OBJECT_INVALID, OBJECT_INVALID, 1)
+				&& Area->ClearLineOfSight(v1, v2, &v3, &temp, OBJECT_INVALID, OBJECT_INVALID, 1)
 			) {
 				++oIDsInShape_it;
 				return cre_obj->obj_generic.obj_id;
