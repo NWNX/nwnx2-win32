@@ -326,10 +326,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="..\include\CExoString.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\funcs.cpp"
 				>
 			</File>
@@ -343,10 +339,6 @@
 			</File>
 			<File
 				RelativePath=".\HookFunc.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\nwn_internals.cpp"
 				>
 			</File>
 			<File
@@ -422,6 +414,94 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="nwn_internals"
+				>
+				<File
+					RelativePath="..\nwn_internals\CExoString.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CGameEffect.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSArea.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSAreaOfEffectObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSCreature.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSCreatureStats.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSDoor.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSEncounter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSMessage.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSModule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSPlaceable.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSStats_Level.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSStore.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSTile.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSTrigger.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWTile.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CServerExoApp.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CServerExoAppInternal.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CWorldTimer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\nwn_internals.cpp"
+					>
 				</File>
 			</Filter>
 		</Filter>

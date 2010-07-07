@@ -501,8 +501,8 @@ int CNWNXFuncs::AddFeatAtLevel() {
 		return 0;
 	}
 
-	CNWSCreatureStats__AddFeat((CNWSCreatureStats*)cre->cre_stats, NULL, P2);
-	CNWLevelStats__AddFeat(ls, NULL, P2);
+	((CNWSCreatureStats*)cre->cre_stats)->AddFeat(P2);
+	ls->AddFeat(P2);
 
 	return 1;
 }
@@ -516,7 +516,7 @@ int CNWNXFuncs::AddFeat() {
 		return 0;
 	}
 
-	CNWSCreatureStats__AddFeat((CNWSCreatureStats*)cre->cre_stats, NULL, P1);
+	((CNWSCreatureStats*)cre->cre_stats)->AddFeat(P1);
 	return 1;
 }
 
@@ -1058,9 +1058,9 @@ int CNWNXFuncs::SetEvent() {
 	switch (((CGenericObject*)oObject)->obj_type) {
 		case OBJECT_TYPE_CREATURE: {
 			CNWSCreature *cre;
-			if ((cre = CServerExoAppInternal__GetCreatureByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+			if ((cre = ((*NWN_AppManager)->app_server->srv_internal)->GetCreatureByGameObjectID(((CGenericObject*)oObject)->obj_id))) {
 				if (GetEventScriptInfo(iScript, ScriptName, 13)) {
-					CNWSCreature__SetScriptName(cre, NULL, iScript, CExoString(ScriptName.c_str()));
+					cre->SetScriptName(iScript, CExoString(ScriptName.c_str()));
 				}
 				else _log(1, "o Error (SetCreatureEventScript): Invalid script name or constant\n");
 			}
@@ -1068,9 +1068,9 @@ int CNWNXFuncs::SetEvent() {
 		}break;
 		case OBJECT_TYPE_AREA: {
 			CNWSArea *Area;
-			if ((Area = CServerExoAppInternal__GetAreaByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+			if ((Area = ((*NWN_AppManager)->app_server->srv_internal)->GetAreaByGameObjectID(((CGenericObject*)oObject)->obj_id))) {
 				if (GetEventScriptInfo(iScript, ScriptName, 3)) {
-					CNWSArea__SetScriptName(Area, NULL, iScript, CExoString(ScriptName.c_str()));
+					Area->SetScriptName(iScript, CExoString(ScriptName.c_str()));
 				}
 				else _log(1, "o Error (SetAreaEventScript): Invalid script name or constant\n");
 			}
@@ -1078,9 +1078,9 @@ int CNWNXFuncs::SetEvent() {
 		}break;
 		case OBJECT_TYPE_PLACEABLE: {
 			CNWSPlaceable *Plc;
-			if ((Plc = CServerExoAppInternal__GetPlaceableByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+			if ((Plc = ((*NWN_AppManager)->app_server->srv_internal)->GetPlaceableByGameObjectID(((CGenericObject*)oObject)->obj_id))) {
 				if (GetEventScriptInfo(iScript, ScriptName, 15)) {
-					CNWSPlaceable__SetScriptName(Plc, NULL, iScript, CExoString(ScriptName.c_str()));
+					Plc->SetScriptName(iScript, CExoString(ScriptName.c_str()));
 				}
 				else _log(1, "o Error (SetPlaceableEventScript): Invalid script name or constant\n");
 			}
@@ -1088,9 +1088,9 @@ int CNWNXFuncs::SetEvent() {
 		}break;
 		case OBJECT_TYPE_AREA_OF_EFFECT: {
 			CNWSAreaOfEffectObject *AoE;
-			if ((AoE = CServerExoAppInternal__GetAreaOfEffectByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+			if ((AoE = ((*NWN_AppManager)->app_server->srv_internal)->GetAreaOfEffectByGameObjectID(((CGenericObject*)oObject)->obj_id))) {
 				if (GetEventScriptInfo(iScript, ScriptName, 3)) {
-					CNWSAreaOfEffectObject__SetScriptName(AoE, NULL, iScript, CExoString(ScriptName.c_str()));
+					AoE->SetScriptName(iScript, CExoString(ScriptName.c_str()));
 				}
 				else _log(1, "o Error (SetAoEEventScript): Invalid script name or constant\n");
 			}
@@ -1098,9 +1098,9 @@ int CNWNXFuncs::SetEvent() {
 		}break;
 		case OBJECT_TYPE_DOOR: {
 			CNWSDoor *Door;
-			if ((Door = CServerExoAppInternal__GetDoorByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+			if ((Door = ((*NWN_AppManager)->app_server->srv_internal)->GetDoorByGameObjectID(((CGenericObject*)oObject)->obj_id))) {
 				if (GetEventScriptInfo(iScript, ScriptName, 14)) {
-					CNWSDoor__SetScriptName(Door, NULL, iScript, CExoString(ScriptName.c_str()));
+					Door->SetScriptName(iScript, CExoString(ScriptName.c_str()));
 				}
 				else _log(1, "o Error (SetDoorEventScript): Invalid script name or constant\n");
 			}
@@ -1108,9 +1108,9 @@ int CNWNXFuncs::SetEvent() {
 		}break;
 		case OBJECT_TYPE_ENCOUNTER: {
 			CNWSEncounter *Enc;
-			if ((Enc = CServerExoAppInternal__GetEncounterByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+			if ((Enc = ((*NWN_AppManager)->app_server->srv_internal)->GetEncounterByGameObjectID(((CGenericObject*)oObject)->obj_id))) {
 				if (GetEventScriptInfo(iScript, ScriptName, 4)) {
-					CNWSEncounter__SetScriptName(Enc, NULL, iScript, CExoString(ScriptName.c_str()));
+					Enc->SetScriptName(iScript, CExoString(ScriptName.c_str()));
 				}
 				else _log(1, "o Error (SetEncounterEventScript): Invalid script name or constant\n");
 			}
@@ -1118,9 +1118,9 @@ int CNWNXFuncs::SetEvent() {
 		}break;
 		case OBJECT_TYPE_MODULE: {
 			CNWSModule *Mod;
-			if ((Mod = CServerExoAppInternal__GetModule((*NWN_AppManager)->app_server->srv_internal, NULL))) {
+			if ((Mod = ((*NWN_AppManager)->app_server->srv_internal)->GetModule())) {
 				if (GetEventScriptInfo(iScript, ScriptName, 17)) {
-					CNWSModule__SetScriptName(Mod, NULL, iScript, CExoString(ScriptName.c_str()));
+					Mod->SetScriptName(iScript, CExoString(ScriptName.c_str()));
 				}
 				else _log(1, "o Error (SetModuleEventScript): Invalid script name or constant\n");
 			}
@@ -1128,9 +1128,9 @@ int CNWNXFuncs::SetEvent() {
 		}break;
 		case OBJECT_TYPE_STORE: {
 			CNWSStore *Store;
-			if ((Store = CServerExoAppInternal__GetStoreByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+			if ((Store = ((*NWN_AppManager)->app_server->srv_internal)->GetStoreByGameObjectID(((CGenericObject*)oObject)->obj_id))) {
 				if (GetEventScriptInfo(iScript, ScriptName, 1)) {
-					CNWSStore__SetScriptName(Store, NULL, iScript, CExoString(ScriptName.c_str()));
+					Store->SetScriptName(iScript, CExoString(ScriptName.c_str()));
 				}
 				else _log(1, "o Error (SetStoreEventScript): Invalid script name or constant\n");
 			}
@@ -1138,9 +1138,9 @@ int CNWNXFuncs::SetEvent() {
 		}break;
 		case OBJECT_TYPE_TRIGGER: {
 			CNWSTrigger *Trigger;
-			if ((Trigger = CServerExoAppInternal__GetTriggerByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id))) {
+			if ((Trigger = ((*NWN_AppManager)->app_server->srv_internal)->GetTriggerByGameObjectID(((CGenericObject*)oObject)->obj_id))) {
 				if (GetEventScriptInfo(iScript, ScriptName, 6)) {
-					CNWSTrigger__SetScriptName(Trigger, NULL, iScript, CExoString(ScriptName.c_str()));
+					Trigger->SetScriptName(iScript, CExoString(ScriptName.c_str()));
 				}
 				else _log(1, "o Error (SetTriggerEventScript): Invalid script name or constant\n");
 			}
@@ -1154,14 +1154,14 @@ int CNWNXFuncs::SetEvent() {
 int CNWNXFuncs::SetTag() {
 	_log(3, "SetTag: %s\n", Params);
 	uint32_t oID = ((CNWSObject*)oObject)->obj_generic.obj_id;
-	CNWSModule *Mod = CServerExoAppInternal__GetModule((*NWN_AppManager)->app_server->srv_internal, NULL);
+	CNWSModule *Mod = ((*NWN_AppManager)->app_server->srv_internal)->GetModule();
 	CLookupTableObject *LookupObject = Mod->lookuptable;
 	int i=0;
 	while (i<Mod->lookuptable_len) {
 		if (LookupObject->obj_oid == oID) {
 			CGenericObject *obj = LookupObject->pObject;
 			CExoString sNewTag(Params);
-			CNWSObject__SetTag((CNWSObject*)oObject, NULL, sNewTag);
+			((CNWSObject*)oObject)->SetTag(sNewTag);
 
 			strcpy(LookupObject->Tag, Params);
 			break;
@@ -2192,7 +2192,7 @@ int CNWNXFuncs::GetAllEffectRemainingDuration() {
     uint32_t tD, tT, eD, eT;
 	int64_t current, expire;
 
-	CWorldTimer__GetWorldTime((*NWN_AppManager)->app_server->srv_internal->srv_time_world, NULL, &tD, &tT);
+	(*NWN_AppManager)->app_server->srv_internal->srv_time_world->GetWorldTime(&tD, &tT);
 	current = (tD * 2880000LL) + tT;
 
 	eD = getFirstNextEffect->eff_expire_day;
@@ -2556,7 +2556,7 @@ int CNWNXFuncs::SetGender() {
 int CNWNXFuncs::GetWorldTime() {
 	uint32_t wtDate, wtTime;
 
-	CWorldTimer__GetWorldTime((*NWN_AppManager)->app_server->srv_internal->srv_time_world, NULL, &wtDate, &wtTime);
+	(*NWN_AppManager)->app_server->srv_internal->srv_time_world->GetWorldTime(&wtDate, &wtTime);
 
 	//return time only
 	if (P1 == 0) sprintf_s(Params, strlen(Params), "%ld", wtTime);
@@ -2690,7 +2690,7 @@ int CNWNXFuncs::GetDamageImmunity() {
 		return 0;
 	}
 
-	sprintf(Params, "%d", CNWSObject__GetDamageImmunityByFlags((CNWSObject*)oObject, NULL, P1));
+	sprintf(Params, "%d", ((CNWSObject*)oObject)->GetDamageImmunityByFlags(P1));
 	return 1;
 }
 
@@ -2927,7 +2927,7 @@ int CNWNXFuncs::GetAllEffectType() {
 
 	int iType;
 	if (!P1) {
-		iType = CGameEffect__GetScriptEffectType(getFirstNextEffect, NULL);
+		iType = getFirstNextEffect->GetScriptEffectType();
 	}
 	else {
 		iType = getFirstNextEffect->eff_type;
@@ -2999,7 +2999,7 @@ int CNWNXFuncs::RemoveQueuedEffects() {
 
 	while (!EffectRemovalIDs.empty()) {
 		iID = EffectRemovalIDs.back();
-		CNWSObject__RemoveEffectById((CNWSObject*)oObject, NULL, iID);
+		((CNWSObject*)oObject)->RemoveEffectById(iID);
 		EffectRemovalIDs.pop_back();
 	}
 	return 1;
@@ -3025,10 +3025,10 @@ int CNWNXFuncs::ApplyVFXForPC() {
 		return 0;
 	}
 
-	CNWSPlayer *pPlayer = CServerExoApp__GetClientObjectByObjectId((*NWN_AppManager)->app_server, NULL, plID);
-	CNWSMessage *pServerMessage = (CNWSMessage*)CServerExoApp__GetNWSMessage((*NWN_AppManager)->app_server, NULL);
+	CNWSPlayer *pPlayer = ((*NWN_AppManager)->app_server)->GetClientObjectByObjectId(plID);
+	CNWSMessage *pServerMessage = ((*NWN_AppManager)->app_server)->GetNWSMessage();
 
-	return CNWSMessage__SendServerToPlayerArea_VisualEffect(pServerMessage, NULL, pPlayer, nVFX, Px, Py, Pz);
+	return pServerMessage->SendServerToPlayerArea_VisualEffect(pPlayer, nVFX, Px, Py, Pz);
 }
 
 int CNWNXFuncs::GetEffectInts() {
@@ -3216,14 +3216,14 @@ int CNWNXFuncs::GetSurfaceMaterial() {
 
 	CNWSArea *Area = (CNWSArea*)(oObject-0xC4);
 	if (Area) {
-		CNWTile *Tile = CNWSArea__GetTile(Area, NULL, x, y, (int)z);
+		CNWTile *Tile = Area->GetTile(x, y, (int)z);
 		if (Tile) {
 			int Tile_x=0, Tile_y=0;
-			CNWTile__GetLocation((CNWTile*)Tile, NULL, &Tile_x, &Tile_y);
+			((CNWTile*)Tile)->GetLocation(&Tile_x, &Tile_y);
 			x = x - (long double)Tile_x * 10.0;
 			y = y - (long double)Tile_y * 10.0;
 			
-			Result = CNWSTile__GetSurfaceMaterial((CNWSTile*)Tile, NULL, x, y, z);
+			Result = ((CNWSTile*)Tile)->GetSurfaceMaterial(x, y, z);
 		}
 		else _log(3, "Tile invalid\n");
 	}
@@ -3241,7 +3241,7 @@ int CNWNXFuncs::TimebarStart() {
 		return 0;
 	}
 
-	nwn_TimebarStart((CNWSCreature*)oObject, P1, P2);
+	((CNWSCreature*)oObject)->StartGuiTimingBar(P1, P2);
 
 	return 1;
 }
@@ -3253,7 +3253,7 @@ int CNWNXFuncs::TimebarStop() {
 		return 0;
 	}
 
-	nwn_TimebarStop((CNWSCreature*)oObject);
+	((CNWSCreature*)oObject)->StopGuiTimingBar();
 	return 1;
 }
 
@@ -3271,7 +3271,7 @@ int CNWNXFuncs::SetAge() {
 }
 
 int CNWNXFuncs::ModifyItem() {
-	CNWSItem *Item = CServerExoAppInternal__GetItemByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, ((CGenericObject*)oObject)->obj_id);
+	CNWSItem *Item = ((*NWN_AppManager)->app_server->srv_internal)->GetItemByGameObjectID(((CGenericObject*)oObject)->obj_id);
 	if (Item) {
 		Item->ModelPart1 = 1;
 	}

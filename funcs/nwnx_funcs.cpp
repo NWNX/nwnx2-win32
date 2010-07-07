@@ -282,8 +282,7 @@ void CNWNXFuncs::NWN_CreateGeometry(CNWSTrigger *Trigger, CScriptLocation *Loc, 
 
 		Trigger->geometry_vectors[0].x = Loc->loc_position.x;
 		Trigger->geometry_vectors[0].y = Loc->loc_position.y;
-		Trigger->geometry_vectors[0].z = CNWSArea__ComputeHeight(
-			Area, NULL,
+		Trigger->geometry_vectors[0].z = Area->ComputeHeight(
 			Trigger->geometry_vectors[0].x,
 			Trigger->geometry_vectors[0].y,
 			Trigger->geometry_vectors[0].z);
@@ -301,8 +300,7 @@ void CNWNXFuncs::NWN_CreateGeometry(CNWSTrigger *Trigger, CScriptLocation *Loc, 
 
 			Trigger->geometry_vectors[i].x = x;
 			Trigger->geometry_vectors[i].y = y;
-			Trigger->geometry_vectors[i].z = CNWSArea__ComputeHeight(
-				Area, NULL,
+			Trigger->geometry_vectors[i].z = Area->ComputeHeight(
 				Trigger->geometry_vectors[i].x,
 				Trigger->geometry_vectors[i].y,
 				Trigger->geometry_vectors[i].z);
@@ -330,7 +328,7 @@ int CNWNXFuncs::GetEventScriptInfo(int &ScriptNumber, std::string &ScriptName, i
 
 				if (iScript >= 0 && iScript <= Max) {
 					CExoString sScriptName(Script.c_str());
-					CExoString__StripNonAlphaNumeric(&sScriptName, NULL, 1, 0, 0);
+					sScriptName.StripNonAlphaNumeric(1, 0, 0);
 					Param = sScriptName.text;
 					Param = Param.substr(0, 16);
 

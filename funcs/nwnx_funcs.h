@@ -247,8 +247,6 @@ private:
 	CGameEffect *GetNthEffect(const CNWSObject *obj, long P1, long P2);
 
 // internal functions helper declarations
-	void nwn_TimebarStart(CNWSCreature *cre, unsigned long ul, unsigned char uc);
-	void nwn_TimebarStop(CNWSCreature *cre);
 
 	void nwn_SetWorldTime(uint32_t wtDate, uint32_t wtTime, int P3=0);
 	void nwn_UpdateQuickBar(CGenericObject* obj);
