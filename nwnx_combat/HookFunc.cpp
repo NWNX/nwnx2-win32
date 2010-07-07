@@ -28,8 +28,8 @@ CNWSItem *Item=NULL;
 
 unsigned int stack;
 
-void __declspec(naked)GetAttackModifierVersusHookProc() {
-	_asm {
+void __declspec(naked) GetAttackModifierVersusHookProc() {
+	__asm {
 		pushad
 		mov pThis, ecx
 		mov Defender, eax
@@ -40,8 +40,7 @@ void __declspec(naked)GetAttackModifierVersusHookProc() {
 		popad
 		mov eax, i
 		ret 4
-	}//OMG IT WORKS! Really wish I knew why...
-
+	}
 }
 
 void __declspec(naked)GetMeleeAttackBonusHookProc() {
@@ -66,7 +65,8 @@ void __declspec(naked)GetMeleeAttackBonusHookProc() {
 	}
 }
 
-void __declspec(naked)GetWeaponFinesseHookProc() {
+void __declspec(naked) GetWeaponFinesseHookProc() {
+
 	__asm {
 		pushad
 		mov pThis, ecx
@@ -256,6 +256,21 @@ void __declspec(naked)GetWeaponOfChoiceHook() {
 	}
 }
 
+void (*nwn_CalculateSpellSaveDCNextHook)(CNWSCreature *cre, int *Spell_ID);
+
+void __declspec(naked)CalculateSpellSaveDCHook(CNWSCreature *cre, int *Spell_ID) {
+	__asm {
+		pushad
+	}
+
+	_log(3, "SpellID: %d\n", *Spell_ID);
+
+	__asm {
+		popad
+		jmp nwn_CalculateSpellSaveDCNextHook
+	}
+}
+
 void HookFunctions() {
 	DWORD org_GetAttackModifierVersus = 0x00470F00;
 	DWORD org_GetMeleeAttackBonus = 0x0046FB40;
@@ -272,13 +287,16 @@ void HookFunctions() {
 	DWORD org_GetDevastatingCrit= 0x00482280;
 	DWORD org_GetWeaponOfChoice= 0x0048CB10;
 
+	DWORD org_GetSpellSaveDC=0x004B2340;
+
+	if (HookCode((PVOID) org_GetSpellSaveDC, CalculateSpellSaveDCHook, (PVOID*)&nwn_CalculateSpellSaveDCNextHook)) _log(3, "* CalculateSpellSaveDC hooked\n");
 
 	//if (HookCode((PVOID) org_GetAttackModifierVersus, GetAttackModifierVersusHookProc, (PVOID*)&nwn_GetAttackModifierVersusNextHook)) _log(3, "* GetAttackModifierVersus hooked\n");
 	//HookCode((PVOID) org_GetMeleeAttackBonus, GetMeleeAttackBonusHookProc, (PVOID*)&nwn_GetMeleeAttackBonusNextHook);
 	//if (HookCode((PVOID) org_GetWeaponFinesse, GetWeaponFinesseHookProc, (PVOID*)&nwn_GetWeaponFinesseNextHook)) _log(3, "* GetWeaponFinnesse hooked\n");
 	//if (HookCode((PVOID) org_CalculateOffhandAttacks, CalculateOffhandAttacksHookProc, (PVOID*)&nwn_CalculateOffhandAttacksNextHook)) _log(3, "* CalculateOffhandAttacks hooked\n");
 	//if (HookCode((PVOID) org_HasFeat, HasFeatHookProc, (PVOID*)&nwn_HasFeatNextHook)) _log(3, "* HasFeat hooked\n");
-	
+	/*
 	_log(3, "* GetWeaponFocusHook: %s\n", 
 		HookCode((PVOID) org_GetWeaponFocus, GetWeaponFocusHook, (PVOID*)&nwn_GetWeaponFocusNextHook) ? "success" : "fail");
 	_log(3, "* GetEpicWeaponFocusHook: %s\n", 
@@ -295,4 +313,5 @@ void HookFunctions() {
 		HookCode((PVOID) org_GetDevastatingCrit, GetDevastatingCritHook, (PVOID*)&nwn_GetDevastatingCritNextHook) ? "success" : "fail");
 	_log(3, "* GetWeaponOfChoiceHook: %s\n", 
 		HookCode((PVOID) org_GetWeaponOfChoice, GetWeaponOfChoiceHook, (PVOID*)&nwn_GetWeaponOfChoiceNextHook) ? "success" : "fail");
+		*/
 }

@@ -78,8 +78,8 @@ char* CNWNXCombat::OnRequest(char *gameObject, char* Request, char* Parameters) 
 		CNWSCreature *cre = (CNWSCreature*)gameObject;
 		//CNWSObject *oDefender = (CNWSObject*)CServerExoApp__GetGameObject((*NWN_AppManager)->app_server, NULL, oidDefender);
 		//CNWSCombatRound__ClearAllAttacks(cre->cre_combat_round, NULL);
-		CNWSCombatRound__StartCombatRound(cre->cre_combat_round, NULL, oidDefender);
-		CNWSCreature__ResolveAttack(cre, NULL, oidDefender, a3, a4);
+		cre->cre_combat_round->StartCombatRound(oidDefender);
+		cre->ResolveAttack(oidDefender, a3, a4);
 	}
 	else if (strcmp(Request, "TEST") == 0) {
 		LoadCombatFeats();
@@ -140,7 +140,7 @@ void CNWNXCombat::WriteLogHeader(int debug)
 }
 
 int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oidDefender, int bOffHand, int nAttackNumber, int bMonk) {
-	CNWSCreature *Defender = (CNWSCreature*)CServerExoApp__GetGameObject((*NWN_AppManager)->app_server, NULL, oidDefender);
+	CNWSCreature *Defender = (CNWSCreature*)((*NWN_AppManager)->app_server)->GetGameObject(oidDefender);
 
 	CNWSItem *Weapon;
 
@@ -175,8 +175,8 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 	CNWBaseItem *BaseMain = NULL;
 	CNWBaseItem *BaseOff = NULL;
 
-	WeaponMain = CNWSInventory__GetItemInSlot(Attacker->cre_equipment, NULL, 0x10);
-	WeaponOff  = CNWSInventory__GetItemInSlot(Attacker->cre_equipment, NULL, 0x20);
+	WeaponMain = Attacker->cre_equipment->GetItemInSlot(0x10);
+	WeaponOff  = Attacker->cre_equipment->GetItemInSlot(0x20);
 
 	_log (3, "Attacker ID: %08x\nDefender ID: %08x\nMain Weapon ID: %08x\nOff Weapon ID: %08x\n",
 		Attacker == NULL ? 0x7F000000 : Attacker->obj.obj_generic.obj_id,
@@ -186,7 +186,7 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 	);
 
 	// Base Attack Bonus
-	iBab = CNWSCreatureStats__GetBaseAttackBonus(Attacker->cre_stats, NULL, 0);
+	iBab = (Attacker->cre_stats)->GetBaseAttackBonus(0);
 	if (bMonk)
 		iBab -= 3 * nAttackNumber;
 	else
@@ -199,9 +199,9 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 
 	// get the baseitem data
 	if (WeaponMain != NULL) { // is it possible to have an offhand weapon equipped without a main weapon?
-		BaseMain = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, WeaponMain->it_baseitemtype);
+		BaseMain = (*NWN_Rules)->ru_baseitems->GetBaseItem(WeaponMain->it_baseitemtype);
 		if (WeaponOff != NULL) {
-			BaseOff = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, WeaponOff->it_baseitemtype);
+			BaseOff = (*NWN_Rules)->ru_baseitems->GetBaseItem(WeaponOff->it_baseitemtype);
 		}
 
 		if ((WeaponOff == NULL || BaseOff->WeaponType == 0) && (WeaponMain != NULL && BaseMain != NULL && BaseMain->WeaponType != 8)) {
@@ -211,18 +211,18 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 		else { // wielding weapons that incurr penalties
 			if (!bOffHand) { // main attack penalties
 				iTwoWeaponFighting_Mod = -6;
-				if ((CNWSCreature__GetRelativeWeaponSize(Attacker, NULL, WeaponOff) <= -1) || BaseMain->WeaponWield == 8)
+				if ((Attacker->GetRelativeWeaponSize(WeaponOff) <= -1) || BaseMain->WeaponWield == 8)
 					iTwoWeaponFighting_Mod = -4;
-				if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 41)) //FEAT_TWO_WEAPON_FIGHTING
+				if ((Attacker->cre_stats)->HasFeat(41)) //FEAT_TWO_WEAPON_FIGHTING
 					iTwoWeaponFighting_Mod += 2;
 			}
 			else { // Off hand attack penalties
 				iTwoWeaponFighting_Mod = -10;
-				if ((CNWSCreature__GetRelativeWeaponSize(Attacker, NULL, WeaponOff) <= -1) || BaseMain->WeaponWield == 8)
+				if ((Attacker->GetRelativeWeaponSize(WeaponOff) <= -1) || BaseMain->WeaponWield == 8)
 					iTwoWeaponFighting_Mod = -8;
-				if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 1)) //FEAT_AMBIDEXTERITY
+				if ((Attacker->cre_stats)->HasFeat(1)) //FEAT_AMBIDEXTERITY
 					iTwoWeaponFighting_Mod += 4;
-				if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 41)) //FEAT_TWO_WEAPON_FIGHTING
+				if ((Attacker->cre_stats)->HasFeat(41)) //FEAT_TWO_WEAPON_FIGHTING
 					iTwoWeaponFighting_Mod += 2;
 			}
 		}
@@ -252,21 +252,21 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 
 	/************************ Special Attack Modifiers *********************/
 
-	iSpecialAttack_Mod = CNWSCreatureStats__ResolveSpecialAttackAttackBonus(Attacker->cre_stats, NULL, Defender);
+	iSpecialAttack_Mod = (Attacker->cre_stats)->ResolveSpecialAttackAttackBonus(Defender);
 
 	_log(3, "iSpecialAttack_Mod: \t\t%d\n", iSpecialAttack_Mod);
 
 	/************************ Nature Sense Modifier *********************/
 
-	unsigned char area = *(unsigned char *)(CNWSObject__GetArea((CNWSObject*)Attacker, NULL) + 4);
-	if (area && (area & 4 || area & 1 || area & 2) && CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 198))
+	unsigned char area = *(unsigned char *)(((CNWSObject*)Attacker)->GetArea() + 4);
+	if (area && (area & 4 || area & 1 || area & 2) && (Attacker->cre_stats)->HasFeat(198))
 		iNatureSense_Mod = 2;
 
 	_log(3, "iNatureSense_Mod: \t\t%d\n", iNatureSense_Mod);
 
 	/************************ Epic Prowess Modifier *********************/
 
-	if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 584))
+	if ((Attacker->cre_stats)->HasFeat(584))
 		iEpicProwess_Mod = 1;
 
 	_log(3, "iEpicProwess_Mod: \t\t%d\n", iEpicProwess_Mod);
@@ -274,12 +274,12 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 	/************************ Weapon Master Modifier *********************/
 
 	int bWeaponOfChoice = 0;
-	if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 884)
-	&& (bWeaponOfChoice = CNWSCreatureStats__GetIsWeaponOfChoice(Attacker->cre_stats, NULL, WeaponMain->it_baseitemtype))) {
+	if ((Attacker->cre_stats)->HasFeat(884)
+	&& (bWeaponOfChoice = (Attacker->cre_stats)->GetIsWeaponOfChoice(WeaponMain->it_baseitemtype))) {
 		iWeaponMaster_Mod = 1;
 		bWeaponOfChoice = 1;
 	}
-	if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 1071) && bWeaponOfChoice) {
+	if ((Attacker->cre_stats)->HasFeat(1071) && bWeaponOfChoice) {
 		// get the weapon master levels
 		for (int i = 0; i<3; i++) {
 			if (Attacker->cre_stats->cs_classes[i].cl_class != 33)
@@ -295,8 +295,8 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 	
 	/************************ Favored Enemy Modifier *********************/
 
-	if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 855)) {
-		if (CNWSCreatureStats__GetFavoredEnemyBonus(Attacker->cre_stats, NULL, Defender)) {
+	if ((Attacker->cre_stats)->HasFeat(855)) {
+		if ((Attacker->cre_stats)->GetFavoredEnemyBonus(Defender)) {
 			iFavoredEnemy_Mod = 2;
 		}
 	}
@@ -305,7 +305,7 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 
 	/************************ Good Aim Modifier *********************/
 
-	iGoodAim_Mod = (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 250) && BaseMain && BaseMain->WeaponWield == 11);
+	iGoodAim_Mod = ((Attacker->cre_stats)->HasFeat(250) && BaseMain && BaseMain->WeaponWield == 11);
 
 	_log(3, "iGoodAim_Mod: \t\t\t%d\n", iGoodAim_Mod);
 
@@ -319,14 +319,14 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 
 	if (WeaponMain && (WeaponMain->it_baseitemtype == 8 || WeaponMain->it_baseitemtype == 11)) {
 		for (int i=1059; i<=1045; i--) {
-			if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, i)) {
+			if ((Attacker->cre_stats)->HasFeat(i)) {
 				iEnchantArrow_Mod = i-1039;
 				break;
 			}
 		}
 		if (!iEnchantArrow_Mod) {
 			for (int i=449; i<=445; i--) {
-				if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, i)) {
+				if ((Attacker->cre_stats)->HasFeat(i)) {
 					iEnchantArrow_Mod = i-444;
 					break;
 				}
@@ -338,9 +338,9 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 
 	/************************ Offensive Training Modifier *********************/
 
-	if ((CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 232) && Defender->cre_stats->cs_race == 12)
-		|| (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 231) && Defender->cre_stats->cs_race == 14)
-		|| (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 242) && Defender->cre_stats->cs_race == 15)
+	if (((Attacker->cre_stats)->HasFeat(232) && Defender->cre_stats->cs_race == 12)
+		|| ((Attacker->cre_stats)->HasFeat(231) && Defender->cre_stats->cs_race == 14)
+		|| ((Attacker->cre_stats)->HasFeat(242) && Defender->cre_stats->cs_race == 15)
 	) {
 		iOffensiveTraining_Mod = 1;
 	}
@@ -349,14 +349,14 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 	
 	/************************ Ability Modifier *********************/
 	
-	int iDex = CNWSCreatureStats__GetDEXMod(Attacker->cre_stats, NULL, 0);
+	int iDex = (Attacker->cre_stats)->GetDEXMod(0);
 	int iWis = Attacker->cre_stats->cs_wis_mod;
 	int iStr = Attacker->cre_stats->cs_str_mod;
 	int iAbility = iStr;
 
 	if (BaseMain && BaseMain->RangedWeapon) { //ranged attack?
 		iAbility = iDex;
-		if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 412)) {
+		if ((Attacker->cre_stats)->HasFeat(412)) {
 			if (iWis > iDex) iAbility = iWis;
 		}
 	}
@@ -383,8 +383,8 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 	if (!bOffHand) Weapon = WeaponMain;
 	else Weapon = WeaponOff;
 
-	if (Weapon && CNWSCreatureStats__GetWeaponFocus(Attacker->cre_stats, NULL, Weapon)) iWeaponFocus_Mod = 1;
-	if (Weapon && CNWSCreatureStats__GetEpicWeaponFocus(Attacker->cre_stats, NULL, Weapon)) iEpicWeaponFocus_Mod = 2;
+	if (Weapon && (Attacker->cre_stats)->GetWeaponFocus(Weapon)) iWeaponFocus_Mod = 1;
+	if (Weapon && (Attacker->cre_stats)->GetEpicWeaponFocus(Weapon)) iEpicWeaponFocus_Mod = 2;
 
 	_log(3, "iWeaponFocus_Mod: \t\t%d\n", iWeaponFocus_Mod);
 	_log(3, "iEpicWeaponFocus_Mod: \t\t%d\n", iEpicWeaponFocus_Mod);
@@ -393,9 +393,7 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 	//Have to admit, I have no clue what this actually does
 
 	iTotalEffect_Mod = 
-		CNWSCreature__GetTotalEffectBonus(
-		Attacker,
-		NULL,
+		Attacker->GetTotalEffectBonus(
 		1,
 		(CNWSObject *)(*(int (__thiscall **)(CNWSCreature *))(Defender->obj.obj_generic.obj_type + 16))(Defender),
 		0,
@@ -411,7 +409,7 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 
 	/************************ Blind Defender Modifier *********************/
 
-	if (CNWSCreature__GetBlind(Defender, NULL) && ((BaseMain && BaseMain->RangedWeapon) || !CNWSCreatureStats__HasFeat(Defender->cre_stats, NULL, 408))) {
+	if (Defender->GetBlind() && ((BaseMain && BaseMain->RangedWeapon) || !(Defender->cre_stats)->HasFeat(408))) {
 		iBlindDefender_Mod = 2;
 	}
 
@@ -420,8 +418,8 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 	/************************ Invisible Attacker Modifier *********************/
 
 	CNWSObject *obj_bInvisible = (CNWSObject *)(*(int (__thiscall **)(CNWSCreature *))(Attacker->cre_stats->cs_original->obj.obj_generic.obj_type + 16))(Attacker->cre_stats->cs_original);
-	if (CNWSCreature__GetInvisible(Attacker, NULL, obj_bInvisible, 0)
-		&& ((BaseMain && BaseMain->RangedWeapon) || !CNWSCreatureStats__HasFeat(Defender->cre_stats, NULL, 408))
+	if (Attacker->GetInvisible(obj_bInvisible, 0)
+		&& ((BaseMain && BaseMain->RangedWeapon) || !(Defender->cre_stats)->HasFeat(408))
 	) {
 		iInvisAttacker_Mod = 2;
 	}
@@ -430,7 +428,7 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 
 	/************************ Can't see target Modifier *********************/
 
-	CNWVisibilityNode *obj_GetVisibleElement = CNWSCreature__GetVisibleListElement(Attacker, NULL, Defender->obj.obj_generic.obj_id);
+	CNWVisibilityNode *obj_GetVisibleElement = Attacker->GetVisibleListElement(Defender->obj.obj_generic.obj_id);
 	if ( !obj_GetVisibleElement || !((unsigned int)obj_GetVisibleElement[1].unknown & 1) ) {
 		iCantSeeTarget_Mod = -4;
 	}
@@ -482,7 +480,7 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 
 	/************************ Target Flanked Modifier *********************/
 
-	if (CNWSCreature__GetFlanked(Attacker, NULL, Defender)) {
+	if (Attacker->GetFlanked(Defender)) {
 		if (BaseMain && BaseMain->RangedWeapon) {
 			// on ranged sneak attack the distance between Attacker and Defender must be <= 9.144m
 			if (fDistance <= 9.144) {
@@ -500,13 +498,13 @@ int CNWNXCombat::GetAttackModifierVersus(CNWSCreature *Attacker, nwn_objid_t oid
 
 	if (BaseMain && BaseMain->RangedWeapon) {
 		if (fDistance <= 4.572) {
-			if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 27)) { //+1 if within 15 ft with Point Blank Shot feat
+			if ((Attacker->cre_stats)->HasFeat(27)) { //+1 if within 15 ft with Point Blank Shot feat
 				iRanged_Mod = 1;
 			}
 			else {
 				iRanged_Mod = -4;
 			}
-/*			float maxAttackRange = CNWSCreature__MaxAttackRange(Attacker, NULL, Defender->obj.obj_generic.obj_id, 0, 0);
+/*			float maxAttackRange = Attacker->MaxAttackRange(Defender->obj.obj_generic.obj_id, 0, 0);
 			if (fDistance <= maxAttackRange) {
 			}*/
 		}
@@ -567,7 +565,7 @@ int CNWNXCombat::GetArmorClassVersus(CNWSCreature *Defender, nwn_objid_t oidAtta
 //
 //	int ac_natural_penalty
 //
-//	CNWSCreature *Attacker = (CNWSCreature*)CServerExoApp__GetGameObject((*NWN_AppManager)->app_server, NULL, oidAttacker);
+//	CNWSCreature *Attacker = (CNWSCreature*)((*NWN_AppManager)->app_server)->GetGameObject(oidAttacker);
 //	int bRangedAttack = 0;
 //	int bAoO = 0;
 //
@@ -582,7 +580,7 @@ int CNWNXCombat::GetArmorClassVersus(CNWSCreature *Defender, nwn_objid_t oidAtta
 //
 //	/************************ Armor, Shield and Natural AC Modifier *********************/
 //
-//	AC_Natural = CNWSCreatureStats__GetACNaturalBase(Defender->cre_stats, NULL, bTouchAttack);
+//	AC_Natural = (Defender->cre_stats)->GetACNaturalBase(bTouchAttack);
 //	
 //	if (!bTouchAttack) {
 //		AC_Armor = Defender->cre_stats->cs_ac_armour_base;
@@ -592,11 +590,11 @@ int CNWNXCombat::GetArmorClassVersus(CNWSCreature *Defender, nwn_objid_t oidAtta
 //
 //	/************************ Dex Modifier & Dodge Modifiers *********************/
 //
-//	iDex_Mod = CNWSCreatureStats__GetDEXMod(Defender->cre_stats, NULL, 1);
+//	iDex_Mod = (Defender->cre_stats)->GetDEXMod(1);
 //
 //	// do we get to keep our dex bonus
 //	CNWSObject *obj_bInvisible = (CNWSObject *)(*(int (__thiscall **)(CNWSCreature *))(Defender->cre_stats->cs_original->obj.obj_generic.obj_type + 16))(Attacker->cre_stats->cs_original);
-//	if (((CNWSCreature__GetInvisible(Attacker, NULL, obj_bInvisible, 0) && !CNWSCreatureStats__HasFeat(Defender->cre_stats, NULL, 0x198))
+//	if (((Attacker->GetInvisible(obj_bInvisible, 0) && !(Defender->cre_stats)->HasFeat(0x198))
 //	|| CNWSCreature__GetFlatFooted(Defender, NULL) == 1)
 //	&& !(CNWSCreatureStats_HasFeat(Defender->cre_stats, NULL, 195) || CNWSCreatureStats_HasFeat(Defender->cre_stats, NULL, 949))){
 //		iDex_Mod = 0;
@@ -608,15 +606,15 @@ int CNWNXCombat::GetArmorClassVersus(CNWSCreature *Defender, nwn_objid_t oidAtta
 //		CNWSVisibilityNode *visNode = CNWSCreature__GetVisibleListElement(Defender, NULL, Attacker->obj.obj_generic.obj_id);
 //		if (visNode &&
 //		((unsigned int)visNode[1].unknown &1
-//		|| CNWSCreatureStats__HasFeat(Defender->cre_stats, 0x198)
+//		|| (Defender->cre_stats)->HasFeat(0x198)
 //		&& !bRangedAttack)) {
 //			iDodge_AC = Defender->cre_stats->cs_ac_dodge_bonus - Defender->cre_stats->cs_ac_dodge_penalty;
 //			if (iDodge_AC > 20) iDodge_AC = 20;
 //			if (bAoO) {
-//				if (CNWSCreatureStats__HasFeat(Defender->cre_stats, NULL, 0x1A)) //Mobility
+//				if ((Defender->cre_stats)->HasFeat(0x1A)) //Mobility
 //					iDodge_AC += 4;
 //			}
-//			if (CNWSCreatureStats__HasFeat(Defender->cre_stats, NULL, 10)) {
+//			if ((Defender->cre_stats)->HasFeat(10)) {
 //				if (Defender->cre_attack_target == oidAttacker) {
 //					iDodge_AC += 2;
 //				}
@@ -641,7 +639,7 @@ int CNWNXCombat::GetArmorClassVersus(CNWSCreature *Defender, nwn_objid_t oidAtta
 //	
 //	/************************ Dex Modifier & Dodge Modifiers *********************/
 //
-//	if (CNWSCreatureStats__HasFeat(Defender->cre_stats, NULL, 233) && Attacker->cre_stats->cs_race == 18) { //Giant Training
+//	if ((Defender->cre_stats)->HasFeat(233) && Attacker->cre_stats->cs_race == 18) { //Giant Training
 //		iDefensiveTaining_AC = 4;
 //	}
 //
@@ -788,11 +786,11 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 
 	uint32_t bRangedAttack = AttackData->RangedAttack;
 	uint8_t WeaponAttackType = AttackData->WeaponAttackType;
-	Weapon = CNWSCombatRound__GetCurrentAttackWeapon(combatRound, NULL, WeaponAttackType);
+	Weapon = combatRound->GetCurrentAttackWeapon(WeaponAttackType);
 
-	iMod = CNWSCreatureStats__GetBaseAttackBonus(AttackerStats, NULL, 0);
+	iMod = AttackerStats->GetBaseAttackBonus(0);
 
-	if (Weapon != NULL) BaseWeapon = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, Weapon->it_baseitemtype);
+	if (Weapon != NULL) BaseWeapon = (*NWN_Rules)->ru_baseitems->GetBaseItem(Weapon->it_baseitemtype);
 
 	if (WeaponAttackType == 2) {
 		 iMod -= 5 * combatRound->OffHandTaken++;
@@ -810,7 +808,7 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 		&& AttackData->AttackType != 6 //cleave
 		&& AttackData->AttackType != 391 //great cleave
 		) {
-			if (CNWSCreatureStats__GetUseMonkAttackTables(AttackerStats, NULL, 0))
+			if (AttackerStats->GetUseMonkAttackTables(0))
 				iMod -= 3 * CurrentAttack;
 			else
 				iMod -= 5 * CurrentAttack;
@@ -832,11 +830,11 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 	//	offHand weapon equipped
 	//	mainHand weapon is double sided
 
-	Weapon2nd = CNWSInventory__GetItemInSlot(Attacker->cre_equipment, NULL, 0x20);
+	Weapon2nd = Attacker->cre_equipment->GetItemInSlot(0x20);
 	if (!Weapon2nd) {
-		Weapon2nd = CNWSInventory__GetItemInSlot(Attacker->cre_equipment, NULL, 0x10);
+		Weapon2nd = Attacker->cre_equipment->GetItemInSlot(0x10);
 		if (Weapon2nd) {
-			Base2nd = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, Weapon2nd->it_baseitemtype);
+			Base2nd = (*NWN_Rules)->ru_baseitems->GetBaseItem(Weapon2nd->it_baseitemtype);
 			if (Base2nd) {
 				if (Base2nd->WeaponWield != 8)
 					Weapon2nd = NULL;
@@ -846,28 +844,28 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 
 	if (Weapon2nd) {
 		if (WeaponAttackType == 1) {
-			Base2nd = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, Weapon2nd->it_baseitemtype);
+			Base2nd = (*NWN_Rules)->ru_baseitems->GetBaseItem(Weapon2nd->it_baseitemtype);
 			if (Base2nd->WeaponType) {
 				iMod = -6;
-				if ((CNWSCreature__GetRelativeWeaponSize(Attacker, NULL, Weapon2nd) <= -1) || Base2nd->WeaponWield == 8)
+				if ((Attacker->GetRelativeWeaponSize(Weapon2nd) <= -1) || Base2nd->WeaponWield == 8)
 					iMod = -4;
-				if (CNWSCreatureStats__HasFeat(AttackerStats, NULL, 41)) //FEAT_TWO_WEAPON_FIGHTING
+				if (AttackerStats->HasFeat(41)) //FEAT_TWO_WEAPON_FIGHTING
 					iMod += 2;
-				if (CNWSCreatureStats__HasFeat(AttackerStats, NULL, CustomFeats.FEAT_ABSOLUTE_AMBIDEXTERITY ))
+				if (AttackerStats->HasFeat(CustomFeats.FEAT_ABSOLUTE_AMBIDEXTERITY ))
 					iMod += 2;
 			}
 		}
 		else if (WeaponAttackType == 2) {
-			Base2nd = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, Weapon2nd->it_baseitemtype);
+			Base2nd = (*NWN_Rules)->ru_baseitems->GetBaseItem(Weapon2nd->it_baseitemtype);
 			if (Base2nd) {
 				iMod = -10;
-				if ((CNWSCreature__GetRelativeWeaponSize(Attacker, NULL, Weapon2nd) <= -1) || BaseWeapon->WeaponWield == 8)
+				if ((Attacker->GetRelativeWeaponSize(Weapon2nd) <= -1) || BaseWeapon->WeaponWield == 8)
 					iMod = -8;
-				if (CNWSCreatureStats__HasFeat(AttackerStats, NULL, 1)) //FEAT_AMBIDEXTERITY
+				if (AttackerStats->HasFeat(1)) //FEAT_AMBIDEXTERITY
 					iMod += 4;
-				if (CNWSCreatureStats__HasFeat(AttackerStats, NULL, 41)) //FEAT_TWO_WEAPON_FIGHTING
+				if (AttackerStats->HasFeat(41)) //FEAT_TWO_WEAPON_FIGHTING
 					iMod += 2;
-				if (CNWSCreatureStats__HasFeat(AttackerStats, NULL, CustomFeats.FEAT_ABSOLUTE_AMBIDEXTERITY ))
+				if (AttackerStats->HasFeat(CustomFeats.FEAT_ABSOLUTE_AMBIDEXTERITY ))
 					iMod += 2;
 			}
 		}
@@ -906,7 +904,7 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 
 	/************************ Special Attack Modifiers *********************/
 
-	iMod = CNWSCreatureStats__ResolveSpecialAttackAttackBonus(Attacker->cre_stats, NULL, DefenderAsCreature);
+	iMod = (Attacker->cre_stats)->ResolveSpecialAttackAttackBonus(DefenderAsCreature);
 
 	if (iMod) {
 		iAttackBonus += iMod;
@@ -917,8 +915,8 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 	/************************ Nature Sense Modifier *********************/
 
 	iMod = 0;
-	unsigned char area = *(unsigned char *)(CNWSObject__GetArea((CNWSObject*)Attacker, NULL) + 4);
-	if (area && (area & 4 || area & 1 || area & 2) && CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 198))
+	unsigned char area = *(unsigned char *)(((CNWSObject*)Attacker)->GetArea() + 4);
+	if (area && (area & 4 || area & 1 || area & 2) && (Attacker->cre_stats)->HasFeat(198))
 		iMod = 2;
 
 	if (iMod) {
@@ -930,7 +928,7 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 	/************************ Epic Prowess Modifier *********************/
 
 	iMod = 0;
-	if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 584))
+	if ((Attacker->cre_stats)->HasFeat(584))
 		iMod = 1;
 
 	if (iMod) {
@@ -944,12 +942,12 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 	iMod = 0;
 	if (Weapon != NULL) {
 		int bWeaponOfChoice = 0;
-		if (CNWSCreatureStats__HasFeat(AttackerStats, NULL, 884)
-		&& (bWeaponOfChoice = CNWSCreatureStats__GetIsWeaponOfChoice(Attacker->cre_stats, NULL, Weapon->it_baseitemtype))) {
+		if (AttackerStats->HasFeat(884)
+		&& (bWeaponOfChoice = (Attacker->cre_stats)->GetIsWeaponOfChoice(Weapon->it_baseitemtype))) {
 			iMod = 1;
 			bWeaponOfChoice = 1;
 		}
-		if (CNWSCreatureStats__HasFeat(AttackerStats, NULL, 1071) && bWeaponOfChoice) {
+		if (AttackerStats->HasFeat(1071) && bWeaponOfChoice) {
 			// get the weapon master levels
 			for (int i = 0; i<3; i++) {
 				if (AttackerStats->cs_classes[i].cl_class != 33)
@@ -972,8 +970,8 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 
 	if (DefenderAsCreature != NULL) {
 		iMod=0;
-		if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 855)) { //FEAT_EPIC_BANE_OF_ENEMIES
-			if (CNWSCreatureStats__GetFavoredEnemyBonus(Attacker->cre_stats, NULL, DefenderAsCreature)) {
+		if ((Attacker->cre_stats)->HasFeat(855)) { //FEAT_EPIC_BANE_OF_ENEMIES
+			if ((Attacker->cre_stats)->GetFavoredEnemyBonus(DefenderAsCreature)) {
 				iMod = 2;
 			}
 			if (iMod) {
@@ -985,7 +983,7 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 
 	/************************ Good Aim Modifier *********************/
 
-	iMod = (CNWSCreatureStats__HasFeat(AttackerStats, NULL, 250) && BaseWeapon && BaseWeapon->WeaponWield == 11);
+	iMod = (AttackerStats->HasFeat(250) && BaseWeapon && BaseWeapon->WeaponWield == 11);
 
 	if (iMod) {
 		iAttackBonus += iMod;
@@ -1008,14 +1006,14 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 	iMod = 0;
 	if (Weapon && (Weapon->it_baseitemtype == 8 || Weapon->it_baseitemtype == 11)) {
 		for (int i=1059; i<=1045; i--) {
-			if (CNWSCreatureStats__HasFeat(AttackerStats, NULL, i)) {
+			if (AttackerStats->HasFeat(i)) {
 				iMod = i-1039;
 				break;
 			}
 		}
 		if (!iMod) {
 			for (int i=449; i<=445; i--) {
-				if (CNWSCreatureStats__HasFeat(AttackerStats, NULL, i)) {
+				if (AttackerStats->HasFeat(i)) {
 					iMod = i-444;
 					break;
 				}
@@ -1032,9 +1030,9 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 
 	if (DefenderAsCreature != NULL) {
 		iMod=0;
-		if ((CNWSCreatureStats__HasFeat(AttackerStats, NULL, 232) && DefenderAsCreatureStats->cs_race == 12)
-			|| (CNWSCreatureStats__HasFeat(AttackerStats, NULL, 231) && DefenderAsCreatureStats->cs_race == 14)
-			|| (CNWSCreatureStats__HasFeat(AttackerStats, NULL, 242) && DefenderAsCreatureStats->cs_race == 15)
+		if ((AttackerStats->HasFeat(232) && DefenderAsCreatureStats->cs_race == 12)
+			|| (AttackerStats->HasFeat(231) && DefenderAsCreatureStats->cs_race == 14)
+			|| (AttackerStats->HasFeat(242) && DefenderAsCreatureStats->cs_race == 15)
 		) {
 			iMod = 1;
 
@@ -1050,17 +1048,17 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 
 	iMod = 0;
 	if (bRangedAttack) {
-		if (CNWSCreatureStats__HasFeat(AttackerStats, NULL, 412)) {
-			int iDexMod = CNWSCreatureStats__GetDEXMod(AttackerStats, NULL, 0);
+		if (AttackerStats->HasFeat(412)) {
+			int iDexMod = AttackerStats->GetDEXMod(0);
 			iMod = iDexMod > AttackerStats->cs_wis_mod ? iDexMod : AttackerStats->cs_wis_mod;
 		}
 		else {
-			iMod = CNWSCreatureStats__GetDEXMod(AttackerStats, NULL, 0);
+			iMod = AttackerStats->GetDEXMod(0);
 		}
 	}
 	else {
 		if (NWN_GetWeaponFinesse(AttackerStats, Weapon)) {
-			int iDexMod = CNWSCreatureStats__GetDEXMod(AttackerStats, NULL, 0);
+			int iDexMod = AttackerStats->GetDEXMod(0);
 			iMod = iDexMod > AttackerStats->cs_str_mod ? iDexMod : AttackerStats->cs_str_mod;
 		}
 		else {
@@ -1076,12 +1074,12 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 
 	/************************ Epic / Weapon Focus Modifier *********************/
 
-	if (iMod = CNWSCreatureStats__GetWeaponFocus(AttackerStats, NULL, Weapon)) {
+	if (iMod = AttackerStats->GetWeaponFocus(Weapon)) {
 		iAttackBonus += 1;
 		_log(3, "iWeaponFocus_Mod: %d\n", iMod);
 	}
 
-	if (iMod = 2*CNWSCreatureStats__GetEpicWeaponFocus(AttackerStats, NULL, Weapon)) {
+	if (iMod = 2*AttackerStats->GetEpicWeaponFocus(Weapon)) {
 		iAttackBonus += 2;
 		_log(3, "iEpicWeaponFocus_Mod: %d\n", iMod);
 	}
@@ -1092,18 +1090,14 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 	iMod = 0;
 	if (DefenderAsCreature != NULL) {
 		iMod = 
-			CNWSCreature__GetTotalEffectBonus(
-			Attacker,
-			NULL,
+			Attacker->GetTotalEffectBonus(
 			1,
 			(CNWSObject *)(*(int (__thiscall **)(CNWSCreature *))(DefenderAsCreature->obj.obj_generic.obj_type + 16))(DefenderAsCreature),
 			0, 0, 0, 0, -1, -1, 0);
 	}
 	else {
 		iMod = 
-			CNWSCreature__GetTotalEffectBonus(
-			Attacker,
-			NULL,
+			Attacker->GetTotalEffectBonus(
 			1, 0, 0, 0, 0, 0, -1, -1, 0);
 	}
 
@@ -1117,8 +1111,8 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 
 	if (DefenderAsCreature != NULL) {
 		iMod=0;
-		if (CNWSCreature__GetBlind(DefenderAsCreature, NULL) 
-			&& (bRangedAttack || !CNWSCreatureStats__HasFeat(DefenderAsCreatureStats, NULL, 408))) {
+		if (DefenderAsCreature->GetBlind() 
+			&& (bRangedAttack || !DefenderAsCreatureStats->HasFeat(408))) {
 			iMod = 2;
 
 			if (iMod) {
@@ -1134,8 +1128,8 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 	if (DefenderAsCreature != NULL) {
 		iMod=0;
 		CNWSObject *obj_bInvisible = (CNWSObject *)(*(int (__thiscall **)(CNWSCreature *))(AttackerStats->cs_original->obj.obj_generic.obj_type + 16))(AttackerStats->cs_original);
-		if (CNWSCreature__GetInvisible(Attacker, NULL, obj_bInvisible, 0)
-			&& (bRangedAttack || !CNWSCreatureStats__HasFeat(DefenderAsCreatureStats, NULL, 408))
+		if (Attacker->GetInvisible(obj_bInvisible, 0)
+			&& (bRangedAttack || !DefenderAsCreatureStats->HasFeat(408))
 		) {
 			iMod = 2;
 		}
@@ -1151,7 +1145,7 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 
 	if (Defender != NULL) {
 		iMod=0;
-		CNWVisibilityNode *obj_GetVisibleElement = CNWSCreature__GetVisibleListElement(Attacker, NULL, Defender->obj_generic.obj_id);
+		CNWVisibilityNode *obj_GetVisibleElement = Attacker->GetVisibleListElement(Defender->obj_generic.obj_id);
 		if ( !obj_GetVisibleElement || !((unsigned int)obj_GetVisibleElement[1].unknown & 1) ) {
 			iMod = -4;
 
@@ -1218,7 +1212,7 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 
 	if (DefenderAsCreature) {
 		iMod=0;
-		if (CNWSCreature__GetFlanked(Attacker, NULL, DefenderAsCreature) == 1) {
+		if (Attacker->GetFlanked(DefenderAsCreature) == 1) {
 			if (bRangedAttack || fDistance < 9.144) {
 				// on ranged sneak attack the distance between Attacker and Defender must be <= 9.144m
 				iMod = 2;
@@ -1238,13 +1232,13 @@ int CNWNXCombat::NWN_GetAttackModifierVersus_Override(CNWSCreature *Attacker, CN
 		iMod=0;
 		if (bRangedAttack) {
 			if (fDistance <= 4.572) {
-				if (CNWSCreatureStats__HasFeat(Attacker->cre_stats, NULL, 27)) { //+1 if within 15 ft with Point Blank Shot feat
+				if ((Attacker->cre_stats)->HasFeat(27)) { //+1 if within 15 ft with Point Blank Shot feat
 					iMod = 1;
 				}
 				else {
-					float maxAttackRange = CNWSCreature__MaxAttackRange(Attacker, NULL, Defender->obj_generic.obj_id, 0, 0);
+					float maxAttackRange = Attacker->MaxAttackRange(Defender->obj_generic.obj_id, 0, 0);
 					if (maxAttackRange * maxAttackRange >= fDistance) {
-						if (!CNWSCreature__GetRangeWeaponEquipped(DefenderAsCreature, NULL)) {
+						if (!DefenderAsCreature->GetRangeWeaponEquipped()) {
 							iMod = -4;
 						}
 					}
@@ -1285,74 +1279,70 @@ int CNWNXCombat::NWN_GetMeleeAttackBonus(CNWSCreatureStats *CreatureStats, int a
 
 
 	if(!a2
-		|| (Item_1 = CNWSInventory__GetItemInSlot(cre->cre_equipment, NULL, 0x20), !Item_1)
-		&& (Item_2 = CNWSInventory__GetItemInSlot(cre->cre_equipment, NULL, 0x10), 
-			(BaseItem = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, Item_2->it_baseitemtype)) != 0)
+		|| (Item_1 = cre->cre_equipment->GetItemInSlot(0x20), !Item_1)
+		&& (Item_2 = cre->cre_equipment->GetItemInSlot(0x10), 
+			(BaseItem = (*NWN_Rules)->ru_baseitems->GetBaseItem(Item_2->it_baseitemtype)) != 0)
 		&& BaseItem->WeaponWield == 8)
-		Item_1 = CNWSInventory__GetItemInSlot(cre->cre_equipment, NULL, 0x10);
+		Item_1 = cre->cre_equipment->GetItemInSlot(0x10);
 	
 	if (NWN_GetWeaponFinesse(CreatureStats, Item_1)
-		|| CNWSCreatureStats__GetDEXMod(CreatureStats, NULL, 0) <= CreatureStats->cs_str_mod
+		|| CreatureStats->GetDEXMod(0) <= CreatureStats->cs_str_mod
 		|| a4)
 		iAttackBonus = CreatureStats->cs_str_mod;
 	else
-		iAttackBonus = CNWSCreatureStats__GetDEXMod(CreatureStats, NULL, 0);
+		iAttackBonus = CreatureStats->GetDEXMod(0);
 
 
 /////////////
 
 	if (a3 == 1) {
 		if (a4) {
-			iAttackBonus += CNWSCreature__GetTotalEffectBonus(
-			cre,
-			NULL,
+			iAttackBonus += cre->GetTotalEffectBonus(
 			6, NULL, 0, 0, 0, 0, -1, -1, a2);
 		}
 		else {
-			iAttackBonus += CNWSCreature__GetTotalEffectBonus(
-			cre,
-			NULL,
+			iAttackBonus += cre->GetTotalEffectBonus(
 			1, NULL, 0, 0, 0, 0, -1, -1, a2);
 		}
 	}
 
 //////////
 
-	iAttackBonus += CNWSCreatureStats__GetBaseAttackBonus(CreatureStats, NULL, 0);
+	iAttackBonus += CreatureStats->GetBaseAttackBonus(0);
 
 /////////////
 
-	if (Item_1 && CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, Item_1->it_baseitemtype)->RangedWeapon) {
+	if (Item_1 && (*NWN_Rules)->ru_baseitems->GetBaseItem(Item_1->it_baseitemtype)->RangedWeapon) {
 		return a4 != 0 ? iAttackBonus : 0;
 	}
 
 //////////////
 
 	if (a4 != 1) {
-		if (CNWSCreatureStats__GetWeaponFocus(CreatureStats, NULL, Item_1)) {
+		if (CreatureStats->GetWeaponFocus(Item_1)) {
 			iAttackBonus += 1;
 		}
 	}
-	else if (!Item_1 && CNWSCreatureStats__GetWeaponFocus(CreatureStats, NULL, NULL)) {
+	else if (!Item_1 && CreatureStats->GetWeaponFocus(NULL)) {
 		iAttackBonus += 1;
 	}
 
 	if (a4 != 1) {
-		if (CNWSCreatureStats__GetEpicWeaponFocus(CreatureStats, NULL, Item_1)) {
+		if (CreatureStats->GetEpicWeaponFocus(Item_1)) {
 			iAttackBonus += 1;
 		}
 	}
-	else if (!Item_1 && CNWSCreatureStats__GetEpicWeaponFocus(CreatureStats, NULL, NULL)) {
+	else if (!Item_1 && CreatureStats->GetEpicWeaponFocus(NULL)) {
 		iAttackBonus += 1;
 	}
 
 ////////////////
 
-	if (CNWSObject__GetArea((CNWSObject*)cre, NULL)) {
-		if ( *(uint8_t *)(CNWSObject__GetArea((CNWSObject*)cre, NULL) + 4) & 4 ) {
-			if ( !(*(uint8_t *)(CNWSObject__GetArea((CNWSObject*)cre, NULL) + 4) & 1) ) {
-				if ( !(*(uint8_t *)(CNWSObject__GetArea((CNWSObject*)cre, NULL) + 4) & 2) ) {
-					if ( CNWSCreatureStats__HasFeat(CreatureStats, NULL, 198) )
+	if (((CNWSObject*)cre)->GetArea()) {
+		if ( *(uint8_t *)(((CNWSObject*)cre)->GetArea() + 4) & 4 ) {
+			if ( !(*(uint8_t *)(((CNWSObject*)cre)->GetArea() + 4) & 1) ) {
+				if ( !(*(uint8_t *)(((CNWSObject*)cre)->GetArea() + 4) & 2) ) {
+					if (CreatureStats->HasFeat(198) )
 						iAttackBonus += 2;
 				}
 			}
@@ -1361,7 +1351,7 @@ int CNWNXCombat::NWN_GetMeleeAttackBonus(CNWSCreatureStats *CreatureStats, int a
 
 ///////////////
 
-	if (CNWSCreatureStats__HasFeat(CreatureStats, NULL, 584))
+	if (CreatureStats->HasFeat(584))
 		++iAttackBonus;
 
 ///////////////
@@ -1373,12 +1363,12 @@ int CNWNXCombat::NWN_GetMeleeAttackBonus(CNWSCreatureStats *CreatureStats, int a
 
 	int bWeaponOfChoice = 0;
 	if (Item_1) {
-		if (CNWSCreatureStats__HasFeat(CreatureStats, NULL, 884)) {
-			if ((bWeaponOfChoice = CNWSCreatureStats__GetIsWeaponOfChoice(CreatureStats, NULL, Item_1->it_baseitemtype)))
+		if (CreatureStats->HasFeat(884)) {
+			if ((bWeaponOfChoice = CreatureStats->GetIsWeaponOfChoice(Item_1->it_baseitemtype)))
 				++iAttackBonus;
 		}
 	}
-	if (CNWSCreatureStats__HasFeat(CreatureStats, NULL, 1071) && bWeaponOfChoice) {
+	if (CreatureStats->HasFeat(1071) && bWeaponOfChoice) {
 		// get the weapon master levels
 		for (int i = 0; i<3; i++) {
 			if (CreatureStats->cs_classes[i].cl_class != 33)
@@ -1392,11 +1382,11 @@ int CNWNXCombat::NWN_GetMeleeAttackBonus(CNWSCreatureStats *CreatureStats, int a
 
 ///////////////
 
-	Item_1 = CNWSInventory__GetItemInSlot(cre->cre_equipment, NULL, 0x20);
+	Item_1 = cre->cre_equipment->GetItemInSlot(0x20);
 	if (!Item_1) {
-		Item_1 = CNWSInventory__GetItemInSlot(cre->cre_equipment, NULL, 0x10);
+		Item_1 = cre->cre_equipment->GetItemInSlot(0x10);
 		if (Item_1) {
-			BaseItem = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, Item_1->it_baseitemtype);
+			BaseItem = (*NWN_Rules)->ru_baseitems->GetBaseItem(Item_1->it_baseitemtype);
 			if (BaseItem) {
 				if (BaseItem->WeaponWield != 8)
 					Item_1 = NULL;
@@ -1412,25 +1402,25 @@ int CNWNXCombat::NWN_GetMeleeAttackBonus(CNWSCreatureStats *CreatureStats, int a
 	}
 	else {
 		if (a2) {
-			BaseItem = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, Item_1->it_baseitemtype);
+			BaseItem = (*NWN_Rules)->ru_baseitems->GetBaseItem(Item_1->it_baseitemtype);
 			if (!BaseItem) return iAttackBonus;
 
 			iMod = -10;
-			if ((CNWSCreature__GetRelativeWeaponSize(cre, NULL, Item_1) <= -1) || BaseItem->WeaponWield == 8)
+			if ((cre->GetRelativeWeaponSize(Item_1) <= -1) || BaseItem->WeaponWield == 8)
 				iMod = -8;
-			if (CNWSCreatureStats__HasFeat(CreatureStats, NULL, 1)) //FEAT_AMBIDEXTERITY
+			if (CreatureStats->HasFeat(1)) //FEAT_AMBIDEXTERITY
 				iMod += 4;
-			if (CNWSCreatureStats__HasFeat(CreatureStats, NULL, 41)) //FEAT_TWO_WEAPON_FIGHTING
+			if (CreatureStats->HasFeat(41)) //FEAT_TWO_WEAPON_FIGHTING
 				iMod += 2;
 		}
 		else {
-			BaseItem = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, Item_1->it_baseitemtype);
+			BaseItem = (*NWN_Rules)->ru_baseitems->GetBaseItem(Item_1->it_baseitemtype);
 			if (!BaseItem || !BaseItem->WeaponType) return iAttackBonus;
 
 			iMod = -6;
-			if ((CNWSCreature__GetRelativeWeaponSize(cre, NULL, Item_1) <= -1) || BaseItem->WeaponWield == 8)
+			if ((cre->GetRelativeWeaponSize(Item_1) <= -1) || BaseItem->WeaponWield == 8)
 				iMod = -4;
-			if (CNWSCreatureStats__HasFeat(CreatureStats, NULL, 41)) //FEAT_TWO_WEAPON_FIGHTING
+			if (CreatureStats->HasFeat(41)) //FEAT_TWO_WEAPON_FIGHTING
 				iMod += 2;
 		}
 	}
@@ -1447,14 +1437,14 @@ int CNWNXCombat::NWN_GetWeaponFinesse(CNWSCreatureStats *Stats, CNWSItem *Item) 
 		_log(3, "base: %d\n", Item->it_baseitemtype);
 		if (Item->it_baseitemtype == 41) {
 			loghasfeat = 1;
-			_log(3, "KatanaFinesseFeat?: %d\n", CNWSCreatureStats__HasFeat(Stats, NULL, CustomFeats.FEAT_KATANA_FINESSE));
+			_log(3, "KatanaFinesseFeat?: %d\n", Stats->HasFeat(CustomFeats.FEAT_KATANA_FINESSE));
 			loghasfeat = 0;
-			if (NWN_HasFeat(Stats, CustomFeats.FEAT_KATANA_FINESSE) && CNWSCreature__GetRelativeWeaponSize(Stats->cs_original, NULL, Item) <= 0) return 1;
+			if (NWN_HasFeat(Stats, CustomFeats.FEAT_KATANA_FINESSE) && Stats->cs_original->GetRelativeWeaponSize(Item) <= 0) return 1;
 			else return 0;
 		}
 	}
 
-	if (!CNWSCreatureStats__HasFeat(Stats, NULL, 42))//Weapon Finesse
+	if (!Stats->HasFeat(42))//Weapon Finesse
 		return 0;
 	if (Item) {
 		int BaseItemType = Item->it_baseitemtype;
@@ -1462,12 +1452,12 @@ int CNWNXCombat::NWN_GetWeaponFinesse(CNWSCreatureStats *Stats, CNWSItem *Item) 
 			if (BaseItemType != 36 && BaseItemType != 69 && BaseItemType != 70 && BaseItemType != 71 && BaseItemType != 72) { //gloves and creature weapons
 				CNWSCreature *cre = Stats->cs_original;
 				if (cre->cre_size > 2) {
-					if (BaseItemType != 51 && BaseItemType != 111 && CNWSCreature__GetRelativeWeaponSize(cre, NULL, Item) >= 0
-						|| BaseItemType == 51 && CNWSCreature__GetRelativeWeaponSize(cre, NULL, Item) > 0)
+					if (BaseItemType != 51 && BaseItemType != 111 && cre->GetRelativeWeaponSize(Item) >= 0
+						|| BaseItemType == 51 && cre->GetRelativeWeaponSize(Item) > 0)
 						return 0;
 				}
 				else {
-					if (CNWSCreature__GetRelativeWeaponSize(cre, NULL, Item) > 0)
+					if (cre->GetRelativeWeaponSize(Item) > 0)
 						return 0;
 				}
 				if (BaseItemType != 22 && BaseItemType != 9 && BaseItemType != 60 && BaseItemType != 37
@@ -1482,11 +1472,11 @@ int CNWNXCombat::NWN_GetWeaponFinesse(CNWSCreatureStats *Stats, CNWSItem *Item) 
 
 int CNWNXCombat::NWN_CalculateOffHandAttacks(CNWSCombatRound *CombatRound) {
 	CNWSCreature *cre = CombatRound->org_nwcreature;
-	CNWSItem *Item = CNWSInventory__GetItemInSlot(cre->cre_equipment, NULL, 0x10);
+	CNWSItem *Item = cre->cre_equipment->GetItemInSlot(0x10);
 	CNWBaseItem *BaseItem = NULL;
 
 	if (Item)
-		CNWBaseItem *BaseItem = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, Item->it_baseitemtype);
+		CNWBaseItem *BaseItem = (*NWN_Rules)->ru_baseitems->GetBaseItem(Item->it_baseitemtype);
 	CombatRound->OffHandAttacks = 0;
 
 	_log(3, "Creature: %08X\tItem: %08X\n", cre, Item);
@@ -1501,8 +1491,8 @@ int CNWNXCombat::NWN_CalculateOffHandAttacks(CNWSCombatRound *CombatRound) {
 			}
 		}
 		else {
-			Item = CNWSInventory__GetItemInSlot(cre->cre_equipment, NULL, 0x20);
-			if (Item) BaseItem = CNWBaseItemArray__GetBaseItem((*NWN_Rules)->ru_baseitems, NULL, Item->it_baseitemtype);
+			Item = cre->cre_equipment->GetItemInSlot(0x20);
+			if (Item) BaseItem = (*NWN_Rules)->ru_baseitems->GetBaseItem(Item->it_baseitemtype);
 			_log(3, "OffhandItem: WeaponType: %d\tWeaponWield: %d\n", BaseItem->WeaponType, BaseItem->WeaponWield);
 			if (Item && BaseItem->WeaponType && BaseItem->WeaponWield != 7) { //WeaponType := does damage && no shields
 				CombatRound->OffHandAttacks = 1;
@@ -1512,14 +1502,14 @@ int CNWNXCombat::NWN_CalculateOffHandAttacks(CNWSCombatRound *CombatRound) {
 		_log(3, "CombatRound->OffHandAttacks before feats: %d\n", CombatRound->OffHandAttacks);
 
 		if (CombatRound->OffHandAttacks > 0) {
-			if (CNWSCreatureStats__HasFeat(cre->cre_stats, NULL, CustomFeats.FEAT_SUPREME_TWO_WEAPON_FIGHTING))
+			if ((cre->cre_stats)->HasFeat(CustomFeats.FEAT_SUPREME_TWO_WEAPON_FIGHTING))
 				CombatRound->OffHandAttacks = 4;
-			else if (CNWSCreatureStats__HasFeat(cre->cre_stats, NULL, CustomFeats.FEAT_GREATER_TWO_WEAPON_FIGHTING))
+			else if ((cre->cre_stats)->HasFeat(CustomFeats.FEAT_GREATER_TWO_WEAPON_FIGHTING))
 				CombatRound->OffHandAttacks = 3;
-			else if (CNWSCreatureStats__HasFeat(cre->cre_stats, NULL, 20))  //Improved two weapon fighting
+			else if ((cre->cre_stats)->HasFeat(20))  //Improved two weapon fighting
 				CombatRound->OffHandAttacks = 2;
 			
-			if (CNWSCreatureStats__HasFeat(cre->cre_stats, NULL, CustomFeats.FEAT_PERFECT_TWO_WEAPON_FIGHTING))
+			if ((cre->cre_stats)->HasFeat(CustomFeats.FEAT_PERFECT_TWO_WEAPON_FIGHTING))
 				CombatRound->OffHandAttacks = CombatRound->OnHandAttacks > CombatRound->OffHandAttacks ? CombatRound->OnHandAttacks : CombatRound->OffHandAttacks;
 		}
 	}
@@ -1529,8 +1519,8 @@ int CNWNXCombat::NWN_CalculateOffHandAttacks(CNWSCombatRound *CombatRound) {
 
 int CNWNXCombat::NWN_HasFeat(CNWSCreatureStats *Stats, uint16_t FeatId) {
 	if (loghasfeat) _log(3, "Feat check: %d\n", FeatId);
-	CNWSPlayer *pl = CServerExoApp__GetClientObjectByObjectId((*NWN_AppManager)->app_server, NULL, Stats->cs_original->obj.obj_generic.obj_id);
-	if (!pl || (CNWSPlayer__HasExpansionPack(pl, NULL, CNWRules__GetFeatExpansionLevel(*NWN_Rules, NULL, FeatId), 1)) != 0) {
+	CNWSPlayer *pl = ((*NWN_AppManager)->app_server)->GetClientObjectByObjectId(Stats->cs_original->obj.obj_generic.obj_id);
+	if (!pl || (pl->HasExpansionPack( (*NWN_Rules)->GetFeatExpansionLevel(FeatId), 1)) != 0) {
 
 		uint32_t Feats_len = Stats->cs_feats.len;
 		uint32_t i=0;
@@ -1547,7 +1537,7 @@ int CNWNXCombat::NWN_HasFeat(CNWSCreatureStats *Stats, uint16_t FeatId) {
 		}
 
 		if (FeatId == 1 || FeatId == 42) { // make sure we have a ranger and they have no medium or heavy armor on
-			CNWSItem *Item = CNWSInventory__GetItemInSlot(Stats->cs_original->cre_equipment, NULL, 2);
+			CNWSItem *Item = Stats->cs_original->cre_equipment->GetItemInSlot(2);
 			if (Stats->cs_classes_len > 0) {
 				int ClassType=0;
 				i=0;
@@ -1556,7 +1546,7 @@ int CNWNXCombat::NWN_HasFeat(CNWSCreatureStats *Stats, uint16_t FeatId) {
 					++i;
 				}
 				if (i < Stats->cs_classes_len) {
-					if (!Item || CNWSItem__ComputeArmorClass(Item, NULL) < 4) return 1;
+					if (!Item || Item->ComputeArmorClass() < 4) return 1;
 				}
 			}
 		}
@@ -1567,8 +1557,8 @@ int CNWNXCombat::NWN_HasFeat(CNWSCreatureStats *Stats, uint16_t FeatId) {
 			||	 FeatId == CustomFeats.FEAT_SUPREME_TWO_WEAPON_FIGHTING
 			||   FeatId == CustomFeats.FEAT_ABSOLUTE_AMBIDEXTERITY
 		) {
-			CNWSItem *Item = CNWSInventory__GetItemInSlot(Stats->cs_original->cre_equipment, NULL, 2);
-			if (!Item || CNWSItem__ComputeArmorClass(Item, NULL) < 4) {
+			CNWSItem *Item = Stats->cs_original->cre_equipment->GetItemInSlot(2);
+			if (!Item || Item->ComputeArmorClass() < 4) {
 				if (Stats->cs_classes_len > 0) {
 					int ClassType=0;
 					int iTempestLevel = 0;
@@ -1594,12 +1584,12 @@ void CNWNXCombat::LoadCombatFeats() {
 	_log(1, "o LoadCombatFeats\n");
 	CExoString exostr("weaponfeats");
 	CResRef *ResRef = (CResRef*)malloc(16); memset(ResRef, 0, 16);
-	ResRef = CResRef__CResRef(ResRef, NULL, exostr);
+	ResRef = ResRef->CResRef(exostr);
 	
 	C2DA *TwoDA = (C2DA*)malloc(60); memset(TwoDA, 0, 60);
-	TwoDA = C2DA__C2DA(TwoDA, NULL, *ResRef, 0);
+	TwoDA = TwoDA->C2DA(*ResRef, 0);
 
-	C2DA__Load2DArray(TwoDA, NULL);
+	TwoDA->Load2DArray();
 
 	exostr = "BaseItem";
 	CExoString col;
@@ -1610,23 +1600,23 @@ void CNWNXCombat::LoadCombatFeats() {
 	int BaseItem=0;
 
 	while (i < iRows) {
-		if (C2DA__GetINTEntry_strcol(TwoDA, NULL, i, exostr, &BaseItem)) {
+		if (TwoDA->GetINTEntry_strcol(i, exostr, &BaseItem)) {
 			col = "WeaponFocus";
-			if (C2DA__GetINTEntry_strcol(TwoDA, NULL, i, col, &ret)) M_WeaponFocus[BaseItem] = ret+1; else M_WeaponFocus[BaseItem] = -1;
+			if (TwoDA->GetINTEntry_strcol(i, col, &ret)) M_WeaponFocus[BaseItem] = ret+1; else M_WeaponFocus[BaseItem] = -1;
 			col = "EpicWeaponFocus";
-			if (C2DA__GetINTEntry_strcol(TwoDA, NULL, i, col, &ret)) M_EPWeaponFocus[BaseItem] = ret+1; else M_EPWeaponFocus[BaseItem] = -1;
+			if (TwoDA->GetINTEntry_strcol(i, col, &ret)) M_EPWeaponFocus[BaseItem] = ret+1; else M_EPWeaponFocus[BaseItem] = -1;
 			col = "WeaponSpec";
-			if (C2DA__GetINTEntry_strcol(TwoDA, NULL, i, col, &ret)) M_WeaponSpec[BaseItem] = ret+1; else M_WeaponSpec[BaseItem] = -1;
+			if (TwoDA->GetINTEntry_strcol(i, col, &ret)) M_WeaponSpec[BaseItem] = ret+1; else M_WeaponSpec[BaseItem] = -1;
 			col = "EpicWeaponSpec";
-			if (C2DA__GetINTEntry_strcol(TwoDA, NULL, i, col, &ret)) M_EpWeaponSpec[BaseItem] = ret+1; else M_EpWeaponSpec[BaseItem] = -1;
+			if (TwoDA->GetINTEntry_strcol(i, col, &ret)) M_EpWeaponSpec[BaseItem] = ret+1; else M_EpWeaponSpec[BaseItem] = -1;
 			col = "ImprovedCrit";
-			if (C2DA__GetINTEntry_strcol(TwoDA, NULL, i, col, &ret)) M_ImprovedCrit[BaseItem] = ret+1; else M_ImprovedCrit[BaseItem] = -1;
+			if (TwoDA->GetINTEntry_strcol(i, col, &ret)) M_ImprovedCrit[BaseItem] = ret+1; else M_ImprovedCrit[BaseItem] = -1;
 			col = "OverwhelmingCrit";
-			if (C2DA__GetINTEntry_strcol(TwoDA, NULL, i, col, &ret)) M_OverwhelmingCrit[BaseItem] = ret+1; else M_OverwhelmingCrit[BaseItem] = -1;
+			if (TwoDA->GetINTEntry_strcol(i, col, &ret)) M_OverwhelmingCrit[BaseItem] = ret+1; else M_OverwhelmingCrit[BaseItem] = -1;
 			col = "DevCrit";
-			if (C2DA__GetINTEntry_strcol(TwoDA, NULL, i, col, &ret)) M_DevCrit[BaseItem] = ret+1; else M_DevCrit[BaseItem] = -1;
+			if (TwoDA->GetINTEntry_strcol(i, col, &ret)) M_DevCrit[BaseItem] = ret+1; else M_DevCrit[BaseItem] = -1;
 			col = "WeaponOfChoice";
-			if (C2DA__GetINTEntry_strcol(TwoDA, NULL, i, col, &ret)) M_WeaponOfChoice[BaseItem] = ret+1; else M_WeaponOfChoice[BaseItem] = -1;
+			if (TwoDA->GetINTEntry_strcol(i, col, &ret)) M_WeaponOfChoice[BaseItem] = ret+1; else M_WeaponOfChoice[BaseItem] = -1;
 		}
 		++i;
 	}
@@ -1640,7 +1630,7 @@ void CNWNXCombat::LoadCombatFeats() {
 	WeaponFeats.push_back(M_DevCrit);
 	WeaponFeats.push_back(M_WeaponOfChoice);
 
-	C2DA__vect_destructor(TwoDA, NULL, 1);
+	TwoDA->vect_destructor(1);
 	free(ResRef);
 
 }

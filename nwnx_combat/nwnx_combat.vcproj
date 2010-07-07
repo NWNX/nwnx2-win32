@@ -273,10 +273,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\include\CExoString.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\combat.cpp"
 				>
 				<FileConfiguration
@@ -309,10 +305,6 @@
 			</File>
 			<File
 				RelativePath=".\HookFunc.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\nwn_internals.cpp"
 				>
 			</File>
 			<File
@@ -356,6 +348,66 @@
 				</File>
 				<File
 					RelativePath="..\NWNXdll\NWNXBase.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="nwn_internals"
+				>
+				<File
+					RelativePath="..\nwn_internals\C2DA.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CExoString.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWBaseItemArray.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWRules.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSCombatRound.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSCreature.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSCreatureStats.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSInventory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSItem.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSPlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CResRef.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CServerExoApp.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\nwn_internals.cpp"
 					>
 				</File>
 			</Filter>
