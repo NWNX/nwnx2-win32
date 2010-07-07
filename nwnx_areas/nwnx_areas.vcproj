@@ -199,19 +199,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\include\CExoLinkedList.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\CExoLocString.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\HookFunc.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\nwn_internals.cpp"
 				>
 			</File>
 			<File
@@ -242,15 +230,59 @@
 				Name="nwnxBase"
 				>
 				<File
-					RelativePath="..\include\CExoString.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\NWNXdll\IniFile.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\NWNXdll\NWNXBase.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="nwn_internals"
+				>
+				<File
+					RelativePath="..\nwn_internals\CExoLinkedList.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CExoLocString.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CExoString.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CGameObjectArray.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSArea.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSMessage.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSScriptVarTable.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CServerExoApp.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CServerExoAppInternal.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\nwn_internals.cpp"
 					>
 				</File>
 			</Filter>

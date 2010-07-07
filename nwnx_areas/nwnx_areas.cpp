@@ -133,12 +133,12 @@ CResRef *CResRef____as(CResRef *res, char *str)
 }
 
 int CNWNXAreas::UpdateAreasForDMs() {
-	CNWSMessage *pMessage = (CNWSMessage*)CServerExoApp__GetNWSMessage((*NWN_AppManager)->app_server, NULL);
-	CExoLinkedList *pPlayerList = (CExoLinkedList*)CServerExoApp__GetPlayerList((*NWN_AppManager)->app_server, NULL);
+	CNWSMessage *pMessage = ((*NWN_AppManager)->app_server)->GetNWSMessage();
+	CExoLinkedList *pPlayerList = (CExoLinkedList*)((*NWN_AppManager)->app_server)->GetPlayerList();
 	CExoLinkedListElement *pElement = pPlayerList->GetHeadPos();
 	while (pElement) {
 		CNWSPlayer *pPlayer = (CNWSPlayer*)pPlayerList->GetAtPos(pElement);
-		if (pPlayer) CNWSMessage__SendServerToPlayerDungeonMasterAreaList(pMessage, NULL, pPlayer);
+		if (pPlayer) pMessage->SendServerToPlayerDungeonMasterAreaList(pPlayer);
 		pElement = pPlayerList->GetNext(pElement);
 	}
 
@@ -149,7 +149,7 @@ int CNWNXAreas::LoadArea(char* ResRef) {
 	char sResRef[20];
 	sscanf(ResRef, "%s", sResRef);
 
-	char *pMod = (char*)CServerExoAppInternal__GetModule((*NWN_AppManager)->app_server->srv_internal, NULL);
+	char *pMod = (char*)((*NWN_AppManager)->app_server->srv_internal)->GetModule();
 	CNWSModule *pModule = (CNWSModule*)(pMod+0x1C);
 
 	_log(3, "o AreaCount: %d\n", pModule->mod_areas_len);
@@ -157,12 +157,12 @@ int CNWNXAreas::LoadArea(char* ResRef) {
 	CResRef res;
 	CResRef____as(&res, sResRef);
 
-	void *pArea = malloc(0x20C);
-	CNWSArea__CNWSArea(pArea, NULL, res, 0, OBJECT_INVALID);
+	CNWSArea *pArea = (CNWSArea*)malloc(0x20C);
+	pArea->CNWSArea(res, 0, OBJECT_INVALID);
 
-	if (!CNWSArea__LoadArea(pArea, NULL, 0)) {
+	if (!pArea->LoadArea(0)) {
 		_log(1, "o Error: Load failed: '%s'\n", sResRef);
-		CNWSArea__scalar_Destructor((CNWSArea*)pArea, NULL, 1);
+		pArea->scalar_Destructor(1);
 		nLastAreaID = OBJECT_INVALID;
 		return 0;
 	}
@@ -185,7 +185,7 @@ int CNWNXAreas::DestroyArea(nwn_objid_t nAreaID) {
 		return 0;
 	}
 
-	CNWSArea* pArea = CServerExoAppInternal__GetAreaByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, nAreaID);
+	CNWSArea* pArea = ((*NWN_AppManager)->app_server->srv_internal)->GetAreaByGameObjectID(nAreaID);
 	if (!pArea) return 0;
 
 	if (pArea->are_numplayers > 0) {
@@ -193,10 +193,10 @@ int CNWNXAreas::DestroyArea(nwn_objid_t nAreaID) {
 		return 0;
 	}
 
-	char *pMod = (char*)CServerExoAppInternal__GetModule((*NWN_AppManager)->app_server->srv_internal, NULL);
+	char *pMod = (char*)((*NWN_AppManager)->app_server->srv_internal)->GetModule();
 	CNWSModule *pModule = (CNWSModule*)(pMod+0x1C);
 	
-	CGameObjectArray *objArray = CServerExoApp__GetObjectArray((*NWN_AppManager)->app_server, NULL);
+	CGameObjectArray *objArray = ((*NWN_AppManager)->app_server)->GetObjectArray();
 
 	_log(1, "o Destroying objects in area %08X\n", nAreaID);
 	nwn_objid_t nTmpObj;
@@ -204,17 +204,17 @@ int CNWNXAreas::DestroyArea(nwn_objid_t nAreaID) {
 	std::vector<uint32_t> Objects;
 
 	int bContinue=0;
-	bContinue = CNWSArea__GetFirstObjectInArea(pArea, NULL, &nTmpObj);
+	bContinue = pArea->GetFirstObjectInArea(&nTmpObj);
 	do{
 		Objects.push_back(nTmpObj);
-	} while (CNWSArea__GetNextObjectInArea(pArea, NULL, &nTmpObj));
+	} while (pArea->GetNextObjectInArea(&nTmpObj));
 
 	CGenericObject *pObject;
 
 	while (!Objects.empty()) {
 		nTmpObj = Objects.back();
 		Objects.pop_back();
-		pObject = (CGenericObject*)CServerExoAppInternal__GetGameObject((*NWN_AppManager)->app_server->srv_internal, NULL, nTmpObj);
+		pObject = (CGenericObject*)((*NWN_AppManager)->app_server->srv_internal)->GetGameObject(nTmpObj);
 		if (!pObject) continue;
 
 		CNWSArea *Area = NULL;
@@ -230,33 +230,33 @@ int CNWNXAreas::DestroyArea(nwn_objid_t nAreaID) {
 
 			CExoString VarName(LocationFailSafe);
 			if (svTable) {
-				Loc = CNWSScriptVarTable__GetLocation(svTable, NULL, VarName);
-				Area = CServerExoAppInternal__GetAreaByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, Loc.loc_area);
+				Loc = svTable->GetLocation(VarName);
+				Area = ((*NWN_AppManager)->app_server->srv_internal)->GetAreaByGameObjectID(Loc.loc_area);
 				_log(3, "o Creature LocationFailSafe AreaID: %08X\n", Loc.loc_area);
 				if (!Area) {
-					char *mod = (char*)CServerExoAppInternal__GetModule((*NWN_AppManager)->app_server->srv_internal, NULL);
+					char *mod = (char*)((*NWN_AppManager)->app_server->srv_internal->GetModule());
 					CNWSModule *Mod= (CNWSModule*)(mod+0x1C);
 					svTable = &Mod->mod_vartable;
 
 					if (svTable) {
-						Loc = CNWSScriptVarTable__GetLocation(svTable, NULL, VarName);
+						Loc = svTable->GetLocation(VarName);
 						_log(3, "o Module LocationFailSafe AreaID: %08X\n", Loc.loc_area);
-						Area = CServerExoAppInternal__GetAreaByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, Loc.loc_area);
+						Area = ((*NWN_AppManager)->app_server->srv_internal)->GetAreaByGameObjectID(Loc.loc_area);
 					}
 				}
 			}
 			if (Area) {
 				_log(3, "\tLocationFailSafe Area valid.\n");
-				CNWSArea__RemoveObjectFromArea(pArea, NULL, TURD->TURD_id);
-				CNWSArea__AddObjectToArea(Area, NULL, TURD->TURD_id, 0);
-				CNWSObject__SetArea((CNWSObject*)TURD, NULL, Area);
+				pArea->RemoveObjectFromArea(TURD->TURD_id);
+				Area->AddObjectToArea(TURD->TURD_id, 0);
+				((CNWSObject*)TURD)->SetArea(Area);
 			}
 		}
 
 		if (!Area) {
 			void (__fastcall *pDestructor)(CGenericObject *pTHIS, void *pVOID, int flag) = (void (__fastcall*)(CGenericObject *pTHIS, void *pVOID, int flag))(*(DWORD*)((DWORD*)(pObject->obj_type)));
 			pDestructor(pObject, NULL, 1);
-			CGameObjectArray__delete(objArray, NULL, nTmpObj); //removes entry in the gameobject array*/
+			objArray->DEL(nTmpObj); //removes entry in the gameobject array*/
 		}
 
 	}
@@ -266,7 +266,7 @@ int CNWNXAreas::DestroyArea(nwn_objid_t nAreaID) {
 	CExoArrayList_uint32___Remove(pArray, NULL, nAreaID);
 
 	_log(1, "o Destroying area %08X\n", nAreaID);
-	CNWSArea__scalar_Destructor(pArea, NULL, 1);
+	pArea->scalar_Destructor(1);
 	RemoveAreaForCreatures(pModule, nAreaID);
 	UpdateAreasForDMs();
 
@@ -274,7 +274,7 @@ int CNWNXAreas::DestroyArea(nwn_objid_t nAreaID) {
 }
 
 int CNWNXAreas::AddAreaToCreatures(CNWSModule *pModule, nwn_objid_t nAreaID) {
-	CGameObjectArray *pGameObjArray = CServerExoApp__GetObjectArray((*NWN_AppManager)->app_server, NULL);
+	CGameObjectArray *pGameObjArray = ((*NWN_AppManager)->app_server)->GetObjectArray();
 
 	_log(3, "o Module Area Count: %d\n", pModule->mod_areas_len);
 	if (!pGameObjArray) return NULL;
@@ -301,7 +301,7 @@ int CNWNXAreas::AddAreaToCreatures(CNWSModule *pModule, nwn_objid_t nAreaID) {
 }
 
 int CNWNXAreas::RemoveAreaForCreatures(CNWSModule *pModule, nwn_objid_t nAreaID) {
-	CGameObjectArray *pGameObjArray = CServerExoApp__GetObjectArray((*NWN_AppManager)->app_server, NULL);
+	CGameObjectArray *pGameObjArray = ((*NWN_AppManager)->app_server)->GetObjectArray();
 
 	_log(3, "o Module Area Count: %d\n", pModule->mod_areas_len);
 	if (!pGameObjArray) return 0;
@@ -352,18 +352,18 @@ CNWSArea *CNWNXAreas::GetOverrideArea(CNWSCreature *Cre) {
 
 		CExoString VarName(LocationFailSafe);
 		if (svTable) {
-			Loc = CNWSScriptVarTable__GetLocation(svTable, NULL, VarName);
-			Area = CServerExoAppInternal__GetAreaByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, Loc.loc_area);
+			Loc = svTable->GetLocation(VarName);
+			Area = ((*NWN_AppManager)->app_server->srv_internal)->GetAreaByGameObjectID(Loc.loc_area);
 			_log(3, "o Creature LocationFailSafe AreaID: %08X\n", Loc.loc_area);
 			if (!Area) {
-				char *mod = (char*)CServerExoAppInternal__GetModule((*NWN_AppManager)->app_server->srv_internal, NULL);
+				char *mod = (char*)((*NWN_AppManager)->app_server->srv_internal)->GetModule();
 				CNWSModule *Mod= (CNWSModule*)(mod+0x1C);
 				svTable = &Mod->mod_vartable;
 
 				if (svTable) {
-					Loc = CNWSScriptVarTable__GetLocation(svTable, NULL, VarName);
+					Loc = svTable->GetLocation(VarName);
 					_log(3, "o Module LocationFailSafe AreaID: %08X\n", Loc.loc_area);
-					Area = CServerExoAppInternal__GetAreaByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, Loc.loc_area);
+					Area = ((*NWN_AppManager)->app_server->srv_internal)->GetAreaByGameObjectID(Loc.loc_area);
 				}
 			}
 		}
@@ -372,7 +372,7 @@ CNWSArea *CNWNXAreas::GetOverrideArea(CNWSCreature *Cre) {
 }
 
 int CNWNXAreas::CheckArea(CNWSPlayerTURD *TURD) {
-	CNWSArea *Area = CServerExoAppInternal__GetAreaByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, TURD->TURD_AreaId);
+	CNWSArea *Area = ((*NWN_AppManager)->app_server->srv_internal)->GetAreaByGameObjectID(TURD->TURD_AreaId);
 	if (Area == NULL) {
 		_log(1, "o Area not valid for returning Player: Get Override Location\n");
 		// the creatures varlist is copied when the TURD is created so we can just use it to find a failsafe location
@@ -384,13 +384,13 @@ int CNWNXAreas::CheckArea(CNWSPlayerTURD *TURD) {
 		Loc.loc_orientation.x = 0.0; Loc.loc_orientation.y = 0.0; Loc.loc_orientation.z = 0.0;
 		if (svTable) {
 
-			if (Loc.loc_area = OBJECT_INVALID || !CServerExoAppInternal__GetAreaByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, Loc.loc_area)) {
-				char *mod = (char*)CServerExoAppInternal__GetModule((*NWN_AppManager)->app_server->srv_internal, NULL);
+			if (Loc.loc_area = OBJECT_INVALID || !((*NWN_AppManager)->app_server->srv_internal)->GetAreaByGameObjectID(Loc.loc_area)) {
+				char *mod = (char*)((*NWN_AppManager)->app_server->srv_internal)->GetModule();
 				CNWSModule *Mod= (CNWSModule*)(mod+0x1C);
 				svTable = &Mod->mod_vartable;
 
 				if (svTable) {
-					Loc = CNWSScriptVarTable__GetLocation(svTable, NULL, VarName);
+					Loc = svTable->GetLocation(VarName);
 					_log(3, "o Module LocalLocation AreaID: %08X\n", Loc.loc_area);
 				}
 			}
