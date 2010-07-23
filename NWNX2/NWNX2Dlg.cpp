@@ -24,12 +24,6 @@
 
 #include "nwnserver.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 // CAboutDlg dialog used for App About
 
@@ -232,46 +226,53 @@ HCURSOR CNWNX2Dlg::OnQueryDragIcon()
 	return (HCURSOR) m_hIcon;
 }
 
-void CNWNX2Dlg::OnServerRestartedProcess(WPARAM wParam, LPARAM lParam)
+LRESULT CNWNX2Dlg::OnServerRestartedProcess(WPARAM wParam, LPARAM lParam)
 {
 	m_intCrashCounterProcess++;
 	UpdateData(FALSE);
+	return NULL;
 }
 
-void CNWNX2Dlg::OnServerRestartedGamespy(WPARAM wParam, LPARAM lParam)
+LRESULT CNWNX2Dlg::OnServerRestartedGamespy(WPARAM wParam, LPARAM lParam)
 {
 	m_intCrashCounterGamespy++;
 	UpdateData(FALSE);
+	return NULL;
 }
 
-void CNWNX2Dlg::OnServerRestartedGamespyLockup(WPARAM wParam, LPARAM lParam)
+LRESULT CNWNX2Dlg::OnServerRestartedGamespyLockup(WPARAM wParam, LPARAM lParam)
 {
 	m_intLockupCounter++;
 	UpdateData(FALSE);
+	return NULL;
 }
 
-void CNWNX2Dlg::OnProcessStateChecking(WPARAM wParam, LPARAM lParam)
+LRESULT CNWNX2Dlg::OnProcessStateChecking(WPARAM wParam, LPARAM lParam)
 {
 	pProcessIcon->ShowWindow(SW_RESTORE);
 	watchdogGamespy->doSleep(TRUE);
+	return NULL;
 }
 
-void CNWNX2Dlg::OnProcessStateNone(WPARAM wParam, LPARAM lParam)
+LRESULT CNWNX2Dlg::OnProcessStateNone(WPARAM wParam, LPARAM lParam)
 {
 	pProcessIcon->ShowWindow(SW_HIDE);
 	watchdogGamespy->doSleep(FALSE);
+	return NULL;
 }
 
-void CNWNX2Dlg::OnGamespyStateChecking(WPARAM wParam, LPARAM lParam)
+LRESULT CNWNX2Dlg::OnGamespyStateChecking(WPARAM wParam, LPARAM lParam)
 {
 	pGamespyIcon->ShowWindow(SW_RESTORE);
 	watchdogProcess->doSleep(TRUE);
+	return NULL;
 }
 
-void CNWNX2Dlg::OnGamespyStateNone(WPARAM wParam, LPARAM lParam)
+LRESULT CNWNX2Dlg::OnGamespyStateNone(WPARAM wParam, LPARAM lParam)
 {
 	pGamespyIcon->ShowWindow(SW_HIDE);
 	watchdogProcess->doSleep(FALSE);
+	return NULL;
 }
 
 void CNWNX2Dlg::OnWatchdogProcess() 

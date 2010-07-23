@@ -72,14 +72,14 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
-	afx_msg void OnServerRestartedProcess(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnServerRestartedGamespy(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnServerRestartedGamespyLockup(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnServerRestartedProcess(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnServerRestartedGamespy(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnServerRestartedGamespyLockup(WPARAM wParam, LPARAM lParam);
 
-	afx_msg void OnProcessStateChecking(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnProcessStateNone(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnGamespyStateChecking(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnGamespyStateNone(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnProcessStateChecking(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnProcessStateNone(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnGamespyStateChecking(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnGamespyStateNone(WPARAM wParam, LPARAM lParam);
 
 	// Generated message map functions
 	//{{AFX_MSG(CNWNX2Dlg)
