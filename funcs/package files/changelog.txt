@@ -301,3 +301,15 @@ v 0.0.82
 	Changed
 		Replaced Individual Get/SetEventScript functions with two respective functions able to handle all object types with events:
 			Area, AreaOfEffectObject, Creature, Door, Encounter, Module, Placeable, Store, Trigger
+
+v 0.0.83
+	Added:
+		NWNXFuncs_ClearPlayerTURDs
+			Yes, it is called TURD and it stores all the persistent character information between server resets (location, local vars, etc).
+			This function deletes all that information which should free up some memory - in theory. The tradeoff is that returning characters will act as if the server
+			had reset: They'll spawn in at the module start location, have all hitpoints and spells, etc.
+	
+	Fixed:
+		NWNX_Funcs_GetBaseAttackBonusOverride changed to NWNXFuncs_GetBaseAttackBonusOverride
+	
+		NWNXFuncs_ApplyVisualEffectForPC checks for validity of the area the object is in; should prevent some crashes

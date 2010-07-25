@@ -3026,9 +3026,12 @@ int CNWNXFuncs::ApplyVFXForPC() {
 	}
 
 	CNWSPlayer *pPlayer = ((*NWN_AppManager)->app_server)->GetClientObjectByObjectId(plID);
-	CNWSMessage *pServerMessage = ((*NWN_AppManager)->app_server)->GetNWSMessage();
-
-	return pServerMessage->SendServerToPlayerArea_VisualEffect(pPlayer, nVFX, Px, Py, Pz);
+	
+	if(((CNWSObject*)(pPlayer->GetGameObject()))->GetArea() != NULL) {
+		CNWSMessage *pServerMessage = ((*NWN_AppManager)->app_server)->GetNWSMessage();
+		return pServerMessage->SendServerToPlayerArea_VisualEffect(pPlayer, nVFX, Px, Py, Pz);
+	}
+	return 0;
 }
 
 int CNWNXFuncs::GetEffectInts() {
@@ -3278,7 +3281,24 @@ int CNWNXFuncs::ModifyItem() {
 	return 1;
 }
 
+int CNWNXFuncs::ClearTURDList() {
+	CNWSModule *Mod = ((*NWN_AppManager)->app_server->srv_internal)->GetModule();
+	
+	CNWSPlayerTURD *TURD = NULL;
+	
+	CExoLinkedListElement *Element = Mod->mod_PlayerTURDList.GetHeadPos();
+	while (Element) {
+		TURD = (CNWSPlayerTURD*)Element->Data;
+		Mod->mod_PlayerTURDList.Remove(Element);
 
+		TURD->ScalarDestructor(1);
+
+		Element = Mod->mod_PlayerTURDList.GetHeadPos();
+	}
+
+
+	return 1;
+}
 
 
 /*

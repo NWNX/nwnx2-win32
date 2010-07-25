@@ -126,4 +126,5 @@ void CNWNXFuncs::CreateFunctionLookup() {
 	i = 118;	pFunc[i] = &CNWNXFuncs::TimebarStop; FunctionLookup["TIMEBARSTOP"] = i;
 	i = 119;	pFunc[i] = &CNWNXFuncs::SetAge; FunctionLookup["SETAGE"] = i;
 	i = 120;	pFunc[i] = &CNWNXFuncs::ModifyItem; FunctionLookup["MODIFYITEM"] = i;
+	i = 121;	pFunc[i] = &CNWNXFuncs::ClearTURDList; FunctionLookup["CLEARTURDLIST"] = i;
 }

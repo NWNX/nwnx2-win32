@@ -551,9 +551,6 @@ string NWNXFuncs_GetSpellsGainedAtLevel(object oCreature, int iSpellLevel, int i
 struct levelstats_s NWNXFuncs_GetStatsGainedAtLevel(object oCreature, int iLevel);
 
 
-//obsolete
-void NWNXFuncs_Init();
-
 // Returns data for a given quickslot; 0-11 F1-F12 / 12-23 = SHIFT+(F1-F12) / 24-35 = CTRL+(F1-F12)
 // Won't work for items
 struct quickslot_s NWNXFuncs_GetQuickSlot(object oPC, int iSlot);
@@ -770,6 +767,14 @@ string NWNXFuncs_GetEventScript(object oObject, int iEvent);
 // sets an eventscript for an object
 void NWNXFuncs_SetEventScript(object oObject, string sScript, int iEvent);
 
+// Clear the playerdata of logged off players 
+// This is rather experimental.
+// This function deletes all the persistent player data the server stores 
+// when a player logs off: Location, local variables, effects, etc.
+// This does not affect any scripted custom persistency between resets
+// After a call to NWNXFuncs_ClearPlayerTURDs the server will essentially
+// behave as if it had been reset when player logon's are concerened.
+void NWNXFuncs_ClearPlayerTURDs();
 
 //*******************************************************************************************************************
 
@@ -840,7 +845,7 @@ void NWNXFuncs_ModAbilityScore(object oCreature, int iAbility, int iValue) {
 	DeleteLocalString(oCreature, "NWNX!FUNCS!SETABILITYSCORE");
 }
 
-int NWNX_Funcs_GetBaseAttackBonusOverride(object oCreature) {
+int NWNXFuncs_GetBaseAttackBonusOverride(object oCreature) {
 	SetLocalString(oCreature, "NWNX!FUNCS!GETBABOVERRIDE", "---");
 	int iRet = StringToInt(GetLocalString(oCreature, "NWNX!FUNCS!GETBABOVERRIDE"));
 	DeleteLocalString(oCreature, "NWNX!FUNCS!GETBABOVERRIDE");
@@ -1029,18 +1034,6 @@ int NWNXFuncs_GetHasLocalVariable(object oObject, string sVarName, int iVarType 
 void NWNXFuncs_SetCreatureSize(object oCreature, int iSize = CREATURE_SIZE_MEDIUM) {
 	SetLocalString(oCreature, "NWNX!FUNCS!SETCREATURESIZE", IntToString(iSize));
 	DeleteLocalString(oCreature, "NWNX!FUNCS!SETCREATURESIZE");
-}
-
-string NWNXFuncs_GetCreatureEventScript(object oCreature, int iEvent = EVENT_CREATURE_HEARTBEAT) {
-	SetLocalString(oCreature, "NWNX!FUNCS!GETEVENT", IntToString(iEvent)+" -----------------");
-	string sRet = GetLocalString(oCreature, "NWNX!FUNCS!GETEVENT");
-	DeleteLocalString(oCreature, "NWNX!FUNCS!GETEVENT");
-	return sRet;
-}
-
-void NWNXFuncs_SetCreatureEventScript(object oCreature, string sEvent, int iEvent = EVENT_CREATURE_HEARTBEAT) {
-	SetLocalString(oCreature, "NWNX!FUNCS!SETEVENT", IntToString(iEvent)+" "+sEvent);
-	DeleteLocalString(oCreature, "NWNX!FUNCS!SETEVENT");
 }
 
 int NWNXFuncs_GetEquippedWeight(object oCreature) {
@@ -1333,9 +1326,6 @@ struct levelstats_s NWNXFuncs_GetStatsGainedAtLevel(object oCreature, int iLevel
 	iP = FindSubString(sRet, "|", iStart);	ls.iSkillPoints = StringToInt(GetSubString(sRet, iStart, iP-iStart));
 	
 	return ls;
-}
-
-void NWNXFuncs_Init() {
 }
 
 struct quickslot_s NWNXFuncs_GetQuickSlot(object oPC, int iSlot) {
@@ -1672,3 +1662,9 @@ string NWNXFuncs_GetEventScript(object oObject, int iEvent) {
 	DeleteLocalString(oObject, "NWNX!FUNCS!GETEVENT");
 	return sRet;
 }
+
+void NWNXFuncs_ClearPlayerTURDs() {
+	SetLocalString(OBJECT_SELF, "NWNX!FUNCS!CLEARTURDLIST", "-");
+	DeleteLocalString(OBJECT_SELF, "NWNX!FUNCS!CLEARTURDLIST");
+}
+	

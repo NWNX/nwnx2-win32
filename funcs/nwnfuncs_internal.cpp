@@ -54,10 +54,10 @@ void CNWNXFuncs::RunTestFunc(CGenericObject* obj) {
 
 CNWSModule *CNWNXFuncs::nwn_GetModule(bool addOffset) {
 	//I'm not sure why there is a difference of 0x1C bettwen the ServerExoAppInternal call and the object GetModule (nss) the script returns
+	if (!addOffset) return (*NWN_AppManager)->app_server->srv_internal->GetModule();
+
 	char *mod = (char*)((*NWN_AppManager)->app_server->srv_internal)->GetModule();
-	if (addOffset)
-		return (CNWSModule*)(mod+=0x1C);
-	return (CNWSModule*)mod;
+	return (CNWSModule*)(mod+=0x1C);
 }
 
 void CNWNXFuncs::nwn_UpdateQuickBar(CGenericObject* obj) {

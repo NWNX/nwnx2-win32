@@ -248,7 +248,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				InlineFunctionExpansion="1"
+				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
@@ -287,8 +287,10 @@
 				AdditionalLibraryDirectories="T:\a\a\_nwnx\a\funcs\"
 				IgnoreDefaultLibraryNames=""
 				GenerateMapFile="false"
-				OptimizeReferences="1"
+				SubSystem="2"
+				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				OptimizeForWindows98="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="2"
 				TargetMachine="1"
@@ -420,6 +422,10 @@
 				Name="nwn_internals"
 				>
 				<File
+					RelativePath="..\nwn_internals\CExoLinkedList.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\nwn_internals\CExoString.cpp"
 					>
 				</File>
@@ -465,6 +471,14 @@
 				</File>
 				<File
 					RelativePath="..\nwn_internals\CNWSPlaceable.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSPlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSplayerTURD.cpp"
 					>
 				</File>
 				<File

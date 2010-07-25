@@ -13,7 +13,7 @@
 
 #define PLAYER_ID_ALL_PLAYERS						0xFFFFFFF7
 
-#define FUNCTION_COUNT 121
+#define FUNCTION_COUNT 122
 
 class CNWNXFuncs : public CNWNXBase {
 public:
@@ -200,6 +200,8 @@ public:
 
 	int TimebarStart();
 	int TimebarStop();
+
+	int ClearTURDList();
 
 	void LOG(const char *pcMsg, ...);
 
