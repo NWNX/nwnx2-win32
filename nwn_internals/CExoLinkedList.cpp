@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include "CExoLinkedList.h"
 
+int (__thiscall *CExoLinkedListInternal__Remove)(CExoLinkedListHeader *pTHIS, CExoLinkedListElement *Element) = (int (__thiscall *)(CExoLinkedListHeader *pTHIS, CExoLinkedListElement *Element))0x00410080;
+
+int CExoLinkedList_s::Remove(CExoLinkedListElement *Element) {
+	return CExoLinkedListInternal__Remove(this->ListHeader, Element);
+}
+
 CExoLinkedListElement *CExoLinkedList_s::GetHeadPos()
 {
 	return this->ListHeader->FirstElement;

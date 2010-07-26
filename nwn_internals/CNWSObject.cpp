@@ -2,12 +2,12 @@
 #include "types.h"
 #include "nwn_internals.h"
 
-char			(__thiscall *CNWSObject__GetDamageImmunityByFlags)(CNWSObject *pTHIS, uint16_t Flags) = (char (__thiscall *)(CNWSObject * pTHIS, uint16_t))0x004E1D50;
-int				(__thiscall *CNWSObject__RemoveEffectById)(CNWSObject *pTHIS, uint64_t EffID) = (int (__thiscall *)(CNWSObject *pTHIS, uint64_t EffID))0x004E2DE0;
-CNWSArea * 		(__thiscall *CNWSObject__GetArea)(CNWSObject *pTHIS) = (CNWSArea* (__thiscall *)(CNWSObject *pTHIS))0x004E3F50;
-void 			(__thiscall *CNWSObject__SetTag)(CNWSObject *pTHIS, CExoString sTag) = (void (__thiscall*)(CNWSObject *pTHIS, CExoString sTag))0x00466360;
-int 			(__thiscall *CNWSObject__GetDead)(CNWSObject *pTHIS) = (int (__thiscall*)(CNWSObject *pTHIS))0x004E59D0;
-unsigned int 	(__thiscall *CNWSObject__SetArea)(CNWSObject *pTHIS, CNWSArea *Area) = (unsigned int (__thiscall*)(CNWSObject *pTHIS, CNWSArea *Area))0x004E3F90;
+char			(__thiscall *CNWSObject__GetDamageImmunityByFlags)(CNWSObject_s *pTHIS, uint16_t Flags) = (char (__thiscall *)(CNWSObject_s * pTHIS, uint16_t))0x004E1D50;
+int				(__thiscall *CNWSObject__RemoveEffectById)(CNWSObject_s *pTHIS, uint64_t EffID) = (int (__thiscall *)(CNWSObject_s *pTHIS, uint64_t EffID))0x004E2DE0;
+CNWSArea * 		(__thiscall *CNWSObject__GetArea)(CNWSObject_s *pTHIS) = (CNWSArea* (__thiscall *)(CNWSObject_s *pTHIS))0x004E3F50;
+void 			(__thiscall *CNWSObject__SetTag)(CNWSObject_s *pTHIS, CExoString sTag) = (void (__thiscall*)(CNWSObject_s *pTHIS, CExoString sTag))0x00466360;
+int 			(__thiscall *CNWSObject__GetDead)(CNWSObject_s *pTHIS) = (int (__thiscall*)(CNWSObject_s *pTHIS))0x004E59D0;
+unsigned int 	(__thiscall *CNWSObject__SetArea)(CNWSObject_s *pTHIS, CNWSArea *Area) = (unsigned int (__thiscall*)(CNWSObject_s *pTHIS, CNWSArea *Area))0x004E3F90;
 
 
 CNWSArea *CNWSObject_s::GetArea() {

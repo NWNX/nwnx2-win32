@@ -20,7 +20,7 @@ struct CNWSModule_s {
     uint32_t                    field_3C;
     uint32_t                    field_40;
     uint32_t                    field_44;
-    uint32_t                    field_48;
+    CExoLinkedList              mod_PlayerTURDList;
     uint32_t                    field_4C;
     uint32_t                    field_50;
     uint32_t                    field_54;

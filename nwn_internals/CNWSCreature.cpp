@@ -2,7 +2,7 @@
 #include "types.h"
 #include "nwn_internals.h"
 
-signed int 			(__thiscall *CNWSCreature__AcquireItem)(CNWSCreature *pTHIS, CNWSItem **a2, unsigned int a3, int a4, int a5, int bSendFeedBack) = (signed int (__thiscall*)(CNWSCreature *pTHIS, CNWSItem **a2, unsigned int a3, int a4, int a5, int bSendFeedBack))0x004C0580;
+signed int 			(__thiscall *CNWSCreature__AcquireItem)(CNWSCreature *pTHIS, CNWSItem **Item, nwn_objid_t From_oID, nwn_objid_t a4, char a5, char a6, int a7, int a8) = (signed int (__thiscall*)(CNWSCreature *pTHIS, CNWSItem **Item, nwn_objid_t From_oID, nwn_objid_t a4, char a5, char a6, int a7, int a8))0x004C0580;
 int 				(__thiscall *CNWSCreature__GetRelativeWeaponSize)(CNWSCreature *pTHIS, CNWSItem *weapon) = (int (__thiscall*)(CNWSCreature *pTHIS, CNWSItem *weapon))0x004A6D00;
 int 				(__thiscall *CNWSCreature__GetTotalEffectBonus)(CNWSCreature *pTHIS, char a2, CNWSObject *obj_a, int a4, int a5, unsigned __int8 a6, unsigned __int8 a7, unsigned __int8 a8, unsigned __int8 a9, int a10) = (int (__thiscall*)(CNWSCreature *pTHIS, char a2, CNWSObject *obj_a, int a4, int a5, unsigned __int8 a6, unsigned __int8 a7, unsigned __int8 a8, unsigned __int8 a9, int a10))0x004AB140;
 int 				(__thiscall *CNWSCreature__GetBlind)(CNWSCreature *Cre) = (int (__thiscall*)(CNWSCreature *Cre))0x004AEB40;
@@ -31,8 +31,8 @@ void 				(__thiscall *CNWSCreature__UpdateAutoMap)(CNWSCreature* pTHIS, uint32_t
 	//CNWSCreature__dtor_CNWSCreature(this, c);
 //}
 
-signed int CNWSCreature_s::AcquireItem(CNWSItem **a2, unsigned int a3, int a4, int a5, int bSendFeedBack) {
-	return CNWSCreature__AcquireItem(this, a2, a3, a4, a5, bSendFeedBack);
+signed int CNWSCreature_s::AcquireItem(CNWSItem **Item, nwn_objid_t From_oID, nwn_objid_t a4, char a5, char a6, int a7, int bFeedback) {
+	return CNWSCreature__AcquireItem(this, Item, From_oID, a4, a5, a6, a7, bFeedback);
 }
 
 int CNWSCreature_s::GetBlind() {

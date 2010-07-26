@@ -32,8 +32,7 @@ char *CExoLocString_s::GetStringText(uint32_t nLocale)
 	return NULL;
 }
 
-int CExoLocString_s::AddString(uint32_t nLocale, char *sString)
-{
+int CExoLocString_s::AddString(uint32_t nLocale, char *sString) {
 	CExoLocStringElement *pCurrentData;
 	CExoLocStringElement *pNewEntry;
 	CExoLinkedListElement *pCurrentElement;

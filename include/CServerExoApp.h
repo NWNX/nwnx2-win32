@@ -12,6 +12,7 @@ struct CServerExoApp_s {
 	CNWSMessage*		GetNWSMessage();
 	CGameObjectArray*	GetObjectArray();
 	void* 				GetPlayerList();
+	int					GetModuleLanguage();
 
 };
 

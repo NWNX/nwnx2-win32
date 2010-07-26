@@ -14,19 +14,22 @@ struct CExoLinkedListHeader
 {
 	CExoLinkedListElement *FirstElement;
 	CExoLinkedListElement *LastElement;
-	//dword                  Count;
+	uint32_t              Count;
+	
 };
 
 class CExoLinkedList_s {
 public:
 	CExoLinkedListHeader *ListHeader;
-	uint32_t             Count;
+	//uint32_t             Count;
 
 	CExoLinkedListElement *GetHeadPos();
 	void                  *GetHead();
 	void                  *GetAtPos(CExoLinkedListElement *Position);
 	CExoLinkedListElement *GetNext(CExoLinkedListElement *Position);
 	CExoLinkedListElement *AddTail(void *pData);
+	int Remove(CExoLinkedListElement *Element);
+	
 };
 
 #endif

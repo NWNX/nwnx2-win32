@@ -1030,7 +1030,7 @@ struct CNWSCreature_s {
   	uint8_t 							spacer40;
 	CNWSCreatureStats 				*cre_stats;			/* 0x0C64 */
 	
-	signed int 			AcquireItem(CNWSItem **a2, unsigned int a3, int a4, int a5, int bSendFeedBack);
+	signed int 			AcquireItem(CNWSItem **Item, nwn_objid_t From_oID, nwn_objid_t a4, char a5, char a6, int a7, int bFeedback);
 	int 				GetBlind();
 	bool 				GetFlanked(CNWSCreature *Target);
 	int 				GetFlatFooted();

@@ -90,8 +90,8 @@ struct CNWSItem_s {
 	uint8_t						field_27D;
 	uint8_t						field_27E;
 	uint8_t						field_27F;
-	uint32_t					field_280;
-	
+
+	uint32_t					it_stacksize;
 	uint8_t						it_stolen;				/* 0x0284 */
 
 	uint8_t						field_285;

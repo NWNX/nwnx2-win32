@@ -451,6 +451,8 @@ struct CNWSPlayerTURD_s {
   unsigned __int32 Mod_MapNumAreas;
   unsigned __int32 field_1F0;
   unsigned __int32 field_1F4;
+  
+  void *ScalarDestructor(uint32_t Flags);
 };
 
 #endif

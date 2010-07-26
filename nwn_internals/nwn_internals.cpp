@@ -32,9 +32,6 @@ void 			(__fastcall *CExoArrayList_uint32___Remove)(void *, void *, unsigned lon
 void			(__fastcall *CNWMessage__CreateWriteMessage)(CNWSMessage*, void*, uint32_t, nwn_objid_t, uint32_t) = (void (__fastcall *)(CNWSMessage*, void*, uint32_t, nwn_objid_t, uint32_t))0x00507E30;
 int				(__fastcall *CNWMessage__GetWriteMessage)(CNWSMessage*, void*, uint8_t**, uint64_t*) = (int (__fastcall *)(CNWSMessage*, void*, uint8_t**, uint64_t*))0x00508B80;
 
-////////
-//crash
-
 
 void (__fastcall *CNWSAreaOfEffectObject__dtor_CNWSAreaOfEffectObject)	(void *pThis, void *pVOID, char) = (void (__fastcall*)(void *pThis, void *pVOID, char))0x005A3880;
 void (__fastcall *CNWSDoor__dtor_CNWSDoor)								(void *pThis, void *pVOID, char) = (void (__fastcall*)(void *pThis, void *pVOID, char))0x005237F0;
