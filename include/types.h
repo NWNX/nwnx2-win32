@@ -31,6 +31,7 @@ struct CNWSWaypoint_s;                    typedef struct CNWSWaypoint_s         
 struct CNWSEncounter_s;                   typedef struct CNWSEncounter_s                   CNWSEncounter; 
 struct CNWSSoundObject_s;                 typedef struct CNWSSoundObject_s                 CNWSSoundObject; 
 struct CNWSStore_s;                       typedef struct CNWSStore_s                       CNWSStore; 
+struct CNWSPlayerCharSheetGUI_s;			typedef struct CNWSPlayerCharSheetGUI_s			CNWSPlayerCharSheetGUI;
 struct CNWSClient_s;						typedef struct CNWSClient_s						CNWSClient;
 struct CNWSPlayer_s;                      typedef struct CNWSPlayer_s                      CNWSPlayer;
 struct CNWSPlayerTURD_s;					typedef struct CNWSPlayerTURD_s					CNWSPlayerTURD;
@@ -165,6 +166,7 @@ struct CEffectsStore_s; typedef struct CEffectsStore_s CEffectsStore;
 #include ".\CNWSPlayerTURD.h"
 #include ".\CResource.h"
 #include ".\C2DA.h"
+#include ".\CNWSPlayerCharSheetGUI.h"
 
 #include ".\nwn_internals.h"
 

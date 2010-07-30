@@ -2,19 +2,28 @@
 #include "types.h"
 #include "nwn_internals.h"
 
-int 			(__thiscall *CNWSMessage__SendServerToPlayerGuiQuickbar_SetButton)(CNWSMessage*, CNWSPlayer*, uint8_t, int32_t) = (int (__thiscall *)(CNWSMessage*, CNWSPlayer *, uint8_t, int32_t))0x044E950; 
-int				(__thiscall *CNWSMessage__SendServerToPlayerGameObjUpdate)(CNWSMessage*, CNWSPlayer *) = (int (__thiscall *)(CNWSMessage*, CNWSPlayer *))0x00440110;
-void			(__thiscall *CNWSMessage__WriteGameObjUpdate_UpdateObject)(CNWSMessage*, CNWSPlayer*, CNWSObject*, CLastUpdateObject*, uint32_t, uint32_t) = (void (__thiscall *)(CNWSMessage*, CNWSPlayer*, CNWSObject*, CLastUpdateObject*, uint32_t, uint32_t))0x00445160;
-void			(__thiscall *CNWSMessage__WriteGameObjUpdate_UpdateAppearance)(CNWSMessage*, CNWSObject*, CLastUpdateObject*, uint32_t) = (void (__thiscall *)(CNWSMessage*, CNWSObject*, CLastUpdateObject*, uint32_t))0x0043E9C0;
-int				(__thiscall *CNWSMessage__SendServerToPlayerMessage)(CNWSMessage*, nwn_objid_t, uint8_t, uint8_t, uint8_t *, uint32_t) = (int (__thiscall *)(CNWSMessage*, nwn_objid_t, uint8_t, uint8_t, uint8_t *, uint32_t))0x00449F40;
-int 			(__thiscall *CNWSMessage__SendServerToPlayerArea_VisualEffect)(CNWSMessage *pTHIS, CNWSPlayer* plyer, int VFX_number, float Px, float Py, float Pz) = (int (__thiscall*)(CNWSMessage *pTHIS, CNWSPlayer* plyer, int VFX_number, float Px, float Py, float Pz))0x0043A2B0;
-int 			(__thiscall *CNWSMessage__SendServerToPlayerDungeonMasterAreaList)(CNWSMessage *pTHIS, CNWSPlayer *Player) = (int (__thiscall*)(CNWSMessage *pTHIS, CNWSPlayer *Player))0x00448700;
-int 			(__thiscall *CNWSMessage__SendServerToPlayerChat_ServerTell)(CNWSMessage *pTHIS, uint32_t Receiver_id, CExoString Msg) = (int (__thiscall*)(CNWSMessage *pTHIS, uint32_t Receiver_id, CExoString Msg))0x0043DEA0;
-int 			(__thiscall *CNWSMessage__SendServerToPlayerChat_Shout)(CNWSMessage *pTHIS, uint32_t Receiver, nwn_objid_t Sender, CExoString Msg) = (int (__thiscall*)(CNWSMessage *pTHIS, uint32_t Receiver, nwn_objid_t Sender, CExoString Msg))0x0043DF80;
-int 			(__thiscall *CNWSMessage__SendServerToPlayerChat_Tell)(CNWSMessage *pTHIS, uint32_t Receiver, nwn_objid_t Sender, CExoString Msg) = (int (__thiscall*)(CNWSMessage *pTHIS, uint32_t Receiver, nwn_objid_t Sender, CExoString Msg))0x0043DC90;
-int 			(__thiscall *CNWSMessage__SendServerToPlayerChat_Party)(CNWSMessage *pTHIS, unsigned long, unsigned long, char*, int) = (int (__thiscall*)(CNWSMessage *pTHIS, unsigned long, unsigned long, char*, int))0x0043D790;
-int 			(__thiscall *CNWSMessage__SendServerToPlayerChatMessage)(CNWSMessage *pTHIS, uint8_t Channel, nwn_objid_t Sender, char* Msg, uint32_t msg_len, uint32_t player_id) = (int (__thiscall*)(CNWSMessage *pTHIS, uint8_t Channel, nwn_objid_t Sender, char* Msg, uint32_t msg_len, uint32_t player_id))0x0043CA00;
+int 		(__thiscall *CNWSMessage__SendServerToPlayerGuiQuickbar_SetButton)(CNWSMessage*, CNWSPlayer*, uint8_t, int32_t) = (int (__thiscall *)(CNWSMessage*, CNWSPlayer *, uint8_t, int32_t))0x044E950; 
+int			(__thiscall *CNWSMessage__SendServerToPlayerGameObjUpdate)(CNWSMessage*, CNWSPlayer *) = (int (__thiscall *)(CNWSMessage*, CNWSPlayer *))0x00440110;
+void		(__thiscall *CNWSMessage__WriteGameObjUpdate_UpdateObject)(CNWSMessage*, CNWSPlayer*, CNWSObject*, CLastUpdateObject*, uint32_t, uint32_t) = (void (__thiscall *)(CNWSMessage*, CNWSPlayer*, CNWSObject*, CLastUpdateObject*, uint32_t, uint32_t))0x00445160;
+void		(__thiscall *CNWSMessage__WriteGameObjUpdate_UpdateAppearance)(CNWSMessage*, CNWSObject*, CLastUpdateObject*, uint32_t) = (void (__thiscall *)(CNWSMessage*, CNWSObject*, CLastUpdateObject*, uint32_t))0x0043E9C0;
+nwn_objid_t	(__thiscall *CNWSMessage__ReadOBJECTIDServer)(CNWSMessage *pTHIS) = (nwn_objid_t (__thiscall*)(CNWSMessage *pTHIS))0x00508C80;
+int			(__thiscall *CNWSMessage__SendServerToPlayerMessage)(CNWSMessage*, nwn_objid_t, uint8_t, uint8_t, uint8_t *, uint32_t) = (int (__thiscall *)(CNWSMessage*, nwn_objid_t, uint8_t, uint8_t, uint8_t *, uint32_t))0x00449F40;
+int 		(__thiscall *CNWSMessage__SendServerToPlayerArea_VisualEffect)(CNWSMessage *pTHIS, CNWSPlayer* plyer, int VFX_number, float Px, float Py, float Pz) = (int (__thiscall*)(CNWSMessage *pTHIS, CNWSPlayer* plyer, int VFX_number, float Px, float Py, float Pz))0x0043A2B0;
+int 		(__thiscall *CNWSMessage__SendServerToPlayerDungeonMasterAreaList)(CNWSMessage *pTHIS, CNWSPlayer *Player) = (int (__thiscall*)(CNWSMessage *pTHIS, CNWSPlayer *Player))0x00448700;
+int 		(__thiscall *CNWSMessage__SendServerToPlayerChat_ServerTell)(CNWSMessage *pTHIS, uint32_t Receiver_id, CExoString Msg) = (int (__thiscall*)(CNWSMessage *pTHIS, uint32_t Receiver_id, CExoString Msg))0x0043DEA0;
+int 		(__thiscall *CNWSMessage__SendServerToPlayerChat_Shout)(CNWSMessage *pTHIS, uint32_t Receiver, nwn_objid_t Sender, CExoString Msg) = (int (__thiscall*)(CNWSMessage *pTHIS, uint32_t Receiver, nwn_objid_t Sender, CExoString Msg))0x0043DF80;
+int 		(__thiscall *CNWSMessage__SendServerToPlayerChat_Tell)(CNWSMessage *pTHIS, uint32_t Receiver, nwn_objid_t Sender, CExoString Msg) = (int (__thiscall*)(CNWSMessage *pTHIS, uint32_t Receiver, nwn_objid_t Sender, CExoString Msg))0x0043DC90;
+int 		(__thiscall *CNWSMessage__SendServerToPlayerChat_Party)(CNWSMessage *pTHIS, unsigned long, unsigned long, char*, int) = (int (__thiscall*)(CNWSMessage *pTHIS, unsigned long, unsigned long, char*, int))0x0043D790;
+int 		(__thiscall *CNWSMessage__SendServerToPlayerChatMessage)(CNWSMessage *pTHIS, uint8_t Channel, nwn_objid_t Sender, char* Msg, uint32_t msg_len, uint32_t player_id) = (int (__thiscall*)(CNWSMessage *pTHIS, uint8_t Channel, nwn_objid_t Sender, char* Msg, uint32_t msg_len, uint32_t player_id))0x0043CA00;
+void		(__thiscall *CNWSMessage__WriteGameObjUpdate_CharacterSheet)(CNWSMessage *pTHIS, CNWSPlayer *player, uint32_t a3) = (void (__thiscall*)(CNWSMessage *pTHIS, CNWSPlayer *player, uint32_t a3))0x00447B10;
 
+nwn_objid_t CNWSMessage_s::ReadOBJECTIDServer() {
+	return CNWSMessage__ReadOBJECTIDServer(this);
+}
+
+void CNWSMessage_s::WriteGameObjUpdate_CharacterSheet(CNWSPlayer* player, uint32_t a3) {
+	CNWSMessage__WriteGameObjUpdate_CharacterSheet(this, player, a3);
+}
 
 int CNWSMessage_s::SendServerToPlayerArea_VisualEffect(CNWSPlayer* player, int VFX_number, float Px, float Py, float Pz) {
 	return CNWSMessage__SendServerToPlayerArea_VisualEffect(this, player, VFX_number, Px, Py, Pz);

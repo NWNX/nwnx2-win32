@@ -160,6 +160,12 @@ int 				HasFeat(uint16_t feat);
 bool 				LevelUp(CNWSStats_Level *a2, int a3, char a4, char a5, int a6);
 int 				ResolveSpecialAttackAttackBonus(CNWSCreature *Defender);
 
+void				SetCHABase(uint8_t CHABase);
+void				SetCONBase(uint8_t CONBase, int a3);
+void				SetDEXBase(uint8_t DEXBase);
+void				SetINTBase(uint8_t INTBase);
+void				SetSTRBase(uint8_t STRBase);
+void				SetWISBase(uint8_t WISBase);
 };
 
 

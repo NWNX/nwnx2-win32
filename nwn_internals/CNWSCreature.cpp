@@ -12,6 +12,7 @@ int 				(__thiscall *CNWSCreature__GetInvisible)(CNWSCreature *pTHIS, CNWSObject
 int 				(__thiscall *CNWSCreature__GetRangeWeaponEquipped)(CNWSCreature *pTHIS) = (int (__thiscall*)(CNWSCreature *pTHIS))0x00496460;
 CNWVisibilityNode * (__thiscall *CNWSCreature__GetVisibleListElement)(CNWSCreature *pTHIS, unsigned long ul) = (CNWVisibilityNode * (__thiscall*)(CNWSCreature *pTHIS, unsigned long ul))0x004C7FF0;
 float 				(__thiscall *CNWSCreature__MaxAttackRange)(CNWSCreature *pTHIS, nwn_objid_t, int, int) = (float (__thiscall*)(CNWSCreature *pTHIS, nwn_objid_t, int, int))0x00498090;
+void 				(__thiscall *CNWSCreature__PossessCreature)(CNWSCreature *pTHIS, nwn_objid_t oidPossessee) = (void (__thiscall*)(CNWSCreature *pTHIS, nwn_objid_t oidPossessee))0x004CD1B0;
 void 				(__thiscall *CNWSCreature__PostProcess)(CNWSCreature *pTHIS) = (void (__thiscall*)(CNWSCreature *pTHIS))0x0049E450;
 void				(__thiscall *CNWSCreature__RemoveFromArea)(CNWSCreature*, int AreaID) = (void (__thiscall *)(CNWSCreature*, int AreaID))0x004964C0;
 signed int 			(__thiscall *CNWSCreature__RemoveItem)(CNWSCreature *pTHIS, CNWSItem *a2, int a3, int bSendFeedBack, int a5, int a6) = (signed int (__thiscall*)(CNWSCreature *pTHIS, CNWSItem *a2, int a3, int bSendFeedBack, int a5, int a6))0x004C0830;
@@ -111,3 +112,6 @@ void CNWSCreature_s::UpdateAutoMap(uint32_t areaid) {
 	CNWSCreature__UpdateAutoMap(this, areaid);
 }
 
+void CNWSCreature_s::PossessCreature(nwn_objid_t oid_Possessee) {
+	CNWSCreature__PossessCreature(this, oid_Possessee);
+}

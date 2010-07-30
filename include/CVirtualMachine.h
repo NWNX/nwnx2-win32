@@ -38,6 +38,8 @@ struct CVirtualMachine_s {
 	void *Commands; 
 
     void                       *unknown;
+    
+    int Runscript(CExoString *ScriptName, nwn_objid_t OBJECT_SELF, int a4 = 1);
 };
 
 #endif 

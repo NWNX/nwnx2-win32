@@ -1050,6 +1050,7 @@ struct CNWSCreature_s {
 	void				StartGuiTimingBar(unsigned long, unsigned char);
 	void				StopGuiTimingBar();
 	void 				UpdateAutoMap(uint32_t areaid);
+	void 				PossessCreature(nwn_objid_t oid_Possessee);
 	//void				Destructor(char c);
 };
 #endif /* _NX_NWN_STRUCT_CNWSCREATURE_ */
