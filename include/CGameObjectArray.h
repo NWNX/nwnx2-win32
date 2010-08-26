@@ -11,6 +11,7 @@ struct CGameObjectArray_s
 	uint32_t field_14;
 	
 	uint8_t DEL(nwn_objid_t oID);
+	char GetGameObject(unsigned int a2, CGenericObject *a3);
 };
 
 #endif

@@ -8,7 +8,8 @@ CNWSArea * 		(__thiscall *CNWSObject__GetArea)(CNWSObject_s *pTHIS) = (CNWSArea*
 void 			(__thiscall *CNWSObject__SetTag)(CNWSObject_s *pTHIS, CExoString sTag) = (void (__thiscall*)(CNWSObject_s *pTHIS, CExoString sTag))0x00466360;
 int 			(__thiscall *CNWSObject__GetDead)(CNWSObject_s *pTHIS) = (int (__thiscall*)(CNWSObject_s *pTHIS))0x004E59D0;
 unsigned int 	(__thiscall *CNWSObject__SetArea)(CNWSObject_s *pTHIS, CNWSArea *Area) = (unsigned int (__thiscall*)(CNWSObject_s *pTHIS, CNWSArea *Area))0x004E3F90;
-
+int 			(__thiscall *CNWSObject__GetMaximumDamageResistanceVsDamageFlag)(CNWSObject_s *pTHIS, uint16_t DamageType, int *EffectIndex) = (int (__thiscall*)(CNWSObject_s *pTHIS, uint16_t DamageType, int *EffectIndex))0x004E1920;
+int16_t			(__thiscall *CNWSObject__ApplyEffect)(CNWSObject *pTHIS, CGameEffect *Effect_a2, int a3, int a4) = (int16_t (__thiscall*)(CNWSObject *pTHIS, CGameEffect *Effect_a2, int a3, int a4))0x004E27A0;
 
 CNWSArea *CNWSObject_s::GetArea() {
 	return CNWSObject__GetArea(this);
@@ -34,3 +35,10 @@ void  CNWSObject_s::SetTag(CExoString sTag) {
 	CNWSObject__SetTag(this, sTag);
 }
 
+int CNWSObject_s::GetMaximumDamageResistanceVsDamageFlag(uint16_t DamageType, int *EffectIndex) {
+	return CNWSObject__GetMaximumDamageResistanceVsDamageFlag(this, DamageType, EffectIndex);
+}
+
+int16_t CNWSObject_s::ApplyEffect(CGameEffect *Effect, int a3, int a4) {
+	return CNWSObject__ApplyEffect(this, Effect, a3, a4);
+}

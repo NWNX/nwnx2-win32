@@ -28,62 +28,64 @@
 
 #define OBJECT_INVALID                            0x7F000000
 
-#define OBJECT_TYPE_MODULE                                 3
-#define OBJECT_TYPE_AREA                                   4
-#define OBJECT_TYPE_CREATURE                               5
-#define OBJECT_TYPE_ITEM                                   6
-#define OBJECT_TYPE_TRIGGER                                7
-#define OBJECT_TYPE_PLACEABLE                              8
-#define OBJECT_TYPE_DOOR                                  10
-#define OBJECT_TYPE_AREA_OF_EFFECT                        11
-#define OBJECT_TYPE_WAYPOINT                              12
-#define OBJECT_TYPE_ENCOUNTER                             13
-#define OBJECT_TYPE_STORE                                 14
 
-//#define   QUICKBAR_TYPE_INVALID							=	0;	// set/getquickslot: yes; Param#: 0
-#define   QUICKBAR_TYPE_ITEM							=	1;	// set/getquickslot: no
-//#define   QUICKBAR_TYPE_SPELL							=	2;	// set/getquickslot: yes; Param#: 4; see struct quickslot_s;
-//#define   QUICKBAR_TYPE_PARRY							=	3;	// set/getquickslot: yes; Param#: 1; iParam1 = 10
-//#define   QUICKBAR_TYPE_FEAT							=	4;	// set/getquickslot: yes; Param#: 1; iParam1 = Feat id
-//#define   QUICKBAR_TYPE_TALKTO							=	6;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_ATTACK							=	7;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_EMOTE							=	8;	// set/getquickslot: yes; Param#: 1; iParam1 = emote id
-//#define   QUICKBAR_TYPE_MODE							=	10;	// set/getquickslot: yes; Param#: 1; iParam1 = mode id
-#define   QUICKBAR_TYPE_DM_CREATECREATURE				=	11;	// set/getquickslot: no
-#define   QUICKBAR_TYPE_DM_CREATEITEM					=	12;	// set/getquickslot: no
-#define   QUICKBAR_TYPE_DM_CREATEENCOUNTER				=	13;	// set/getquickslot: no
-#define   QUICKBAR_TYPE_DM_CREATEWAYPOINT				=	14;	// set/getquickslot: no
-#define   QUICKBAR_TYPE_DM_CREATETRIGGER				=	15;	// set/getquickslot: no
-#define   QUICKBAR_TYPE_DM_CREATEPORTAL					=	16;	// set/getquickslot: no
-#define   QUICKBAR_TYPE_DM_CREATEPLACEABLE				=	17;	// set/getquickslot: no
-//#define   QUICKBAR_TYPE_MACRO							=	18;	// set/getquickslot: no
-//#define   QUICKBAR_TYPE_DM_TOGGLEINVULNERABLE			=	19;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_DM_FORCEREST					=	20;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_DM_GOTO							=	21;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_DM_HEAL							=	22;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_DM_KILL							=	23;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_DM_TAKECONTROL					=	24;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_DM_TAKECONTROLFULLPOWERS		=	25;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_DM_GIVEGOLD						=	27;	// set/getquickslot: yes; Param#: 1; iParam1 = gold amount
-//#define   QUICKBAR_TYPE_DM_TAKEGOLD						=	28;	// set/getquickslot: yes; Param#: 1; iParam1 = NEGATIVE gold amount
-#define   QUICKBAR_TYPE_DM_GIVEITEM						=	29;	// set/getquickslot: no
-#define   QUICKBAR_TYPE_DM_TAKEITEM						=	30;	// set/getquickslot: no
-//#define   QUICKBAR_TYPE_DM_GIVEXP						=	31;	// set/getquickslot: yes; Param#: 1; iParam1 = xp amount
-//#define   QUICKBAR_TYPE_DM_TAKEXP						=	32;	// set/getquickslot: yes; Param#: 1; iParam1 = NEGATIVE xp amount
-//#define   QUICKBAR_TYPE_DM_GIVELEVEL					=	33;	// set/getquickslot: yes; Param#: 1; iParam1 = number of levels
-//#define   QUICKBAR_TYPE_DM_TAKELEVEL					=	34;	// set/getquickslot: yes; Param#: 1; iParam1 = NEGATIVE number of levels
-//#define   QUICKBAR_TYPE_DM_LIMBO						=	35;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_DM_TOGGLEAI						=	36;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_POSSESSFAMILIAR					=	38;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_EXAMINE							=	40;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_BARTER							=	41;	// set/getquickslot: yes; Param#: 0
-//#define   QUICKBAR_TYPE_ASSOCIATECOMMAND				=	42;	// set/getquickslot: yes; Param#: 1; iParam1 = command id
-#define   QUICKBAR_TYPE_CANCELPOLYMORPH					=	43;	// ??
-//#define   QUICKBAR_TYPE_SPELLLIKEABILITY				=	44;	// set/getquickslot: yes; Param#: 1; basically the same as spell
-//#define   QUICKBAR_TYPE_DM_SHIFTALIGNMENTGOOD			=	45;	// set/getquickslot: yes; Param#: 1; iParam1 = amount to shift towards allignment
-//#define   QUICKBAR_TYPE_DM_SHIFTALIGNMENTEVIL			=	46;	// set/getquickslot: yes; Param#: 1; iParam1 = amount to shift towards allignment
-//#define   QUICKBAR_TYPE_DM_SHIFTALIGNMENTLAWFUL			=	47;	// set/getquickslot: yes; Param#: 1; iParam1 = amount to shift towards allignment
-//#define   QUICKBAR_TYPE_DM_SHIFTALIGNMENTCHAOTIC		=	48;	// set/getquickslot: yes; Param#: 1; iParam1 = amount to shift towards allignment
+#define OBJECT_TYPE2_MODULE                                 3
+#define OBJECT_TYPE2_AREA                                   4
+#define OBJECT_TYPE2_CREATURE                               5
+#define OBJECT_TYPE2_ITEM                                   6
+#define OBJECT_TYPE2_TRIGGER                                7
+#define OBJECT_TYPE2_PLACEABLE                              8
+#define OBJECT_TYPE2_DOOR                                  10
+#define OBJECT_TYPE2_AREA_OF_EFFECT                        11
+#define OBJECT_TYPE2_WAYPOINT                              12
+#define OBJECT_TYPE2_ENCOUNTER                             13
+#define OBJECT_TYPE2_STORE                                 14
+
+
+//#define   QUICKBAR_TYPE_INVALID						=	0	// set/getquickslot: yes; Param#: 0
+#define   QUICKBAR_TYPE_ITEM							=	1	// set/getquickslot: no
+//#define   QUICKBAR_TYPE_SPELL							=	2	// set/getquickslot: yes; Param#: 4; see struct quickslot_s;
+//#define   QUICKBAR_TYPE_PARRY							=	3	// set/getquickslot: yes; Param#: 1; iParam1 = 10
+//#define   QUICKBAR_TYPE_FEAT							=	4	// set/getquickslot: yes; Param#: 1; iParam1 = Feat id
+//#define   QUICKBAR_TYPE_TALKTO						=	6	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_ATTACK						=	7	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_EMOTE							=	8	// set/getquickslot: yes; Param#: 1; iParam1 = emote id
+//#define   QUICKBAR_TYPE_MODE							=	10	// set/getquickslot: yes; Param#: 1; iParam1 = mode id
+#define   QUICKBAR_TYPE_DM_CREATECREATURE				=	11	// set/getquickslot: no
+#define   QUICKBAR_TYPE_DM_CREATEITEM					=	12	// set/getquickslot: no
+#define   QUICKBAR_TYPE_DM_CREATEENCOUNTER				=	13	// set/getquickslot: no
+#define   QUICKBAR_TYPE_DM_CREATEWAYPOINT				=	14	// set/getquickslot: no
+#define   QUICKBAR_TYPE_DM_CREATETRIGGER				=	15	// set/getquickslot: no
+#define   QUICKBAR_TYPE_DM_CREATEPORTAL					=	16	// set/getquickslot: no
+#define   QUICKBAR_TYPE_DM_CREATEPLACEABLE				=	17	// set/getquickslot: no
+//#define   QUICKBAR_TYPE_MACRO							=	18	// set/getquickslot: no
+//#define   QUICKBAR_TYPE_DM_TOGGLEINVULNERABLE			=	19	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_DM_FORCEREST					=	20	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_DM_GOTO						=	21	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_DM_HEAL						=	22	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_DM_KILL						=	23	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_DM_TAKECONTROL				=	24	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_DM_TAKECONTROLFULLPOWERS		=	25	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_DM_GIVEGOLD					=	27	// set/getquickslot: yes; Param#: 1; iParam1 = gold amount
+//#define   QUICKBAR_TYPE_DM_TAKEGOLD					=	28	// set/getquickslot: yes; Param#: 1; iParam1 = NEGATIVE gold amount
+#define   QUICKBAR_TYPE_DM_GIVEITEM						=	29	// set/getquickslot: no
+#define   QUICKBAR_TYPE_DM_TAKEITEM						=	30	// set/getquickslot: no
+//#define   QUICKBAR_TYPE_DM_GIVEXP						=	31	// set/getquickslot: yes; Param#: 1; iParam1 = xp amount
+//#define   QUICKBAR_TYPE_DM_TAKEXP						=	32	// set/getquickslot: yes; Param#: 1; iParam1 = NEGATIVE xp amount
+//#define   QUICKBAR_TYPE_DM_GIVELEVEL					=	33	// set/getquickslot: yes; Param#: 1; iParam1 = number of levels
+//#define   QUICKBAR_TYPE_DM_TAKELEVEL					=	34	// set/getquickslot: yes; Param#: 1; iParam1 = NEGATIVE number of levels
+//#define   QUICKBAR_TYPE_DM_LIMBO						=	35	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_DM_TOGGLEAI					=	36	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_POSSESSFAMILIAR				=	38	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_EXAMINE						=	40	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_BARTER						=	41	// set/getquickslot: yes; Param#: 0
+//#define   QUICKBAR_TYPE_ASSOCIATECOMMAND				=	42	// set/getquickslot: yes; Param#: 1; iParam1 = command id
+#define   QUICKBAR_TYPE_CANCELPOLYMORPH					=	43	// ??
+//#define   QUICKBAR_TYPE_SPELLLIKEABILITY				=	44	// set/getquickslot: yes; Param#: 1; basically the same as spell
+//#define   QUICKBAR_TYPE_DM_SHIFTALIGNMENTGOOD			=	45	// set/getquickslot: yes; Param#: 1; iParam1 = amount to shift towards allignment
+//#define   QUICKBAR_TYPE_DM_SHIFTALIGNMENTEVIL			=	46	// set/getquickslot: yes; Param#: 1; iParam1 = amount to shift towards allignment
+//#define   QUICKBAR_TYPE_DM_SHIFTALIGNMENTLAWFUL		=	47	// set/getquickslot: yes; Param#: 1; iParam1 = amount to shift towards allignment
+//#define   QUICKBAR_TYPE_DM_SHIFTALIGNMENTCHAOTIC		=	48	// set/getquickslot: yes; Param#: 1; iParam1 = amount to shift towards allignment
 
 #define CREATURE_EVENT_HEARTBEAT                           0
 #define CREATURE_EVENT_PERCEPTION                          1
@@ -595,9 +597,27 @@
 #define ITEM_APPR_ARMOR_MODEL_ROBE                        18
 
 
-#include "nwn_const_feats.h"
-#include "nwn_const_spells.h"
-#include "nwn_const_vfx.h"
+#define CNWSEffectListHandler__ATTACK_BONUS_MISC		0
+#define CNWSEffectListHandler__ATTACK_BONUS_ONHAND		1
+#define CNWSEffectListHandler__ATTACK_BONUS_OFFHAND		2
+#define CNWSEffectListHandler__ATTACK_BONUS_CWEAPON1	3
+#define CNWSEffectListHandler__ATTACK_BONUS_CWEAPON2	4
+#define CNWSEffectListHandler__ATTACK_BONUS_CWEAPON3	5
+#define CNWSEffectListHandler__ATTACK_BONUS_UNARMED		7
+
+#define ATTACK_TYPE_SPECIAL_ARMED						6
+#define ATTACK_TYPE_SPECIAL_UNARMED						8
+
+#define WEAPON_TYPE_PIERCING				1
+#define WEAPON_TYPE_BLUDGEONING				2
+#define WEAPON_TYPE_SLASHING				3
+#define WEAPON_TYPE_PIERCING_SLASHING		4
+#define WEAPON_TYPE_BLUDGEONING_PIERCING	5
+
+
+//#include "nwn_const_feats.h"
+//#include "nwn_const_spells.h"
+//#include "nwn_const_vfx.h"
 
 #endif /* _NX_NWN_CONST_H_ */
 

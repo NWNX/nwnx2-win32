@@ -7,8 +7,9 @@ struct CNWSScriptVarTable_s {
 
 	float 				GetFloat(CExoString &VarName);
 	int 				GetInt(CExoString &VarName);
-	void 				SetInt(CExoString &VarName, int VarValue, int a3);
 	CScriptLocation 	GetLocation(CExoString &VarName);
+	CExoString*			GetString(CExoString &VarName);
+	void 				SetInt(CExoString &VarName, int VarValue, int a3);
 };
 
 #endif

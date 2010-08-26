@@ -64,7 +64,7 @@ struct CNWSItem_s {
   
     uint8_t                     field_22A;
     uint8_t                     field_22B;
-    uint32_t					spacer_021C[5];			/* 0x022C */ 
+    uint32_t					spacer_021C;			/* 0x022C */ 
     
     nwn_objid_t					it_container_obj;		/* 0x0240 */
     
@@ -76,7 +76,7 @@ struct CNWSItem_s {
     uint8_t						field_024A;				/* 0x024A */
     uint8_t						field_024B;				/* 0x024B */
 
-    uint32_t					spacer_24C[10];			/* 0x024C */
+    uint32_t					spacer_24C[14];			/* 0x024C */
     
     uint8_t						it_droppable;			/* 0x0274 */
     

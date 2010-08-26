@@ -153,6 +153,8 @@ int 				GetDead();
 int					RemoveEffectById(uint64_t EffID);
 unsigned int 		SetArea(CNWSArea *Area);
 void 				SetTag(CExoString sTag);
+int  				GetMaximumDamageResistanceVsDamageFlag(uint16_t DamageType, int *EffectIndex);
+int16_t				ApplyEffect(CGameEffect *Effect, int a3, int a4);
 
 };
 

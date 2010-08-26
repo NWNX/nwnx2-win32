@@ -19,3 +19,7 @@ void CNWSCombatRound_s::StartCombatRound(nwn_objid_t oidDefender) {
 	return CNWSCombatRound__StartCombatRound(this, oidDefender);
 }
 
+CNWSCombatAttackData *CNWSCombatRound_s::GetAttack(int a2) {
+	if (a2<50) return &this->AttackData[a2];
+	else return &this->AttackData[49];
+}

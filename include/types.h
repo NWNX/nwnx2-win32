@@ -5,6 +5,7 @@
 #include ".\CExoString.h"
 
 struct CResource_s;							typedef struct CResource_s						CResource; 
+struct CTwoDimArrays_s;						typedef struct CTwoDimArrays_s					CTwoDimArrays;
 struct C2DA_s;								typedef struct C2DA_s							C2DA; 
 struct CExoArrayList_float_s;             	typedef struct CExoArrayList_float_s            CExoArrayList_float;
 struct CExoArrayList_int32_s;             	typedef struct CExoArrayList_int32_s            CExoArrayList_int32;
@@ -69,6 +70,7 @@ struct CNWSItem_s;                          typedef struct CNWSItem_s           
 struct CNWTile_s;							typedef struct CNWTile_s						CNWTile;
 struct CNWSTile_s;							typedef struct CNWSTile_s						CNWSTile;
 struct CNWSArea_s;							typedef struct CNWSArea_s						CNWSArea;
+struct CNWMessage_s;                     	typedef struct CNWMessage_s                     CNWMessage;
 struct CNWSMessage_s;                     	typedef struct CNWSMessage_s                     CNWSMessage;
 struct CGameObjectArrayElement_s;			typedef struct CGameObjectArrayElement_s		CGameObjectArrayElement;
 struct CGameObjectArray_s;					typedef struct CGameObjectArray_s				CGameObjectArray;
@@ -106,6 +108,7 @@ struct CEffectsStore_s; typedef struct CEffectsStore_s CEffectsStore;
 #include ".\CScriptLocation.h"
 #include ".\CScriptVariable.h"
 #include ".\CNWSMessage.h"
+#include ".\CNWMessage.h"
 #include ".\CNWBaseItem.h"
 #include ".\CNWSQuickbarButton.h"
 #include ".\CNWSCreatureEventHandler.h"
@@ -167,6 +170,7 @@ struct CEffectsStore_s; typedef struct CEffectsStore_s CEffectsStore;
 #include ".\CResource.h"
 #include ".\C2DA.h"
 #include ".\CNWSPlayerCharSheetGUI.h"
+#include ".\CTwoDimArrays.h"
 
 #include ".\nwn_internals.h"
 

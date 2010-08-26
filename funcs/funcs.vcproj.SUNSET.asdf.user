@@ -65,7 +65,7 @@
 			Name="Server_specific|Win32"
 			>
 			<DebugSettings
-				Command=""
+				Command="e:\games\nwn\nwnx2.exe"
 				WorkingDirectory=""
 				CommandArguments=""
 				Attach="false"

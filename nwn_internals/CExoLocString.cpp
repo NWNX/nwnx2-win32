@@ -62,7 +62,8 @@ int CExoLocString_s::AddString(uint32_t nLocale, char *sString) {
 	pNewEntry->Text.text = sString;
 	pNewEntry->Text.len = strlen(sString)+1;
 	this->List->AddTail(pNewEntry);
-	++this->List->Count;
+	//++this->List->Count;
+	//++this->List->ListHeader->Count;
 	//delete[] sString;
 	return 1;
 }

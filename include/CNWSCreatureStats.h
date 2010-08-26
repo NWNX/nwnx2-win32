@@ -166,6 +166,10 @@ void				SetDEXBase(uint8_t DEXBase);
 void				SetINTBase(uint8_t INTBase);
 void				SetSTRBase(uint8_t STRBase);
 void				SetWISBase(uint8_t WISBase);
+
+int16_t				GetDamageRoll(CNWSObject *Defender, int bOffHand, int AttackResult, int SneakAttack, int DeathAttack, int a7);
+
+int GetNumLevelsOfClass(unsigned char nClassType);
 };
 
 

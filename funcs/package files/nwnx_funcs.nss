@@ -1,3 +1,5 @@
+#include "nwnx_funcs_effst"
+
 const int LV_TYPE_INT = 1;
 const int LV_TYPE_FLT = 2;
 const int LV_TYPE_STR = 3;
@@ -199,6 +201,10 @@ struct quickslot_s {
 	string sS2; //for Macros this is the command, for DM Creator objects it's the ResRef of the object to be spawned
 };
 
+struct immunity_override_s {
+	int Override1;
+	int Override_Death;
+};
 
 // Returns the object given by soID 
 // soID is a hex string, e.g.: 7FFFFFEF. It is not necessary to use leading zeros: EF = 000000EF;
@@ -267,10 +273,13 @@ void NWNXFuncs_SetGold(object oCreature, int iGold);
 
 // Sets a base ability score iAbility (ABILITY_STRENGTH, ABILITY_DEXTERITY, etc) to iValue
 // The range of iValue is 3 to 255
-void NWNXFuncs_SetAbilityScore(object oCreature, int iAbility, int iValue);
+// bAdjustCurrentHitPoints is only used when Constitution is set: if false a potential increase in hitpoints
+// will only affect oCreature's maximum hit points. The missing hit points can be regained the normal way: resting,
+// healing, regeneration, etc.
+void NWNXFuncs_SetAbilityScore(object oCreature, int iAbility, int iValue, int bAdjustCurrentHitPoints = 1);
 
 // Changes a base ability score iAbility (ABILITY_STRENGTH, ABILITY_DEXTERITY, etc) by iValue
-void NWNXFuncs_ModAbilityScore(object oCreature, int iAbility, int iValue);
+void NWNXFuncs_ModAbilityScore(object oCreature, int iAbility, int iValue, int bAdjustCurrentHitPoints = 1);
 
 // Adds a feat to oObject's general featlist
 // If iLevel is greater than 0 the feat is also added to the featlist for that level
@@ -776,6 +785,36 @@ void NWNXFuncs_SetEventScript(object oObject, string sScript, int iEvent);
 // behave as if it had been reset when player logon's are concerened.
 void NWNXFuncs_ClearPlayerTURDs();
 
+// Sets the class type taken at a specific level
+void NWNXFuncs_SetClassByLevel(object oCreature, int iClass, int iLevel);
+
+// Replaces one class of a creature with another
+// including classes in the level statlist of the creature
+void NWNXFuncs_ReplaceClass(object oCreature, int iOldClass, int iNewClass);
+
+// Updates the character sheet of a player
+// Most of the information on the char sheet is just for display purposes and the 
+// actual values used (e.g. for combat) are recalculated when needed.
+// This function "resyncs" the charsheet with the real values should they go out
+// of sync (can happen with NWNXFuncs_ReplaceClass)
+void NWNXFuncs_UpdateCharacterSheet(object oPC);
+
+
+// Helper function to add overrides for specific immunities
+// Assigning "OR-able" constants to the first 31 immunity types is no problem,
+// the last one (DEATH) would be 2^32 which a script INT cannot hold (max is 2^(32-1)) and
+// it also doesn't simply overflow in the negatives.
+struct immunity_override_s AddImmunityOverride(struct immunity_override_s Overrides, int iImmunity);
+
+// Sets immunity overrides for a creature
+void SetImmunityOverride(object oCreature, struct immunity_override_s Override);
+
+// Removes immunity overrides for a creature
+void RemoveImmunityOverride(object oCreature) ;
+
+// Returns a custom effect as defined by the gameeffect_s struct (see nwnx_funcs_effst.nss and nwnx_funcs_eff.nss)
+effect NWNXFuncs_EffectCustomEffect(struct gameeffect_s e);
+
 //*******************************************************************************************************************
 
 object NWNXFuncs_StringToObject(string soID) {
@@ -835,13 +874,13 @@ void NWNXFuncs_SetGold(object oCreature, int iGold) {
 	DeleteLocalString(oCreature, "NWNX!FUNCS!SETGOLD");
 }
 
-void NWNXFuncs_SetAbilityScore(object oCreature, int iAbility, int iValue) {
-	SetLocalString(oCreature, "NWNX!FUNCS!SETABILITYSCORE", IntToString(iAbility)+" "+IntToString(iValue)+ " 0");
+void NWNXFuncs_SetAbilityScore(object oCreature, int iAbility, int iValue, int bAdjustCurrentHitPoints) {
+	SetLocalString(oCreature, "NWNX!FUNCS!SETABILITYSCORE", IntToString(iAbility)+" "+IntToString(iValue)+ " 0"+ " "+IntToString(bAdjustCurrentHitPoints));
 	DeleteLocalString(oCreature, "NWNX!FUNCS!SETABILITYSCORE");
 }
 
-void NWNXFuncs_ModAbilityScore(object oCreature, int iAbility, int iValue) {
-	SetLocalString(oCreature, "NWNX!FUNCS!SETABILITYSCORE", IntToString(iAbility)+" "+IntToString(iValue)+" 1");
+void NWNXFuncs_ModAbilityScore(object oCreature, int iAbility, int iValue, int bAdjustCurrentHitPoints = 1) {
+	SetLocalString(oCreature, "NWNX!FUNCS!SETABILITYSCORE", IntToString(iAbility)+" "+IntToString(iValue)+" 1"+ " "+IntToString(bAdjustCurrentHitPoints));
 	DeleteLocalString(oCreature, "NWNX!FUNCS!SETABILITYSCORE");
 }
 
@@ -981,7 +1020,7 @@ void NWNXFuncs_SetMaxHitPoints(object oCreature, int iHP) {
 }
 
 void NWNXFuncs_SetSavingThrowBonus(object oCreature, int iSavingThrow, int iValue) {
-	SetLocalString(oCreature, "NWNX!FUNCS!SETSAVINGTHROWBONUS", IntToString(iValue)+" "+IntToString(iSavingThrow)+" 0");
+	SetLocalString(oCreature, "NWNX!FUNCS!SETSAVINGTHROWBONUS", IntToString(iSavingThrow)+" "+IntToString(iValue)+" 0");
 	DeleteLocalString(oCreature, "NWNX!FUNCS!SETSAVINGTHROWBONUS");
 }
 
@@ -1068,7 +1107,6 @@ string NWNXFuncs_GetAllKnownFeats(object oCreature, string sDelimiter=",") {
 	// spacer = 256 bytes
 	string sSpacer;
 	int iCount = NWNXFuncs_GetFeatCount(oCreature);
-	SpeakString("Feats: "+IntToString(iCount));
 	iCount = (iCount*5+(iCount-1)*GetStringLength(sDelimiter))+1;
 	iCount = iCount / 256 +1;
 	for (iCount; iCount>0; iCount--) {
@@ -1667,4 +1705,62 @@ void NWNXFuncs_ClearPlayerTURDs() {
 	SetLocalString(OBJECT_SELF, "NWNX!FUNCS!CLEARTURDLIST", "-");
 	DeleteLocalString(OBJECT_SELF, "NWNX!FUNCS!CLEARTURDLIST");
 }
+
+void NWNXFuncs_SetClassByLevel(object oCreature, int iClass, int iLevel) {
+	SetLocalString(oCreature, "NWNX!FUNCS!SETCLASSBYLEVEL", IntToString(iClass)+" "+IntToString(iLevel));
+	DeleteLocalString(oCreature, "NWNX!FUNCS!SETCLASSBYLEVEL");
+}
+
+void NWNXFuncs_ReplaceClass(object oCreature, int iOldClass, int iNewClass) {
+	SetLocalString(oCreature, "NWNX!FUNCS!REPLACECLASS", IntToString(iOldClass)+" "+IntToString(iNewClass));
+	DeleteLocalString(oCreature, "NWNX!FUNCS!REPLACECLASS");
+}
+
+void NWNXFuncs_UpdateCharacterSheet(object oPC) {
+	SetLocalString(oPC, "NWNX!FUNCS!UPDATECHARSHEET", ObjectToString(oPC));
+	DeleteLocalString(oPC, "NWNX!FUNCS!UPDATECHARSHEET");
+}
+
+struct immunity_override_s AddImmunityOverride(struct immunity_override_s Overrides, int iImmunity) {
+	if (iImmunity < 32) {
+		Overrides.Override1 |= (1 << (iImmunity-1));
+	}
+	else {
+		Overrides.Override_Death = 1;
+	}
+	return Overrides;
+}
+
+void SetImmunityOverride(object oCreature, struct immunity_override_s Override) {
+	SetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE1", Override.Override1);
+	SetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE2", Override.Override_Death);
+}
+
+void RemoveImmunityOverride(object oCreature) {
+	DeleteLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE1");
+	DeleteLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE2");
+}
+
+/*
+struct gameeffect_s {
+	int Type;
+	string Creator;
+	int SpellID;
+	int NumInts;
+	string Ints;
+};	
+*/	
+effect NWNXFuncs_EffectCustomEffect(struct gameeffect_s e) {
+	object o = GetModule();
+	SetLocalInt(o, "NWNXFUNCS_CE", 1);
+	SetLocalInt(o, "NWNXFUNCS_CE_NUMINTS", e.NumInts);
+	SetLocalString(o, "NWNXFUNCS_CE_INTS", e.Ints);
+	SetLocalString(o, "NWNXFUNCS_CE_EFFECT", IntToString(e.Type)+" "+e.Creator+" "+IntToString(e.SpellID));
+	effect Eff = EffectAppear();
+	DeleteLocalInt(o, "NWNXFUNCS_CE");
+	DeleteLocalInt(o, "NWNXFUNCS_CE_NUMINTS");
+	DeleteLocalString(o, "NWNXFUNCS_CE_INTS");
+	DeleteLocalString(o, "NWNXFUNCS_CUSTOMEFFECT");
 	
+	return Eff;
+}

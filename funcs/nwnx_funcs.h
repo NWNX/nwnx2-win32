@@ -13,7 +13,7 @@
 
 #define PLAYER_ID_ALL_PLAYERS						0xFFFFFFF7
 
-#define FUNCTION_COUNT 122
+#define FUNCTION_COUNT 128
 
 class CNWNXFuncs : public CNWNXBase {
 public:
@@ -100,7 +100,9 @@ public:
 	int SetSkill();
 	int SetSkillByLevel();
 	int SetClassByPosition();
+	int SetClassByLevel();
 	int SetClassLevel();
+	int ReplaceClass();
 
 	int SetHitPointsByLevel();
 	int SetCurrentHitPoints();
@@ -194,6 +196,8 @@ public:
 	std::list<float> Floats;
 	void NWN_CreateGeometry(CNWSTrigger *Trigger, CScriptLocation *Loc, CNWSArea *Area);
 	bool bHookCreateGeometry;
+	
+	bool bOverrideMaximumDexMod;
 
 	int SetDebugLevel();
 	int debugLevel;
@@ -201,9 +205,17 @@ public:
 	int TimebarStart();
 	int TimebarStop();
 
+	int UpdateCharSheet();
+
 	int ClearTURDList();
 
+	int PossessCreature();
+
+	int SummonAssociate();
+
 	void LOG(const char *pcMsg, ...);
+
+	CNWSObject *CustomEffectObject;
 
 private:
 	struct effect_id_type_s {
@@ -268,6 +280,7 @@ private:
 	int GetEventScriptInfo(int &ScriptNumber, std::string &ScriptName, int Max);
 
 	int ModifyItem();
+
 
 public:
 	int SendServerToPlayerChatMessage(uint8_t Channel, nwn_objid_t Sender, char *Msg, int Msg_len, uint32_t Receiver);

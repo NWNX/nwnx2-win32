@@ -33,7 +33,13 @@ struct CGameEffect_s {
 
     uint32_t            eff_skiponload;         /* 48 */
 
+	CGameEffect *ctor(int a2);
+	CGameEffect *ctor(CGameEffect *Effect, int bCopy);
+	void dtor();
 	int	GetScriptEffectType();
+	int GetInteger(int nInt);
+	int SetNumIntegers(int nInts);
+	int SetCreator(nwn_objid_t oidCreator);
 };
 
 #endif

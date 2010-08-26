@@ -30,7 +30,18 @@ struct CNWRules_s {
 	uint8_t				ru_races_len;					/* 0x00DC */
 	uint8_t				ru_skills_len;					/* 0x00DD */
 	uint8_t				ru_domains_len;					/* 0x00DE */
-	
+
+    uint8_t            field_DD;
+    uint8_t            field_DE;
+    uint8_t            field_DF;
+
+    void           *ru_classes;             /* 00E0 */
+    void            *ru_races;               /* 00E4 */
+    void           *ru_skills;              /* 00E8 */
+    void          *ru_domains;             /* 00EC */
+
+    CTwoDimArrays      *ru_2das;                /* 00F0 */
+
 	uint8_t GetFeatExpansionLevel(uint16_t FeatID);
 };
 

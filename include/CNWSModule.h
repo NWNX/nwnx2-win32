@@ -98,6 +98,7 @@ struct CNWSModule_s {
 	CNWSArea * 			GetArea(nwn_objid_t oID);
 	CNWSPlayerTURD* 	GetPlayerTURDFromList(CNWSPlayer *Player);
 	void 				SetScriptName(int iScript, CExoString ScriptName);
+	int					FindObjectByTagOrdinal(CExoString *sTag, int nNth);
 };
 
 #endif

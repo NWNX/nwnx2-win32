@@ -205,7 +205,8 @@ int CNWNXFuncs::SetAbilityScore() {
 
 	CNWSCreature *cre = (CNWSCreature*)oObject;
 
-	uint8_t *Abilities = &cre->cre_stats->cs_str;
+	CNWSCreatureStats *Stats = cre->cre_stats;
+	uint8_t *Abilities = &Stats->cs_str;
 
 	unsigned short int iIndex = P1*2;
 
@@ -214,8 +215,16 @@ int CNWNXFuncs::SetAbilityScore() {
 	if (P2 < 3) P2 = 3;
 	else if (P2 > 255) P2 = 255;
 
-	Abilities[iIndex] = P2;
-	Abilities[iIndex+1] = (P2-10)/2;
+	switch (P1) {
+		case 0: Stats->SetSTRBase(P2); break;
+		case 1: Stats->SetDEXBase(P2); break;
+		case 2: Stats->SetCONBase(P2, P4); break;
+		case 3: Stats->SetINTBase(P2); break;
+		case 4: Stats->SetWISBase(P2); break;
+		case 5: Stats->SetCHABase(P2); break;
+	}
+	//Abilities[iIndex] = P2;
+	//Abilities[iIndex+1] = (P2-10)/2;
 	
 	return 1;
 }
@@ -1547,7 +1556,21 @@ int CNWNXFuncs::SetItemWeight() {
 		return 0;
 	}
 
-	((CNWSItem*)oObject)->it_weight = P1;
+	CNWSItem *Item = (CNWSItem*)oObject;
+	
+	Item->it_weight = P1;
+
+	_log(3, "PossessorID: %08X\n", Item->it_container_obj);
+	CNWSObject *Possessor = (CNWSObject*)(*NWN_AppManager)->app_server->GetGameObject(Item->it_container_obj);
+	if (Possessor) {
+		_log(3, "Possessor: %08X\n", Possessor->obj_generic.obj_type);
+		if (Possessor->obj_generic.obj_type == OBJECT_TYPE_ITEM) {
+			Possessor = (CNWSObject*)(*NWN_AppManager)->app_server->GetGameObject(((CNWSItem*)Possessor)->it_container_obj);
+		}
+		if (Possessor->obj_generic.obj_type == OBJECT_TYPE_CREATURE) {
+			((CNWSCreature*)Possessor)->UpdateEncumbranceState(1);
+		}
+	}
 
 	return 1;
 }
@@ -1559,8 +1582,10 @@ int CNWNXFuncs::SetItemValue() {
 		return 0;
 	}
 
+	oObject = oObject-0x10;
+
 	if (P1 < 0) P1 = 0;
-	
+
 	switch (P2) {
 		case ITEM_VALUE_IDENTIFIED	: 
 			((CNWSItem*)oObject)->it_cost_ided = P1; 
@@ -1580,6 +1605,8 @@ int CNWNXFuncs::SetItemCharges() {
 		return 0;
 	}
 
+	oObject = oObject-0x10;
+
 	if (P1 < 0) P1 = 0;
 	if (P1 > 255) P1 = 255;
 
@@ -1595,8 +1622,11 @@ int CNWNXFuncs::GetItemValue() {
 		sprintf(Params, "-1");
 		return 0;
 	}
-	
+
+	oObject = oObject-0x10;
+
 	switch (P1) {
+		case ITEM_VALUE_IDENTIFIED: sprintf(Params, "%d", ((CNWSItem*)oObject)->it_cost_ided); break;
 		case ITEM_VALUE_UNIDENTIFIED: sprintf(Params, "%d", ((CNWSItem*)oObject)->it_cost_unided); break;
 		case ITEM_VALUE_ADDITIONAL	: sprintf(Params, "%d", ((CNWSItem*)oObject)->it_cost_add); break;
 	}
@@ -3300,51 +3330,93 @@ int CNWNXFuncs::ClearTURDList() {
 	return 1;
 }
 
+int CNWNXFuncs::PossessCreature() {
+	CNWSCreature *Possessor = (CNWSCreature*)oObject;
+	int oID_Possessee = 0;
+	sscanf(Params, "%x", &oID_Possessee);
 
-/*
-	int iEvent;
-	sscanf(Params, "%d¬%s", &iEvent, Params);
-	_log(3, "o SetEvent: |%i|%s|\n", iEvent, Params);
-	
-	// check new event string for validity
-	_log(3, "o SetEvent: strspn [%i], strlen [%i]\n", strspn(Params, "abcdefghijklmnopqrstuvwxyz012345679_"), strlen(Params));
-	if ((strlen(Params) < 0 || strlen(Params)>16) ||
-	   (strspn(Params, "abcdefghijklmnopqrstuvwxyz012345679_") != strlen(Params)))
-	{
-		_log(2, "o Error (SetEvent): New event script name contains invalid characters or is too long.\n");
+	_log(3, "Possessor: %08X\tPossessee: %08X\n", Possessor->obj.obj_generic.obj_id, oID_Possessee);
+	Possessor->PossessCreature(oID_Possessee);
+	return 1;
+}
+
+int CNWNXFuncs::SetClassByLevel() {
+	if (!GetIsCreature()) {
+		_log(2, "o Error: SetClassByLevel used on non-creature object.\n");
 		sprintf(Params, "-1");
 		return 0;
 	}
 
-	switch (((CGenericObject*)oObject)->obj_type) {
-		case OBJECT_TYPE_CREATURE: {
-			CNWSCreature *cre = (CNWSCreature*)oObject;
-			switch (iEvent) {
-				case EVENT_CREATURE_HEARTBEAT:		cre->cre_events.onHeartbeat = Params; break;
-				case EVENT_CREATURE_PERCEPTION:		cre->cre_events.onPerception = Params; break;
-				case EVENT_CREATURE_SPELLCASTAT:	cre->cre_events.onSpellCastAt = Params; break;
-				case EVENT_CREATURE_ATTACKED:		cre->cre_events.onAttacked = Params; break;
-				case EVENT_CREATURE_DAMAGED:		cre->cre_events.onDisturbed = Params; break;
-				case EVENT_CREATURE_DISTURBED:		cre->cre_events.onDamaged = Params; break;
-				case EVENT_CREATURE_ENDCOMBAT:		cre->cre_events.onEndCombat = Params; break;
-				case EVENT_CREATURE_DIALOG:			cre->cre_events.onDialog = Params; break;
-				case EVENT_CREATURE_RESTED:			cre->cre_events.onRested = Params; break;
-				case EVENT_CREATURE_SPAWN:			cre->cre_events.onSpawn = Params; break;
-				case EVENT_CREATURE_DEATH:			cre->cre_events.onDeath = Params; break;
-				case EVENT_CREATURE_USERDEFINDED:	cre->cre_events.onUserDefined = Params; break;
-				case EVENT_CREATURE_BLOCKED:		cre->cre_events.onBlocked = Params; break;
-				default: 
-					_log(2, "o Error (SetEvent): Could not set event for object type creature\n");
-					sprintf(Params, "-1");
-					return 0;
-				break;
-			}
-		} break;
-		default: 
-			sprintf(Params, "-1");
-			return 0;
-		break;
+	CNWSCreature *cre = (CNWSCreature*)oObject;
+	CNWSStats_Level *ls = nwn_GetLevelStats(cre->cre_stats, P1);
+
+	if (!ls) {
+		sprintf(Params, "-1");
+		return 0;
+	}
+
+	ls->ls_class = P2;
+	
+	return 1;
+}
+
+int CNWNXFuncs::ReplaceClass() {
+	if (!GetIsCreature()) {
+		_log(2, "o Error: ReplaceClass used on non-creature object.\n");
+		sprintf(Params, "-1");
+		return 0;
+	}
+
+	CNWSCreature *cre = (CNWSCreature*)oObject;
+	CNWSStats_Level *ls;
+	int i=0;
+
+	while (i < cre->cre_stats->cs_levelstat.len) {
+		ls = (CNWSStats_Level*)cre->cre_stats->cs_levelstat.data[i];
+		if (ls->ls_class == P1) ls->ls_class = P2;
+		i++;
+	}
+
+	for (i=0; i<cre->cre_stats->cs_classes_len; i++) {
+		if (cre->cre_stats->cs_classes[i].cl_class == P1) {
+			cre->cre_stats->cs_classes[i].cl_class = P2;
+			break;
+		}
+	}
+
+	return 1;
+}
+
+int CNWNXFuncs::UpdateCharSheet() {
+	uint32_t player_id = 0;
+	sscanf(Params, "%x", &player_id);
+	CNWSPlayer *Player = (*NWN_AppManager)->app_server->GetClientObjectByObjectId(player_id);
+
+	if (Player != NULL) {
+		CNWSPlayerCharSheetGUI *CharSheet = (CNWSPlayerCharSheetGUI*)(((char*)Player)+0x60);
+		uint32_t msg = CharSheet->ComputeCharacterSheetUpdateRequired(Player);
+		if (msg) {
+			((*NWN_AppManager)->app_server->srv_internal->srv_client_messages)->WriteGameObjUpdate_CharacterSheet(Player, msg);
+		}
 	}
 	return 1;
 }
-*/
+
+int CNWNXFuncs::SummonAssociate() {
+	uint16_t Type=0;
+	char Name[250];
+	char ResRef[16];
+
+	if (sscanf(Params, "%s %s %d", ResRef, Name, &Type) != 3) {
+		sprintf(Params, "-1");
+		return -1;
+	}
+
+	CResRef sResRef;
+	strcpy(sResRef.resref, ResRef);
+	CExoString sName(Name);
+	_log(3, "ResRef: %s\tName: %s\tType %d\n", sResRef.resref, sName.text, Type);
+	((CNWSCreature*)oObject)->SummonAssociate(sResRef, sName, Type);
+
+	return 1;
+}

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "nwnx_funcs.h"
 #include "../NWNXdll/IniFile.h"
+#include <time.h>
 
 
 CNWNXFuncs::CNWNXFuncs() {
@@ -34,6 +35,8 @@ char* CNWNXFuncs::OnRequest(char *gameObject, char* Request, char* Parameters) {
 	else if (strcmp(Request, "SETWORLDTIME") == 0) nwn_SetWorldTime(P1, P2, P3);
 
 	else if (strcmp(Request, "TEST") == 0) {
+		CNWSCreature *cre = (CNWSCreature*)gameObject;
+		_log(3, "str: %08X\n", &cre->cre_stats->cs_str);
 	}
 
 	else {sprintf(Params, "-1"); _log(1, "o Could not find requested function.\n");}
@@ -95,7 +98,13 @@ void CNWNXFuncs::LOG(const char *pcMsg, ...) {
 		}
 
 		// _log string in file
-		fprintf (m_fFile, acBuffer);
+		time_t rawtime;
+		time(&rawtime);
+		struct tm *ti;
+		ti = localtime(&rawtime);
+
+		fprintf (m_fFile, "[%02d/%02d/%02d %02d:%02d:%02d] %s", ti->tm_mon+1, ti->tm_mday, ti->tm_year+1900, ti->tm_hour, ti->tm_min, ti->tm_sec, acBuffer);
+		//fprintf (m_fFile, acBuffer);
 		fflush (m_fFile);
 	}
 }
@@ -110,6 +119,7 @@ BOOL CNWNXFuncs::OnCreate(const char* LogDir) {
 	debugLevel = iniFile.ReadInteger("FUNCS", "DebugLevel", 0);
 	nSkill = iniFile.ReadInteger("FUNCS", "Number_of_Skills", 28);
 	bHookCreateGeometry = iniFile.ReadInteger("FUNCS", "HOOK_CustomTrapGeometry", 0);
+	bOverrideMaximumDexMod = iniFile.ReadInteger("FUNCS", "HOOK_OverrideMaximumDexMod", 0);
 
 	WriteLogHeader(debugLevel);
 	CreateFunctionLookup();
@@ -130,7 +140,7 @@ BOOL CNWNXFuncs::OnRelease() {
 
 void CNWNXFuncs::WriteLogHeader(int debug)
 {
-	fprintf(m_fFile, "Windows NWNX Funcs plugin v.0.0.8.2");
+	fprintf(m_fFile, "Windows NWNX Funcs plugin v.0.0.8.4");
 	if (!debug) fprintf(m_fFile, " [logging off]");
 	else fprintf(m_fFile, " [log level: %i]", debug);
 	fprintf(m_fFile, "\n");

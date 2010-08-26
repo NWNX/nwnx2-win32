@@ -313,3 +313,23 @@ v 0.0.83
 		NWNX_Funcs_GetBaseAttackBonusOverride changed to NWNXFuncs_GetBaseAttackBonusOverride
 	
 		NWNXFuncs_ApplyVisualEffectForPC checks for validity of the area the object is in; should prevent some crashes
+
+v 0.0.84
+	Added:
+		NWNXFuncs_SetClassByLevel
+		NWNXFuncs_ReplaceClass
+		
+		New Effect Constructors which let you set Creator and Spell ID (see effects_example.nss for usage)
+		
+	Fixed:
+		NWNXFuncs_SetItemCharges
+		NWNXFuncs_SetItemValue
+		NWNXFuncs_GetItemValue
+		NWNXFuncs_SetItemWeight
+			All these should now work
+			NWNXFuncs_SetItemWeight will now also update the total carried weight of a creature possessing the item
+	
+	Changed:
+		New parameter for NWNXFuncs_SetAbilityScore and NWNXFuncs_ModAbilityScore: bAdjustCurrentHitPoints
+			bAdjustCurrentHitPoints is only used when altering Constitution and determines whether current hitpoints are affected if hitpoints are changed.
+			The parameter defaults to 1 so the current functionality is preserved.

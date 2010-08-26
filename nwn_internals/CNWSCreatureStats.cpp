@@ -13,6 +13,7 @@ int 			(__thiscall *CNWSCreatureStats__GetFavoredEnemyBonus)(CNWSCreatureStats *
 int 			(__thiscall *CNWSCreatureStats__GetIsWeaponOfChoice)(CNWSCreatureStats *pTHIS, uint32_t BaseItemType) = (int (__thiscall*)(CNWSCreatureStats *pTHIS, uint32_t BaseItemType))0x0048CB10;
 uint8_t			(__thiscall *CNWSCreatureStats__GetLevel)(CNWSCreatureStats *pTHIS, int bCountNegativeLevels) = (uint8_t (__thiscall*)(CNWSCreatureStats *pTHIS, int bCountNegativeLevels))0x0046DB40;
 int				(__thiscall *CNWSCreatureStats__GetMeleeAttackBonus)(CNWSCreatureStats *, int, int, int) = (int (__thiscall *)(CNWSCreatureStats *, int, int, int))0x0046FB40;
+int 			(__thiscall *CNWSCreatureStats__GetNumLevelsOfClass)(CNWSCreatureStats *pTHIS, unsigned char) = (int (__thiscall*)(CNWSCreatureStats *pTHIS, unsigned char))0x0048F400;
 signed int 		(__thiscall *CNWSCreatureStats__GetWeaponFinesse)(CNWSCreatureStats *pTHIS, CNWSItem *weapon) = (signed int (__thiscall*)(CNWSCreatureStats *pTHIS, CNWSItem *weapon))0x00481210;
 signed int 		(__thiscall *CNWSCreatureStats__GetWeaponFocus)(CNWSCreatureStats *pTHIS, CNWSItem *weapon) = (signed int (__thiscall*)(CNWSCreatureStats *pTHIS, CNWSItem *weapon))0x004812E0;
 int 			(__thiscall *CNWSCreatureStats__GetUseMonkAttackTables)(CNWSCreatureStats *pTHIS, int) = (int (__thiscall*)(CNWSCreatureStats *pTHIS, int))0x00470730;
@@ -27,6 +28,8 @@ void (__thiscall *CNWSCreatureStats__SetDEXBase)(CNWSCreatureStats *pTHIS, uint8
 void (__thiscall *CNWSCreatureStats__SetINTBase)(CNWSCreatureStats *pTHIS, uint8_t AbilityBase) = (void (__thiscall*)(CNWSCreatureStats *pTHIS, uint8_t AbilityBase))0x0047CEF0;
 void (__thiscall *CNWSCreatureStats__SetSTRBase)(CNWSCreatureStats *pTHIS, uint8_t AbilityBase) = (void (__thiscall*)(CNWSCreatureStats *pTHIS, uint8_t AbilityBase))0x0047CBD0;
 void (__thiscall *CNWSCreatureStats__SetWISBase)(CNWSCreatureStats *pTHIS, uint8_t AbilityBase) = (void (__thiscall*)(CNWSCreatureStats *pTHIS, uint8_t AbilityBase))0x0047CFE0;
+
+int16_t (__thiscall *CNWSCreatureStats__GetDamageRoll)(CNWSCreatureStats *pTHIS, CNWSObject *Defender, int bOffHand, int AttackResult, int SneakAttack, int DeathAttack, int a7) = (int16_t (__thiscall*)(CNWSCreatureStats *pTHIS, CNWSObject *Defender, int bOffHand, int AttackResult, int SneakAttack, int DeathAttack, int a7))0x004764D0;
 
 void CNWSCreatureStats_s::SetCHABase(uint8_t CHABase) {
 	CNWSCreatureStats__SetCHABase(this, CHABase);
@@ -124,3 +127,10 @@ int CNWSCreatureStats_s::ResolveSpecialAttackAttackBonus(CNWSCreature *Defender)
 	return CNWSCreatureStats__ResolveSpecialAttackAttackBonus(this, Defender);
 }
 
+int16_t CNWSCreatureStats_s::GetDamageRoll(CNWSObject *Defender, int bOffHand, int AttackResult, int SneakAttack, int DeathAttack, int a7) {
+	return CNWSCreatureStats__GetDamageRoll(this, Defender, bOffHand, AttackResult, SneakAttack, DeathAttack, a7);
+}
+
+int CNWSCreatureStats_s::GetNumLevelsOfClass(unsigned char nClassType) {
+	return CNWSCreatureStats__GetNumLevelsOfClass(this, nClassType);
+}

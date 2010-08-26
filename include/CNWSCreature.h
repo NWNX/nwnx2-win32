@@ -1049,8 +1049,11 @@ struct CNWSCreature_s {
 	void				*SetScriptName(signed int iScript, CExoString ScriptName);
 	void				StartGuiTimingBar(unsigned long, unsigned char);
 	void				StopGuiTimingBar();
+	void				SummonAssociate(CResRef ResRef, CExoString Name, uint16_t Type);
 	void 				UpdateAutoMap(uint32_t areaid);
 	void 				PossessCreature(nwn_objid_t oid_Possessee);
+	int					GetUseMonkAbilities();
+	void				UpdateEncumbranceState(int bFeedback);
 	//void				Destructor(char c);
 };
 #endif /* _NX_NWN_STRUCT_CNWSCREATURE_ */

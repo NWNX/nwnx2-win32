@@ -10,6 +10,7 @@ bool 				(__thiscall *CNWSCreature__GetFlanked)(CNWSCreature *pTHIS, CNWSCreatur
 int 				(__thiscall *CNWSCreature__GetFlatFooted)(CNWSCreature *pTHIS) = (int (__thiscall*)(CNWSCreature *pTHIS))0x00551170;
 int 				(__thiscall *CNWSCreature__GetInvisible)(CNWSCreature *pTHIS, CNWSObject* obj, int i) = (int (__thiscall*)(CNWSCreature *pTHIS, CNWSObject* obj, int i))0x004AEB60;
 int 				(__thiscall *CNWSCreature__GetRangeWeaponEquipped)(CNWSCreature *pTHIS) = (int (__thiscall*)(CNWSCreature *pTHIS))0x00496460;
+int 				(__thiscall *CNWSCreature__GetUseMonkAbilities)(CNWSCreature *pTHIS) = (int (__thiscall*)(CNWSCreature *pTHIS))0x0049E370;
 CNWVisibilityNode * (__thiscall *CNWSCreature__GetVisibleListElement)(CNWSCreature *pTHIS, unsigned long ul) = (CNWVisibilityNode * (__thiscall*)(CNWSCreature *pTHIS, unsigned long ul))0x004C7FF0;
 float 				(__thiscall *CNWSCreature__MaxAttackRange)(CNWSCreature *pTHIS, nwn_objid_t, int, int) = (float (__thiscall*)(CNWSCreature *pTHIS, nwn_objid_t, int, int))0x00498090;
 void 				(__thiscall *CNWSCreature__PossessCreature)(CNWSCreature *pTHIS, nwn_objid_t oidPossessee) = (void (__thiscall*)(CNWSCreature *pTHIS, nwn_objid_t oidPossessee))0x004CD1B0;
@@ -25,8 +26,9 @@ void				(__thiscall *CNWSCreature__SetQuickbarButton_SpellLikeAbility)(CNWSCreat
 void *				(__thiscall *CNWSCreature__SetScriptName)(CNWSCreature *pTHIS, signed int iScript, CExoString ScriptName) = (void* (__thiscall*)(CNWSCreature *pTHIS, signed int iScript, CExoString ScriptName))0x0049F8D0;
 void				(__thiscall *CNWSCreature__StartGuiTimingBar)(CNWSCreature*, unsigned long, unsigned char) = (void (__thiscall *)(CNWSCreature*, unsigned long, unsigned char))0x004B1A90;
 void				(__thiscall *CNWSCreature__StopGuiTimingBar)(CNWSCreature*) = (void (__thiscall *)(CNWSCreature*))0x004B1AF0;
+void 				(__thiscall *CNWSCreature__SummonAssociate)(CNWSCreature *pTHIS, CResRef ResRef, CExoString ExoString, uint16_t Type) = (void (__thiscall*)(CNWSCreature *pTHIS, CResRef ResRef, CExoString ExoString, uint16_t Type))0x004CC6D0;
 void 				(__thiscall *CNWSCreature__UpdateAutoMap)(CNWSCreature* pTHIS, uint32_t areaid) = (void (__thiscall*)(CNWSCreature* pTHIS, uint32_t areaid))0x00494C50;
-
+void 				(__thiscall *CNWSCreature__UpdateEncumbranceState)(CNWSCreature *pTHIS, int bFeedback) = (void (__thiscall*)(CNWSCreature *pTHIS, int bFeedback))0x004CFC70;
 
 //void Destructor(char c) {
 	//CNWSCreature__dtor_CNWSCreature(this, c);
@@ -114,4 +116,16 @@ void CNWSCreature_s::UpdateAutoMap(uint32_t areaid) {
 
 void CNWSCreature_s::PossessCreature(nwn_objid_t oid_Possessee) {
 	CNWSCreature__PossessCreature(this, oid_Possessee);
+}
+
+void CNWSCreature_s::SummonAssociate(CResRef ResRef, CExoString Name, uint16_t Type) {
+	CNWSCreature__SummonAssociate(this, ResRef, Name, Type);
+}
+
+int CNWSCreature_s::GetUseMonkAbilities() {
+	return CNWSCreature__GetUseMonkAbilities(this);
+}
+
+void CNWSCreature_s::UpdateEncumbranceState(int bFeedback) {
+	return CNWSCreature__UpdateEncumbranceState(this, bFeedback);
 }

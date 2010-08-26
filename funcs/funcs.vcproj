@@ -422,6 +422,10 @@
 				Name="nwn_internals"
 				>
 				<File
+					RelativePath="..\nwn_internals\C2DA.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\nwn_internals\CExoLinkedList.cpp"
 					>
 				</File>
@@ -458,6 +462,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\nwn_internals\CNWSInventory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSItem.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\nwn_internals\CNWSMessage.cpp"
 					>
 				</File>
@@ -478,7 +490,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\nwn_internals\CNWSPlayerCharSheetGUI.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\nwn_internals\CNWSplayerTURD.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSScriptVarTable.cpp"
 					>
 				</File>
 				<File
@@ -507,6 +527,10 @@
 				</File>
 				<File
 					RelativePath="..\nwn_internals\CServerExoAppInternal.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CVirtualMachine.cpp"
 					>
 				</File>
 				<File

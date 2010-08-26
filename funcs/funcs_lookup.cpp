@@ -127,4 +127,9 @@ void CNWNXFuncs::CreateFunctionLookup() {
 	i = 119;	pFunc[i] = &CNWNXFuncs::SetAge; FunctionLookup["SETAGE"] = i;
 	i = 120;	pFunc[i] = &CNWNXFuncs::ModifyItem; FunctionLookup["MODIFYITEM"] = i;
 	i = 121;	pFunc[i] = &CNWNXFuncs::ClearTURDList; FunctionLookup["CLEARTURDLIST"] = i;
+	i = 122;	pFunc[i] = &CNWNXFuncs::PossessCreature; FunctionLookup["POSSESSCREATURE"] = i;
+	i = 123;	pFunc[i] = &CNWNXFuncs::SetClassByLevel; FunctionLookup["SETCLASSBYLEVEL"] = i;
+	i = 125;	pFunc[i] = &CNWNXFuncs::ReplaceClass; FunctionLookup["REPLACECLASS"] = i;
+	i = 126;	pFunc[i] = &CNWNXFuncs::UpdateCharSheet; FunctionLookup["UPDATECHARSHEET"] = i;
+	i = 127;	pFunc[i] = &CNWNXFuncs::SummonAssociate; FunctionLookup["SUMMONASSOCIATE"] = i;
 }

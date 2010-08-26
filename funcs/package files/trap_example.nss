@@ -82,10 +82,10 @@ void main() {
 	The coordinates are always rotated around the origin
 */
 
-	//NWNXFuncs_SetCustomTrapGeometry(sGeometry); // set the same coordinates again
-	//NWNXFuncs_RotateCustomTrapGeometry(180.0); // clockwise rotation of 90 degrees
+	NWNXFuncs_SetCustomTrapGeometry(sGeometry); // set the same coordinates again
+	NWNXFuncs_RotateCustomTrapGeometry(180.0); // clockwise rotation of 90 degrees
 
-	//oTrap = CreateTrapAtLocation(TRAP_BASE_TYPE_AVERAGE_FIRE, lLoc);
+	oTrap = CreateTrapAtLocation(TRAP_BASE_TYPE_AVERAGE_FIRE, lLoc);
 	
 /*	You should now have 2 star shaped traps connected by one their points
 */
