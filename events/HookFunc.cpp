@@ -23,19 +23,18 @@
 
 extern CNWNXEvents events;
 
-void (*SaveCharNextHook)();
-void (*PickPocketNextHook)();
-void (*AttackNextHook)();
-void (*ExamineItemNextHook)();
-void (*ExamineCreatureNextHook)();
-void (*ExaminePlaceableNextHook)();
-void (*ExamineDoorNextHook)();
+int (__fastcall *SaveCharNextHook)(void *);
+int (__fastcall *PickPocketNextHook)(void *, void *, unsigned long);
+int (__fastcall *AttackNextHook)(void *, void *, unsigned long, int, int, int);
+int (__fastcall *ExamineItemNextHook)(void *, void *, CNWSPlayer *, unsigned long);
+int (__fastcall *ExamineCreatureNextHook)(void *, void *, CNWSPlayer *, unsigned long);
+int (__fastcall *ExaminePlaceableNextHook)(void *, void *, CNWSPlayer *, unsigned long);
+int (__fastcall *ExamineDoorNextHook)(void *, void *, CNWSPlayer *, unsigned long);
 
-void (*pRunScript)();
+int (__fastcall *pRunScript)(CVirtualMachine *, void *, CExoString *, unsigned long, int);
 
-dword pServThis = 0;
-dword pList = 0;
-dword pScriptThis = 0;
+CAppManager *pServThis = (CAppManager*)0x0066C050;
+CVirtualMachine *pScriptThis = (CVirtualMachine*)0x0066C048;
 dword oPC = 0;
 dword oTarget_b = OBJECT_INVALID;
 
@@ -43,171 +42,93 @@ char scriptRun = 0;
 
 unsigned long lastRet;
 
-void SaveCharHookProc()
+// int __thiscall CNWSPlayer::PackCreatureIntoMessage(void)
+int __fastcall SaveCharHookProc(CNWSPlayer *thisptr)
 {
-//  _asm { int 3 }
-  _asm { pushad }
 	if (!scriptRun)
 	{
-		_asm { add ebx, 4 }
-		_asm { mov oPC, ebx }
-		_asm { sub ebx, 4 }
-		events.FireEvent(*(dword *)oPC, EVENT_SAVE_CHAR);
+		events.FireEvent(thisptr->nwsoid, EVENT_SAVE_CHAR);
 	}
-  _asm { popad }
-  _asm { leave }
 
-  _asm { jmp SaveCharNextHook }
+	return SaveCharNextHook(thisptr);
 }
 
-void __declspec(naked) PickPocketHookProc()
+// int __thiscall CNWSCreature::AddPickPocketActions(unsigned long)
+int __fastcall PickPocketHookProc(CGameObject *thisptr, void *, unsigned long a)
 {
-	_asm { pushad }
 	if (!scriptRun)
 	{
-		_asm
-		{
-			//Get oPC
-			mov eax, ecx
-			mov eax, [eax+4]
-			mov oPC, eax
-
-			//Get oTarget
-			mov eax, [esp+0x24]  //0x4+0x20
-			mov oTarget_b, eax
-		}
-		events.oTarget = oTarget_b;
+		oPC = thisptr->id;
+		events.oTarget = a;
 		
 		events.FireEvent(oPC, EVENT_PICKPOCKET);
 	}
-	_asm { popad }
-	//_asm { leave }
-  _asm { jmp PickPocketNextHook }
+	return PickPocketNextHook(thisptr, NULL, a);
 }
 
-void __declspec(naked) AttackHookProc()
+// int __thiscall CNWSCreature::AddAttackActions(unsigned long, int, int, int)
+int __fastcall AttackHookProc(CGameObject *thisptr, void *, unsigned long a, int b, int c, int d)
 {
-	_asm { pushad }
 	if (!scriptRun)
 	{
-		_asm
-		{
-			//Get oPC
-			mov eax, ecx
-			mov eax, [eax+4]
-			mov oPC, eax
-
-			//Get oTarget
-			mov eax, [esp+0x24]  //0x4+0x20
-			mov oTarget_b, eax
-		}
-		events.oTarget = oTarget_b;
+		oPC = thisptr->id;
+		events.oTarget = a;
 		
 		events.FireEvent(oPC, EVENT_ATTACK);
 	}
-	_asm { popad }
-	//_asm { leave }
-  _asm { jmp AttackNextHook }
+	return AttackNextHook(thisptr, NULL, a, b, c, d);
 }
 
-void __declspec(naked) ExamineItemHookProc()
+// int __thiscall CNWSMessage::SendServerToPlayerExamineGui_ItemData(class CNWSPlayer *, unsigned long)
+int __fastcall ExamineItemHookProc(void *thisptr, void *, CNWSPlayer *a, unsigned long b)
 {
-	_asm { pushad }
 	if (!scriptRun)
 	{
-		_asm
-		{
-			//Get oPC
-			mov eax, [esp+0x24]
-			mov eax, [eax+0x30]
-			mov oPC, eax
-
-			//Get oTarget
-			mov eax, [esp+0x28]  //0x24+0x4
-			mov oTarget_b, eax
-		}
-		events.oTarget = oTarget_b;
+		oPC = a->nwsoid;
+		events.oTarget = b;
 		
 		events.FireEvent(oPC, EVENT_EXAMINE);
 	}
-	_asm { popad }
-	//_asm { leave }
-	_asm { jmp ExamineItemNextHook };
+	return ExamineItemNextHook(thisptr, NULL, a, b);
 }
 
-void __declspec(naked) ExamineCreatureHookProc()
+// int __thiscall CNWSMessage::SendServerToPlayerExamineGui_CreatureData(class CNWSPlayer *, unsigned long)
+int __fastcall ExamineCreatureHookProc(void *thisptr, void *, CNWSPlayer *a, unsigned long b)
 {
-	_asm { pushad }
 	if (!scriptRun)
 	{
-		_asm
-		{
-			//Get oPC
-			mov eax, [esp+0x24]
-			mov eax, [eax+0x30]
-			mov oPC, eax
-
-			//Get oTarget
-			mov eax, [esp+0x28]  //0x24+0x4
-			mov oTarget_b, eax
-		}
-		events.oTarget = oTarget_b;
+		oPC = a->nwsoid;
+		events.oTarget = b;
 		
 		events.FireEvent(oPC, EVENT_EXAMINE);
 	}
-	_asm { popad }
-	//_asm { leave }
-	_asm { jmp ExamineCreatureNextHook };
+	return ExamineCreatureNextHook(thisptr, NULL, a, b);
 }
 
-void __declspec(naked) ExaminePlaceableHookProc()
+// int __thiscall CNWSMessage::SendServerToPlayerExamineGui_PlaceableData(class CNWSPlayer *, unsigned long)
+int __fastcall ExaminePlaceableHookProc(void *thisptr, void *, CNWSPlayer *a, unsigned long b)
 {
-	_asm { pushad }
 	if (!scriptRun)
 	{
-		_asm
-		{
-			//Get oPC
-			mov eax, [esp+0x24]
-			mov eax, [eax+0x30]
-			mov oPC, eax
-
-			//Get oTarget
-			mov eax, [esp+0x28]  //0x24+0x4
-			mov oTarget_b, eax
-		}
-		events.oTarget = oTarget_b;
+		oPC = a->nwsoid;
+		events.oTarget = b;
 		
 		events.FireEvent(oPC, EVENT_EXAMINE);
 	}
-	_asm { popad }
-	//_asm { leave }
-	_asm { jmp ExaminePlaceableNextHook };
+	return ExaminePlaceableNextHook(thisptr, NULL, a, b);
 }
 
-void __declspec(naked) ExamineDoorHookProc()
+// int __thiscall CNWSMessage::SendServerToPlayerExamineGui_DoorData(class CNWSPlayer *, unsigned long)
+int __fastcall ExamineDoorHookProc(void *thisptr, void *, CNWSPlayer *a, unsigned long b)
 {
-	_asm { pushad }
 	if (!scriptRun)
 	{
-		_asm
-		{
-			//Get oPC
-			mov eax, [esp+0x24]
-			mov eax, [eax+0x30]
-			mov oPC, eax
-
-			//Get oTarget
-			mov eax, [esp+0x28]  //0x24+0x4
-			mov oTarget_b, eax
-		}
-		events.oTarget = oTarget_b;
+		oPC = a->nwsoid;
+		events.oTarget = b;
 		
 		events.FireEvent(oPC, EVENT_EXAMINE);
 	}
-	_asm { popad }
-	//_asm { leave }
-	_asm { jmp ExamineDoorNextHook };
+	return ExamineDoorNextHook(thisptr, NULL, a, b);
 }
 
 DWORD FindSaveChar()
@@ -413,45 +334,34 @@ DWORD FindRunScript()
 	return NULL;
 }
 
+// int __thiscall CVirtualMachine::RunScript(class CExoString *, unsigned long, int)
 void RunScript(char * sname, int ObjID)
 {
-  int sptr[4];
-  sptr[1] = strlen(sname);
-  _asm
-  {
-    lea  edx, sptr
-    mov  eax, sname
-    mov  [edx], eax
-    push 1
-    push ObjID
-    push edx
-    mov ecx, pScriptThis
-    mov ecx, [ecx]
-  }
-  scriptRun = 1;
-  pRunScript();
-  scriptRun = 0;
+	// set up script name
+	CExoString s;
+	s.text = sname;
+	s.len = strlen(sname);
+	// run script
+	scriptRun = 1;
+	pRunScript(pScriptThis, NULL, &s, ObjID, 1);
+	scriptRun = 0;
 }
 
 int HookFunctions()
 {
 	int success1 = 0, success2 = 0, success3 = 0;
 	int success6_1 = 0, success6_2 = 0, success6_3 = 0, success6_4 = 0;
-	DWORD org_SaveChar    = FindSaveChar();
-	DWORD org_Run         = FindRunScript();
-	DWORD org_PickPocket  = FindPickPocket();
-	DWORD org_Attack      = FindAttack();
+	DWORD org_SaveChar         = FindSaveChar(); // 0x00435D50
+	DWORD org_Run              = FindRunScript(); // 0x005BF9D0
+	DWORD org_PickPocket       = FindPickPocket(); // 0x00493120
+	DWORD org_Attack           = FindAttack(); // 0x00493810
 	DWORD org_ExamineItem      = 0x446F60;
 	DWORD org_ExamineCreature  = 0x446B00;
 	DWORD org_ExaminePlaceable = 0x4474B0;
 	DWORD org_ExamineDoor      = 0x447970;
 
 	if (org_SaveChar)
-	{
-		pServThis = *(dword*)(org_SaveChar + 0x19);
-		pScriptThis = pServThis - 8;
 		success1 = HookCode((PVOID) org_SaveChar, SaveCharHookProc, (PVOID*) &SaveCharNextHook);
-	}
 	
 	if (org_PickPocket)
 	    success2 = HookCode((PVOID) org_PickPocket, PickPocketHookProc, (PVOID*) &PickPocketNextHook);

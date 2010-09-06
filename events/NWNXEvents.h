@@ -27,6 +27,7 @@
 
 //#include "NwnDefines.h"
 #include "HookFunc.h"
+#include "nwntypes.h"
 
 #define MAXPATH 512
 #define MAXSIZE 512 * 1024

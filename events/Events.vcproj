@@ -323,6 +323,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\nwntypes.h"
+				>
+			</File>
+			<File
 				RelativePath="NWNXEvents.h"
 				>
 			</File>
