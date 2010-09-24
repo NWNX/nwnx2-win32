@@ -40,15 +40,20 @@ public:
 	virtual ~CNWNXEvents();
 	BOOL OnCreate(const char* LogDir);
 	char* OnRequest(char* gameObject, char* Request, char* Parameters);
+	unsigned long OnRequestObject (char *gameObject, char* Request);
 	BOOL OnRelease();
 	void LoadConfiguration();
 	void WriteLogHeader();
-	void FireEvent(const int pObj, int nEvID);
-	char *pGameObject;
+	int FireEvent(const int pObj, int nEvID);
+	CGameObject *pGameObject;
 	dword nGameObjectID;
 	int nEventID;
 	int nVictim;
 	dword oTarget;
+	int nEventSubID;
+	Vector vPosition;
+	dword oItem;
+	int bBypass;
 
 	enum ELogLevel {logNothing, logScripter, logAll};
 	int	m_LogLevel;

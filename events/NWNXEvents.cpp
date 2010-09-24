@@ -42,10 +42,13 @@ BOOL CNWNXEvents::OnCreate (const char* LogDir)
 	// call the base class function
 	char log[MAX_PATH];
 	sprintf (log, "%s\\nwnx_events.txt", LogDir);
+	confKey = "EVENTS";
 	if (!CNWNXBase::OnCreate(log))
 		return false;
     WriteLogHeader();
 	LoadConfiguration();
+	Log("* debuglevel set to %d\n", this->debuglevel);
+	Log("* eventScript set to %s\n", this->eventScript);
 	return HookFunctions();
 }
 
@@ -64,7 +67,7 @@ char* CNWNXEvents::OnRequest (char* gameObject, char* Request, char* Parameters)
 
 	//if (!scriptRun) return NULL; //The following functions are accessible only from event script
 
-	else if (strncmp(Request, "GETEVENTID", 10) == 0)
+	else if (strncmp(Request, "GETEVENTID", 10) == 0 || strncmp(Request, "GET_EVENT_ID", 12) == 0)
 	{
 		if (strlen(Parameters) > 1)
 		{
@@ -73,7 +76,8 @@ char* CNWNXEvents::OnRequest (char* gameObject, char* Request, char* Parameters)
 		}
 		return NULL;
 	}
-	else if (strncmp(Request, "GETTARGETID", 10) == 0)
+	/*
+	else if (strncmp(Request, "GETTARGETID", 11) == 0)
 	{
 		if (strlen(Parameters) > 1)
 		{
@@ -82,7 +86,40 @@ char* CNWNXEvents::OnRequest (char* gameObject, char* Request, char* Parameters)
 		}
 		return NULL;
 	}
+	*/
+	else if (strncmp(Request, "GET_EVENT_SUBID", 15) == 0)
+	{
+		if(strlen(Parameters) > 1)
+			sprintf(Parameters, "%d", nEventSubID);
+		return NULL;
+	}
+	else if (strncmp(Request, "GET_EVENT_POSITION", 18) == 0)
+	{
+		if(strlen(Parameters) > 24)
+			_snprintf(Parameters, strlen(Parameters), "%f¬%f¬%f", vPosition.x, vPosition.y, vPosition.z);
+	}
+	else if (strncmp(Request, "BYPASS", 6) == 0)
+	{
+		bBypass = atoi(Parameters);
+	}
 	return NULL;
+}
+
+unsigned long CNWNXEvents::OnRequestObject (char *gameObject, char* Request)
+{
+	Log(2,"ObjRequest: \"%s\"\n",Request);
+	//this->pGameObject = (CGameObject*)gameObject;
+	//this->nGameObjectID = this->pGameObject->id;
+	if (!scriptRun) return OBJECT_INVALID; //The following functions are accessible only from event script
+	if (strncmp(Request, "TARGET", 6) == 0)
+	{
+		return oTarget;
+	}
+	else if (strncmp(Request, "ITEM", 4) == 0)
+	{
+		return oItem;
+	}
+	return OBJECT_INVALID;
 }
 
 BOOL CNWNXEvents::OnRelease ()
@@ -108,8 +145,9 @@ void CNWNXEvents::WriteLogHeader()
 	fprintf(m_fFile, "Version 1.1 by Terra_777\n\n");
 }
 
-void CNWNXEvents::FireEvent(const int pObj, int nEvID)
+int CNWNXEvents::FireEvent(const int pObj, int nEvID)
 {
+	bBypass = 0;
 	nEventID = nEvID;
 
 	if( nEventID == EVENT_SAVE_CHAR ) 
@@ -120,11 +158,16 @@ void CNWNXEvents::FireEvent(const int pObj, int nEvID)
 		Log( "o EVENT_ATTACK (%d):.......OBJECT_SELF: %08lx TARGET: %08lx.\n", nEventID, pObj, oTarget);
 	else if( nEventID == EVENT_EXAMINE ) 
 		Log( "o EVENT_EXAMINE (%d):......OBJECT_SELF: %08lx TARGET: %08lx.\n", nEventID, pObj, oTarget);
+	else if( nEventID == EVENT_USE_SKILL ) 
+		Log( "o EVENT_USE_SKILL (%d):......OBJECT_SELF: %08lx TARGET: %08lx SKILL: %d.\n", nEventID, pObj, oTarget, nEventSubID);
 	
 	RunScript(eventScript, pObj);
 
 	oTarget = OBJECT_INVALID;
 	nEventID = 0;
+	nEventSubID = 0;
+
+	return bBypass;
 
 	//fflush(m_fFile);
 }

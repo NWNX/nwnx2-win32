@@ -30,17 +30,42 @@ int (__fastcall *ExamineItemNextHook)(void *, void *, CNWSPlayer *, unsigned lon
 int (__fastcall *ExamineCreatureNextHook)(void *, void *, CNWSPlayer *, unsigned long);
 int (__fastcall *ExaminePlaceableNextHook)(void *, void *, CNWSPlayer *, unsigned long);
 int (__fastcall *ExamineDoorNextHook)(void *, void *, CNWSPlayer *, unsigned long);
+int (__fastcall *UseSkillNextHook)(void *, void *, unsigned char, unsigned char, unsigned long, Vector, unsigned long, unsigned long, int);
 
 int (__fastcall *pRunScript)(CVirtualMachine *, void *, CExoString *, unsigned long, int);
 
-CAppManager *pServThis = (CAppManager*)0x0066C050;
-CVirtualMachine *pScriptThis = (CVirtualMachine*)0x0066C048;
+CAppManager **pServThis = (CAppManager**)0x0066C050;
+CVirtualMachine **pScriptThis = (CVirtualMachine**)0x0066C048;
 dword oPC = 0;
 dword oTarget_b = OBJECT_INVALID;
+int bBypass_b = 0;
 
 char scriptRun = 0;
 
 unsigned long lastRet;
+
+// int __thiscall CNWSCreature::UseSkill(unsigned char, unsigned char, unsigned long, class Vector, unsigned long, unsigned long, int)
+int __fastcall UseSkillHookProc(void *thisptr, void *, unsigned char nSkill, unsigned char nSubSkill, unsigned long nTargetObjID, Vector vTarget, unsigned long nAreaID, unsigned long nItemObjID, int g)
+{
+	if(!scriptRun)
+	{
+		events.nEventSubID = nSkill;
+		events.oTarget = nTargetObjID;
+		events.vPosition = vTarget;
+		events.oItem = nItemObjID;
+		events.Log(2,
+			"UseSkill: pCreature=%08lX, oTarget=%08lX, oItem=%08lX, vTarget=%f/%f/%f, nSkill=%d\n",
+            *((dword *)thisptr + 1), events.oTarget, events.oItem, events.vPosition.x,
+            events.vPosition.y, events.vPosition.z, events.nEventSubID);
+		//if(thisptr)
+		bBypass_b = events.FireEvent(*((dword *)thisptr + 1), EVENT_USE_SKILL);
+	}
+
+	if(bBypass_b)
+		return 0;
+	else
+		return UseSkillNextHook(thisptr, NULL, nSkill, nSubSkill, nTargetObjID, vTarget, nAreaID, nItemObjID, g);
+}
 
 // int __thiscall CNWSPlayer::PackCreatureIntoMessage(void)
 int __fastcall SaveCharHookProc(CNWSPlayer *thisptr)
@@ -343,7 +368,7 @@ void RunScript(char * sname, int ObjID)
 	s.len = strlen(sname);
 	// run script
 	scriptRun = 1;
-	pRunScript(pScriptThis, NULL, &s, ObjID, 1);
+	pRunScript(*pScriptThis, NULL, &s, ObjID, 1);
 	scriptRun = 0;
 }
 
@@ -351,6 +376,7 @@ int HookFunctions()
 {
 	int success1 = 0, success2 = 0, success3 = 0;
 	int success6_1 = 0, success6_2 = 0, success6_3 = 0, success6_4 = 0;
+	int success7 = 0;
 	DWORD org_SaveChar         = FindSaveChar(); // 0x00435D50
 	DWORD org_Run              = FindRunScript(); // 0x005BF9D0
 	DWORD org_PickPocket       = FindPickPocket(); // 0x00493120
@@ -359,6 +385,7 @@ int HookFunctions()
 	DWORD org_ExamineCreature  = 0x446B00;
 	DWORD org_ExaminePlaceable = 0x4474B0;
 	DWORD org_ExamineDoor      = 0x447970;
+	DWORD org_UseSkill         = 0x4A4530;
 
 	if (org_SaveChar)
 		success1 = HookCode((PVOID) org_SaveChar, SaveCharHookProc, (PVOID*) &SaveCharNextHook);
@@ -380,6 +407,9 @@ int HookFunctions()
 
 	if (org_ExamineDoor)
 		success6_4 = HookCode((PVOID) org_ExamineDoor, ExamineDoorHookProc, (PVOID*) &ExamineDoorNextHook);
+
+	if (org_UseSkill)
+		success7 = HookCode((PVOID) org_UseSkill, UseSkillHookProc, (PVOID*) &UseSkillNextHook);
 
 
 	if (org_SaveChar && success1)
@@ -417,6 +447,11 @@ int HookFunctions()
 	else
 		fprintf(events.m_fFile, "X Could not find ExamineDoor() function or hook failed: %08lx\n", org_ExamineDoor);
 
+	if (org_UseSkill && success7)
+		fprintf(events.m_fFile, "! UseSkill()...........hooked at %08lx.\n", org_UseSkill);
+	else
+		fprintf(events.m_fFile, "X Could not find UseSkill() function or hook failed: %08lx\n", org_UseSkill);
+
 	if (org_Run)
 	{
 		*(dword*)&pRunScript = org_Run;
@@ -428,5 +463,5 @@ int HookFunctions()
 	fprintf(events.m_fFile, "\n");
 	fflush(events.m_fFile);
 
-	return (org_SaveChar && org_Run && pServThis && pScriptThis);
+	return (org_SaveChar && org_Run);
 }

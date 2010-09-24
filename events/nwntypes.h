@@ -26,7 +26,13 @@ struct CGameObject_s;		typedef struct CGameObject_s		CGameObject;
 struct CAppManager_s;		typedef struct CAppManager_s		CAppManager;
 struct CVirtualMachine_s;	typedef struct CVirtualMachine_s	CVirtualMachine;
 struct CExoString_s;		typedef struct CExoString_s			CExoString;
+struct Vector_s;			typedef struct Vector_s				Vector;
 
+struct Vector_s {
+	float x;
+	float y;
+	float z;
+};
 struct CGameObject_s {
     uint32_t            field_00;
     uint32_t            id;
