@@ -74,6 +74,7 @@ private:
 		char *user;
 		char *pass;
 		char *db;
+		unsigned int port;
 		char *charset;
 	} p;
 

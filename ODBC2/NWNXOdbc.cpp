@@ -83,7 +83,7 @@ BOOL CNWNXODBC::Connect()
 			break;
 		case dbMYSQL:
 			mysql = new CMySQL();
-			connected = mysql->Connect(p.server, p.user, p.pass, p.db, p.charset);
+			connected = mysql->Connect(p.server, p.user, p.pass, p.db, p.port, p.charset);
 			db = mysql;
 			break;
 		case dbSQLITE:
@@ -258,6 +258,8 @@ bool CNWNXODBC::LoadConfiguration ()
 		p.pass = _strdup (buffer);
 		iniFile.ReadString ("ODBC2", "db", buffer, 256, "");
 		p.db = _strdup (buffer);
+		unsigned int tmpPort = (unsigned int)iniFile.ReadInteger ("ODBC2", "port", 0);
+		p.port = (tmpPort < 65536) ? tmpPort : 0;
 		iniFile.ReadString ("ODBC2", "charset", buffer, 256, "");
 		p.charset = _strdup (buffer);
 		dbType = dbMYSQL;
