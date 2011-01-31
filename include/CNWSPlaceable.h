@@ -118,6 +118,7 @@ struct CNWSPlaceable_s {
 
 	int32_t	AcquireItem(CNWSItem **a2, nwn_objid_t oid_From, int a4, int a5, int bSendFeedBack);
 	void 	SetScriptName(int iScript, CExoString ScriptName);
+	int SavePlaceable(CResGFF *ResGFF, void *ResStruct);
 };
 
 

@@ -445,7 +445,7 @@ struct CNWSCreature_s {
 	uint8_t 								spacer2_439;    /* 0x0 */
 	uint8_t 								spacer2_440;    /* 0x0 */
 	void 								**cre_areaminimaps;    /* 0x048C */
-	uint32_t 								*cre_arealist;    /* 0x0490 */
+	CNWSArea 							**cre_arealist;    /* 0x0490 */
 	uint32_t 							cre_areacount;    /* 0x0494 */
 	uint32_t 							cre_areaalloc;    /* 0x0498 */
 	uint8_t 								spacer2_457;	/* 0x049C */
@@ -485,7 +485,40 @@ struct CNWSCreature_s {
     uint32_t                    		cre_weapon_scale;       			/* 0x04DC */
     nwn_objid_t                 		cre_attack_target;      			/* 0x04E0 */
     nwn_objid_t                 		cre_attempted_target;   			/* 0x04E4 */
-    uint32_t								spacer3[317];						/* 0x04E8 */
+    uint32_t                    field_4E8;
+    uint32_t                    field_4EC;
+    uint32_t                    field_4F0;
+
+    nwn_objid_t                 cre_attacker;           /* 04F4 */
+
+    nwn_objid_t                 cre_attempted_spell;    /* 04F8 */
+    nwn_objid_t                 cre_spell_target;       /* 04FC */
+
+    uint32_t                    cre_last_ammo_warning;  /* 0500 */
+
+    uint32_t                    field_504;
+    uint32_t                    field_508;
+
+    nwn_objid_t                 cre_broadcast_aoo_to;   /* 050C */
+
+    uint32_t                    field_510;
+
+    uint32_t                    cre_ext_combat_mode;    /* 0514 */
+
+    int32_t                     cre_eff_bon_amt[50];    /* 0518 */
+    int32_t                     cre_eff_pen_amt[50];    /* 05E0 */
+
+    int32_t                     cre_eff_bon_spid[50];   /* 06A8 */
+    int32_t                     cre_eff_pen_spid[50];   /* 0770 */
+
+    int32_t                     cre_eff_bon_obj[50];    /* 0838 */
+    int32_t                     cre_eff_pen_obj[50];    /* 0900 */
+
+    uint32_t                    cre_silent;             /* 09C8 */
+    uint32_t                    cre_hasted;             /* 09CC */
+    uint32_t                    cre_slowed;             /* 09D0 */
+    uint32_t                    cre_taunted;            /* 09D4 */
+    uint32_t                    cre_forced_walk;        /* 09D8 */
     uint8_t								cre_vision_type;					/* 0x09DC */
     uint8_t								cre_state;							/* 0x09DD */
 	uint8_t									field_9DE;
@@ -744,10 +777,8 @@ struct CNWSCreature_s {
 	uint8_t 								field_B05;
 	uint8_t 								field_B06;
 	uint8_t 								field_B07;
-	uint8_t 								field_B08;
-	uint8_t 								field_B09;
-	uint8_t 								field_B0A;
-	uint8_t 								field_B0B;
+	uint16_t 								cre_ai_state;
+	uint16_t 								field_B0A;
 	uint8_t 								field_B0C;
 	uint8_t 								field_B0D;
 	uint8_t 								field_B0E;
@@ -756,14 +787,8 @@ struct CNWSCreature_s {
 	uint8_t 								field_B11;
 	uint8_t 								field_B12;
 	uint8_t 								field_B13;
-	uint8_t 								field_B14;
-	uint8_t 								field_B15;
-	uint8_t 								field_B16;
-	uint8_t 								field_B17;
-	uint8_t 								field_B18;
-	uint8_t 								field_B19;
-	uint8_t 								field_B1A;
-	uint8_t 								field_B1B;
+	uint32_t 							cre_aistate_activities;
+	uint32_t 							cre_activity_locked;
 	float 								cre_movement_rate;
 	uint8_t 								field_B20;
 	uint8_t 								field_B21;
@@ -1032,6 +1057,7 @@ struct CNWSCreature_s {
 	
 	signed int 			AcquireItem(CNWSItem **Item, nwn_objid_t From_oID, nwn_objid_t a4, char a5, char a6, int a7, int bFeedback);
 	int 				GetBlind();
+	int					GetDamageFlags();
 	bool 				GetFlanked(CNWSCreature *Target);
 	int 				GetFlatFooted();
 	int 				GetInvisible(CNWSObject* obj, int i);
@@ -1054,7 +1080,16 @@ struct CNWSCreature_s {
 	void 				PossessCreature(nwn_objid_t oid_Possessee);
 	int					GetUseMonkAbilities();
 	void				UpdateEncumbranceState(int bFeedback);
+	void 				SetPVPPlayerLikesMe(unsigned long oid_Player2, int a3, int a4);
+	void				SetActivity(int Activity, int bOn);
+	void				SetCombatMode(int Mode, int bOn);
+	int 				ToggleMode(unsigned char Mode);
+	void 				NotifyAssociateActionToggle(int Action);
+	int					GetArmorClass();
+
 	//void				Destructor(char c);
+	
+	void SetAutoMapData(int a2, int a3, int a4);
 };
 #endif /* _NX_NWN_STRUCT_CNWSCREATURE_ */
 /* vim: set sw=4: */

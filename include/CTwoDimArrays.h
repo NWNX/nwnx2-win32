@@ -130,6 +130,10 @@ struct CTwoDimArrays_s {
 
     CExoLinkedList     *tda_cache_2;            /* 0264 */
     int32_t            *tda_cache_2_len;        /* 0268 */
+    
+    uint8_t GetEpicFortSaveBonus(int EpicLevels);
+    uint8_t GetEpicWillSaveBonus(int EpicLevels);
+    uint8_t GetEpicRefSaveBonus(int EpicLevels);
 };
 
 #endif /* _NX_NWN_STRUCT_CTWODIMARRAYS_ */

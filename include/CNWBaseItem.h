@@ -23,7 +23,7 @@ struct CNWBaseItem_s {
 	uint8_t		Category;				/* 0x001E */
 	uint8_t		field_1F;				/* 0x001F */
 	float		BaseCost;				/* 0x0020 */
-	uint8_t		Stacking;				/* 0x0024 */
+	uint8_t		Max_StackSize;			/* 0x0024 */
 	uint8_t		field_25;				/* 0x0025 */
 	uint8_t		field_26;				/* 0x0026 */
 	uint8_t		field_27;				/* 0x0027 */

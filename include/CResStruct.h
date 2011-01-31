@@ -21,15 +21,13 @@
  *
  */
 
-#ifndef _NX_NWN_STRUCT_CNWSITEMPROPERTYHANDLER_
-#define _NX_NWN_STRUCT_CNWSITEMPROPERTYHANDLER_
+#ifndef _NX_NWN_STRUCT_CRESSTRUCT_
+#define _NX_NWN_STRUCT_CRESSTRUCT_
 
-struct CNWSItemPropertyHandler_s {
-    CNWSItemProperty            *ip;
-	uint32_t					ip_len;
-	uint32_t					ip_alloc;    
+struct CResStruct_s {
+    void                *unknown;
 };
 
-#endif /* _NX_NWN_STRUCT_CNWSITEMPROPERTYHANDLER_ */
+#endif /* _NX_NWN_STRUCT_CRESSTRUCT_ */
 
 /* vim: set sw=4: */

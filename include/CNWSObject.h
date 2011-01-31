@@ -147,6 +147,8 @@ struct CNWSObject_s {
 	uint32_t							obj_effect_postprocess;				/* 0x01B8 */
 	uint32_t							obj_door_anim_played;				/* 0x01BC */
 
+int 				DoDamageImmunity(CNWSCreature *Attacker, int DamageDelivered, int DamageFlags, int _bMaxDamage, int bFeedback);
+int					DoDamageResistance(CNWSCreature *a2, int a3, signed int a4, int a5, int a6, int a7);
 CNWSArea * 			GetArea();
 char				GetDamageImmunityByFlags(uint16_t Flags);
 int 				GetDead();

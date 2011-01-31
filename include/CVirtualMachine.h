@@ -10,7 +10,7 @@ typedef struct
 	DWORD Code;
 	DWORD CodeSize;
 	CExoString Name;
-	DWORD field_20;
+	//DWORD field_20;
 } CVirtualMachineScript;
 
 typedef struct
@@ -41,6 +41,7 @@ struct CVirtualMachine_s {
     
     int Runscript(CExoString *ScriptName, nwn_objid_t OBJECT_SELF, int a4 = 1);
     int StackPushEngineStructure(int a2, void *a3);
+    int StackPopEngineStructure(int a2, void **a3);
     int StackPopInteger(int *iINT);
 };
 

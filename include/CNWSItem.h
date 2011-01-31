@@ -24,8 +24,8 @@ struct CNWSItem_s {
     
     uint32_t					field_1E4;
  
-	CNWSItemPropertyHandler		it_iph1;				/* 0x01E8 */ 
-	CNWSItemPropertyHandler		it_iph2;				/* 0x01F4 */
+	CNWSItemPropertyHandler		ActiveProperties;				/* 0x01E8 */ 
+	CNWSItemPropertyHandler		PassiveProperties;				/* 0x01F4 */
 	
 	uint8_t						it_charges;				/* 0x0200 */ //CHECK!
 	
@@ -42,29 +42,31 @@ struct CNWSItem_s {
   unsigned __int8 ModelPart1;
   unsigned __int8 ModelPart2;
   unsigned __int8 ModelPart3;
-  unsigned __int8 ArmorPart_RFoot;
-  unsigned __int8 ArmorPart_LFoot;
-  unsigned __int8 ArmorPart_RShin;
-  unsigned __int8 ArmorPart_LShin;
-  unsigned __int8 ArmorPart_LThigh;
-  unsigned __int8 ArmorPart_RThigh;
-  unsigned __int8 ArmorPart_Pelvis;
-  unsigned __int8 ArmorPart_Torso;
-  unsigned __int8 ArmorPart_Belt;
-  unsigned __int8 ArmorPart_Neck;
-  unsigned __int8 ArmorPart_RFArm;
-  unsigned __int8 ArmorPart_LFArm;
-  unsigned __int8 ArmorPart_RBicep;
-  unsigned __int8 ArmorPart_LBicep;
-  unsigned __int8 ArmorPart_RShoul;
-  unsigned __int8 ArmorPart_LShoul;
-  unsigned __int8 ArmorPart_RHand;
-  unsigned __int8 ArmorPart_LHand;
-  unsigned __int8 ArmorPart_Robe;
+  unsigned __int8 ArmorParts[19];
+//  unsigned __int8 ArmorPart_RFoot;
+//  unsigned __int8 ArmorPart_LFoot;
+//  unsigned __int8 ArmorPart_RShin;
+//  unsigned __int8 ArmorPart_LShin;
+//  unsigned __int8 ArmorPart_LThigh;
+//  unsigned __int8 ArmorPart_RThigh;
+//  unsigned __int8 ArmorPart_Pelvis;
+//  unsigned __int8 ArmorPart_Torso;
+//  unsigned __int8 ArmorPart_Belt;
+//  unsigned __int8 ArmorPart_Neck;
+//  unsigned __int8 ArmorPart_RFArm;
+//  unsigned __int8 ArmorPart_LFArm;
+//  unsigned __int8 ArmorPart_RBicep;
+//  unsigned __int8 ArmorPart_LBicep;
+//  unsigned __int8 ArmorPart_RShoul;
+//  unsigned __int8 ArmorPart_LShoul;
+//  unsigned __int8 ArmorPart_RHand;
+//  unsigned __int8 ArmorPart_LHand;
+//  unsigned __int8 ArmorPart_Robe;
+  unsigned __int8 UArmorParts[19];
   
-    uint8_t                     field_22A;
-    uint8_t                     field_22B;
-    uint32_t					spacer_021C;			/* 0x022C */ 
+    uint8_t                     field_23D;
+    uint8_t                     field_23E;
+    uint8_t						field_23F;
     
     nwn_objid_t					it_container_obj;		/* 0x0240 */
     
@@ -78,31 +80,41 @@ struct CNWSItem_s {
 
     uint32_t					spacer_24C[14];			/* 0x024C */
     
-    uint8_t						it_droppable;			/* 0x0274 */
+    uint8_t						it_droppable;			/* 0x0284 */
     
-	uint8_t						field_275;
-	uint8_t						field_276;
-	uint8_t						field_277;
-	uint32_t					field_278;
-
-	uint8_t						it_pickpocketable;		/* 0x027C */
-
-	uint8_t						field_27D;
-	uint8_t						field_27E;
-	uint8_t						field_27F;
-
-	uint32_t					it_stacksize;
-	uint8_t						it_stolen;				/* 0x0284 */
-
 	uint8_t						field_285;
 	uint8_t						field_286;
 	uint8_t						field_287;
+	uint32_t					field_288;
+
+	uint8_t						it_pickpocketable;		/* 0x028C */
+
+	uint8_t						field_28D;
+	uint8_t						field_28E;
+	uint8_t						field_28F;
+
+	uint32_t					it_stacksize;
+	uint8_t						it_stolen;				/* 0x0294 */
+
+	uint8_t						field_295;
+	uint8_t						field_296;
+	uint8_t						field_297;
 	
-	uint32_t					it_weight;				/* 0x0288 */
+	uint32_t					it_weight;				/* 0x0298 */
+	
+	uint32_t					field_29C;
+	uint32_t					field_2A0;
+
+	CNWSItem *CNWSItem_s::ctor(unsigned int a1);
 
 	int ComputeArmorClass();
+	unsigned short GetDamageFlags();
 	int SetPossessor(unsigned int a2_Possessor_id, int a3_Signalevent, int a4_bFeedback, int i);
-
+	int GetPropertyByType(CNWSItemProperty **iprp, uint16_t ipType, uint16_t ipSubType);
+	int GetPropertyByTypeExists(unsigned short a1, unsigned short a2);
+	int SaveItem(CResGFF *ResGFF, void *ResStruct, int a3);
+	int LoadItem(CResGFF *ResGFF, void *CResStruct, int a3);
+	void AddToArea(CNWSArea *Area, float x, float y, float z, int a5);
 };
 
 #endif

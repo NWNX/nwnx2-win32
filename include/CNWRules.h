@@ -2,47 +2,291 @@
 #define _NX_NWN_STRUCT_CNWRULES_
 
 struct CNWRules_s {
-	void				*v_table;						/* 0x0000 */
-	float				ru_spell_range_personal;		/* 0x0004 */
-	float				ru_spell_range_touch;			/* 0x0008 */
-	float				ru_spell_range_short;			/* 0x000C */
-	float				ru_spell_range_medium;			/* 0x0010 */
-	float				ru_spell_range_long;			/* 0x0014 */
-
-	CNWBaseItemArray 	*ru_baseitems;					/* 0x0018 */
-
-	uint32_t			ru_xp_level[41];				/* 0x001C */
-
-	void				*ru_spells;						/* 0x00C0 */
-
-	uint32_t			field_C4;
-	uint32_t			field_C8;
-	uint32_t			field_CC;
-	uint32_t			field_D0;
-
-	uint16_t			*ru_sorted_feats;				/* 0x00D4 */
-
-	uint16_t			ru_feats_len;					/* 0x00D6 */
-	uint16_t			ru_sorted_feats_len;			/* 0x00D8 */
-
-	uint8_t				ru_unknown_len;					/* 0x00DA */
-	uint8_t				ru_classes_len;					/* 0x00DB */
-	uint8_t				ru_races_len;					/* 0x00DC */
-	uint8_t				ru_skills_len;					/* 0x00DD */
-	uint8_t				ru_domains_len;					/* 0x00DE */
-
-    uint8_t            field_DD;
-    uint8_t            field_DE;
-    uint8_t            field_DF;
-
-    void           *ru_classes;             /* 00E0 */
-    void            *ru_races;               /* 00E4 */
-    void           *ru_skills;              /* 00E8 */
-    void          *ru_domains;             /* 00EC */
-
-    CTwoDimArrays      *ru_2das;                /* 00F0 */
+//	void				*v_table;						/* 0x0000 */
+  unsigned __int32 field_00;                            
+  float ru_spell_range_personal;                        
+  float ru_spell_range_touch;                           
+  float ru_spell_range_short;                           
+  float ru_spell_range_medium;                          
+  float ru_spell_range_long;                            
+  CNWBaseItemArray *ru_baseitems;                       
+  unsigned __int32 ru_xp_level[41];                     
+  CNWSpellArray *ru_spells;                    
+  void *feats;                                          
+  unsigned __int32 field_C8;                            
+  unsigned __int32 field_CC;                            
+  unsigned __int32 field_D0;                            
+  unsigned __int16 *ru_sorted_feats;                    
+  int ru_feats_len;                                     
+  unsigned __int8 ru_classes_length;                    
+  unsigned __int8 ru_unknown1_length;                   
+  unsigned __int8 ru_unknown2_length;                   
+  unsigned __int8 ru_skills_length;                     
+  int ru_spells_len;                                    
+  CNWClass *ru_classes;                                 
+  int ru_races_len;                                     
+  int ru_skills_len;                                    
+  int ru_domains_len;                                   
+  CTwoDimArrays_s *ru_2das;                             // 
+  unsigned __int8 spacer_024;
+  unsigned __int8 spacer_025;
+  unsigned __int8 spacer_026;
+  unsigned __int8 spacer_027;
+  unsigned __int8 spacer_028;
+  unsigned __int8 spacer_029;
+  unsigned __int8 spacer_030;
+  unsigned __int8 spacer_031;
+  unsigned __int8 spacer_032;
+  unsigned __int8 spacer_033;
+  unsigned __int8 spacer_034;
+  unsigned __int8 spacer_035;
+  unsigned __int8 spacer_036;
+  unsigned __int8 spacer_037;
+  unsigned __int8 spacer_038;
+  unsigned __int8 spacer_039;
+  unsigned __int8 spacer_040;
+  unsigned __int8 spacer_041;
+  unsigned __int8 spacer_042;
+  unsigned __int8 spacer_043;
+  unsigned __int8 spacer_044;
+  unsigned __int8 spacer_045;
+  unsigned __int8 spacer_046;
+  unsigned __int8 spacer_047;
+  unsigned __int8 spacer_048;
+  unsigned __int8 spacer_049;
+  unsigned __int8 spacer_050;
+  unsigned __int8 spacer_051;
+  unsigned __int8 spacer_052;
+  unsigned __int8 spacer_053;
+  unsigned __int8 spacer_054;
+  unsigned __int8 spacer_055;
+  unsigned __int8 spacer_056;
+  unsigned __int8 spacer_057;
+  unsigned __int8 spacer_058;
+  unsigned __int8 spacer_059;
+  unsigned __int8 spacer_060;
+  unsigned __int8 spacer_061;
+  unsigned __int8 spacer_062;
+  unsigned __int8 spacer_063;
+  unsigned __int8 spacer_064;
+  unsigned __int8 spacer_065;
+  unsigned __int8 spacer_066;
+  unsigned __int8 spacer_067;
+  unsigned __int8 spacer_068;
+  unsigned __int8 spacer_069;
+  unsigned __int8 spacer_070;
+  unsigned __int8 spacer_071;
+  unsigned __int8 spacer_072;
+  unsigned __int8 spacer_073;
+  unsigned __int8 spacer_074;
+  unsigned __int8 spacer_075;
+  unsigned __int8 spacer_076;
+  unsigned __int8 spacer_077;
+  unsigned __int8 spacer_078;
+  unsigned __int8 spacer_079;
+  unsigned __int8 spacer_080;
+  unsigned __int8 spacer_081;
+  unsigned __int8 spacer_082;
+  unsigned __int8 spacer_083;
+  unsigned __int8 spacer_084;
+  unsigned __int8 spacer_085;
+  unsigned __int8 spacer_086;
+  unsigned __int8 spacer_087;
+  unsigned __int8 spacer_088;
+  unsigned __int8 spacer_089;
+  unsigned __int8 spacer_090;
+  unsigned __int8 spacer_091;
+  unsigned __int8 spacer_092;
+  unsigned __int8 spacer_093;
+  unsigned __int8 spacer_094;
+  unsigned __int8 spacer_095;
+  unsigned __int8 spacer_096;
+  unsigned __int8 spacer_097;
+  unsigned __int8 spacer_098;
+  unsigned __int8 spacer_099;
+  unsigned __int8 spacer_100;
+  unsigned __int8 spacer_101;
+  unsigned __int8 spacer_102;
+  unsigned __int8 spacer_103;
+  unsigned __int8 spacer_104;
+  unsigned __int8 spacer_105;
+  unsigned __int8 spacer_106;
+  unsigned __int8 spacer_107;
+  unsigned __int8 spacer_108;
+  unsigned __int8 spacer_109;
+  unsigned __int8 spacer_110;
+  unsigned __int8 spacer_111;
+  unsigned __int8 spacer_112;
+  unsigned __int8 spacer_113;
+  unsigned __int8 spacer_114;
+  unsigned __int8 spacer_115;
+  unsigned __int8 spacer_116;
+  unsigned __int8 spacer_117;
+  unsigned __int8 spacer_118;
+  unsigned __int8 spacer_119;
+  unsigned __int8 spacer_120;
+  unsigned __int8 spacer_121;
+  unsigned __int8 spacer_122;
+  unsigned __int8 spacer_123;
+  unsigned __int8 spacer_124;
+  unsigned __int8 spacer_125;
+  unsigned __int8 spacer_126;
+  unsigned __int8 spacer_127;
+  unsigned __int8 spacer_128;
+  unsigned __int8 spacer_129;
+  unsigned __int8 spacer_130;
+  unsigned __int8 spacer_131;
+  unsigned __int8 spacer_132;
+  unsigned __int8 spacer_133;
+  unsigned __int8 spacer_134;
+  unsigned __int8 spacer_135;
+  unsigned __int8 spacer_136;
+  unsigned __int8 spacer_137;
+  unsigned __int8 spacer_138;
+  unsigned __int8 spacer_139;
+  unsigned __int8 spacer_140;
+  unsigned __int8 spacer_141;
+  unsigned __int8 spacer_142;
+  unsigned __int8 spacer_143;
+  unsigned __int8 spacer_144;
+  unsigned __int8 spacer_145;
+  unsigned __int8 spacer_146;
+  unsigned __int8 spacer_147;
+  unsigned __int8 spacer_148;
+  unsigned __int8 spacer_149;
+  unsigned __int8 spacer_150;
+  unsigned __int8 spacer_151;
+  unsigned __int8 spacer_152;
+  unsigned __int8 spacer_153;
+  unsigned __int8 spacer_154;
+  unsigned __int8 spacer_155;
+  unsigned __int8 spacer_156;
+  unsigned __int8 spacer_157;
+  unsigned __int8 spacer_158;
+  unsigned __int8 spacer_159;
+  unsigned __int8 spacer_160;
+  unsigned __int8 spacer_161;
+  unsigned __int8 spacer_162;
+  unsigned __int8 spacer_163;
+  unsigned __int8 spacer_164;
+  unsigned __int8 spacer_165;
+  unsigned __int8 spacer_166;
+  unsigned __int8 spacer_167;
+  unsigned __int8 spacer_168;
+  unsigned __int8 spacer_169;
+  unsigned __int8 spacer_170;
+  unsigned __int8 spacer_171;
+  unsigned __int8 spacer_172;
+  unsigned __int8 spacer_173;
+  unsigned __int8 spacer_174;
+  unsigned __int8 spacer_175;
+  unsigned __int8 spacer_176;
+  unsigned __int8 spacer_177;
+  unsigned __int8 spacer_178;
+  unsigned __int8 spacer_179;
+  unsigned __int8 spacer_180;
+  unsigned __int8 spacer_181;
+  unsigned __int8 spacer_182;
+  unsigned __int8 spacer_183;
+  unsigned __int8 spacer_184;
+  unsigned __int8 spacer_185;
+  unsigned __int8 spacer_186;
+  unsigned __int8 spacer_187;
+  unsigned __int8 spacer_188;
+  unsigned __int8 spacer_189;
+  unsigned __int8 spacer_190;
+  unsigned __int8 spacer_191;
+  unsigned __int8 spacer_192;
+  unsigned __int8 spacer_193;
+  unsigned __int8 spacer_194;
+  unsigned __int8 spacer_195;
+  unsigned __int8 spacer_196;
+  unsigned __int8 spacer_197;
+  unsigned __int8 spacer_198;
+  unsigned __int8 spacer_199;
+  unsigned __int8 spacer_200;
+  unsigned __int8 spacer_201;
+  unsigned __int8 spacer_202;
+  unsigned __int8 spacer_203;
+  unsigned __int8 spacer_204;
+  unsigned __int8 spacer_205;
+  unsigned __int8 spacer_206;
+  unsigned __int8 spacer_207;
+  unsigned __int8 spacer_208;
+  unsigned __int8 spacer_209;
+  unsigned __int8 spacer_210;
+  unsigned __int8 spacer_211;
+  unsigned __int8 spacer_212;
+  unsigned __int8 spacer_213;
+  unsigned __int8 spacer_214;
+  unsigned __int8 spacer_215;
+  unsigned __int8 spacer_216;
+  unsigned __int8 spacer_217;
+  unsigned __int8 spacer_218;
+  unsigned __int8 spacer_219;
+  unsigned __int8 spacer_220;
+  unsigned __int8 spacer_221;
+  unsigned __int8 spacer_222;
+  unsigned __int8 spacer_223;
+  unsigned __int8 spacer_224;
+  unsigned __int8 spacer_225;
+  unsigned __int8 spacer_226;
+  unsigned __int8 spacer_227;
+  unsigned __int8 spacer_228;
+  unsigned __int8 spacer_229;
+  unsigned __int8 spacer_230;
+  unsigned __int8 spacer_231;
+  unsigned __int8 spacer_232;
+  unsigned __int8 spacer_233;
+  unsigned __int8 spacer_234;
+  unsigned __int8 spacer_235;
+  unsigned __int8 spacer_236;
+  unsigned __int8 spacer_237;
+  unsigned __int8 spacer_238;
+  unsigned __int8 spacer_239;
+  unsigned __int8 spacer_240;
+  unsigned __int8 spacer_241;
+  unsigned __int8 spacer_242;
+  unsigned __int8 spacer_243;
+  unsigned __int8 spacer_244;
+  unsigned __int8 spacer_245;
+  unsigned __int8 spacer_246;
+  unsigned __int8 spacer_247;
+  unsigned __int8 spacer_248;
+  unsigned __int8 spacer_249;
+  unsigned __int8 spacer_250;
+  unsigned __int8 spacer_251;
+  unsigned __int8 spacer_252;
+  unsigned __int8 spacer_253;
+  unsigned __int8 spacer_254;
+  unsigned __int8 spacer_255;
+  unsigned __int8 spacer_256;
+  unsigned __int8 spacer_257;
+  unsigned __int8 spacer_258;
+  unsigned __int8 spacer_259;
+  unsigned __int8 spacer_260;
+  unsigned __int8 spacer_261;
+  unsigned __int8 spacer_262;
+  unsigned __int8 spacer_263;
+  unsigned __int8 spacer_264;
+  unsigned __int8 spacer_265;
+  unsigned __int8 spacer_266;
+  unsigned __int8 spacer_267;
+  unsigned __int8 spacer_268;
+  unsigned __int8 spacer_269;
+  unsigned __int8 spacer_270;
+  unsigned __int8 spacer_271;
+  unsigned __int8 spacer_272;
+  unsigned __int8 spacer_273;
+  unsigned __int8 spacer_274;
+  unsigned __int8 spacer_275;
+  unsigned __int8 spacer_276;
+  unsigned __int8 spacer_277;
+  unsigned __int8 spacer_278;
+  unsigned __int8 spacer_279;
 
 	uint8_t GetFeatExpansionLevel(uint16_t FeatID);
+	unsigned short RollDice(unsigned char NumDice, unsigned char DieType);
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include ".\nwnx_funcs_const.h"
 #include ".\CExoString.h"
 
+struct CCodeBase_s;							typedef struct CCodeBase_s						CCodeBase;
 struct CResource_s;							typedef struct CResource_s						CResource; 
 struct CTwoDimArrays_s;						typedef struct CTwoDimArrays_s					CTwoDimArrays;
 struct C2DA_s;								typedef struct C2DA_s							C2DA; 
@@ -16,7 +17,10 @@ struct CExoArrayList_uint32_s;            	typedef struct CExoArrayList_uint32_s
 struct CExoArrayList_uint64_s;            	typedef struct CExoArrayList_uint64_s           CExoArrayList_uint64;
 struct CExoArrayList_uint8_s;             	typedef struct CExoArrayList_uint8_s            CExoArrayList_uint8; 
 struct CResRef_s;							typedef struct CResRef_s						CResRef;
+struct CResGFF_s;							typedef struct CResGFF_s						CResGFF;
 struct Vector_s;							typedef struct Vector_s                         Vector;
+struct CNWClass_s;							typedef struct CNWClass_s						CNWClass;
+struct CScriptEvent_s;						typedef struct CScriptEvent_s					CScriptEvent;
 struct CNWCCMessageData_s;					typedef struct CNWCCMessageData_s				CNWCCMessageData;
 struct CNWSFaction_s;						typedef struct CNWSFaction_s                    CNWSFaction;
 struct CFactionManager_s;					typedef struct CFactionManager_s                CFactionManager;
@@ -25,7 +29,9 @@ struct CFactionManager_s;					typedef struct CFactionManager_s                CF
 //struct CExoLinkedListNode_s;				typedef struct CExoLinkedListNode_s             CExoLinkedListNode;
 class CExoLinkedList_s;					typedef CExoLinkedList_s                 CExoLinkedList;
 //struct CExoLocStringElement_s;				typedef struct CExoLocStringElement_s           CExoLocStringElement;
-class  CExoLocString_s;						typedef CExoLocString_s                  CExoLocString; 
+class  CExoLocString_s;						typedef CExoLocString_s                  		CExoLocString; 
+struct CNWSpell_s;							typedef CNWSpell_s								CNWSpell;
+struct CNWSpellArray_s;						typedef CNWSpellArray_s							CNWSpellArray;
 struct CNWSAreaOfEffectObject_s;          typedef struct CNWSAreaOfEffectObject_s          CNWSAreaOfEffectObject; 
 struct CNWSSoundObject_s;                 typedef struct CNWSSoundObject_s                 CNWSSoundObject; 
 struct CNWSWaypoint_s;                    typedef struct CNWSWaypoint_s                    CNWSWaypoint; 
@@ -171,6 +177,12 @@ struct CEffectsStore_s; typedef struct CEffectsStore_s CEffectsStore;
 #include ".\C2DA.h"
 #include ".\CNWSPlayerCharSheetGUI.h"
 #include ".\CTwoDimArrays.h"
+#include ".\CScriptEvent.h"
+#include ".\CNWSpell.h"
+#include ".\CNWClass.h"
+#include ".\CNWSpellArray.h"
+#include ".\CResGFF.h"
+#include ".\CCodeBase.h"
 
 #include ".\nwn_internals.h"
 

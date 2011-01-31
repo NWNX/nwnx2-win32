@@ -21,15 +21,23 @@
  *
  */
 
-#ifndef _NX_NWN_STRUCT_CNWSITEMPROPERTYHANDLER_
-#define _NX_NWN_STRUCT_CNWSITEMPROPERTYHANDLER_
+#ifndef _NX_NWN_STRUCT_CRESGFF_
+#define _NX_NWN_STRUCT_CRESGFF_
 
-struct CNWSItemPropertyHandler_s {
-    CNWSItemProperty            *ip;
-	uint32_t					ip_len;
-	uint32_t					ip_alloc;    
+struct CResGFF_s {
+    void                *unknown;
+  
+	CResGFF_s *ctor();
+    int CreateGFFFile(void *ResStruct, CExoString const &Version, CExoString const &Type);
+    int WriteGFFFile(CExoString const &FileName, unsigned short GFFType);
+    int WriteGFFToPointer(void **Data, unsigned int &a2);
+	int GetDataFromPointer(char *Pointer, int a3);
+	int GetTopLevelStruct(char *ResStruct);
+	void GetGFFFileInfo(CExoString &Type, CExoString &Version);
+	void dtor();
+
 };
 
-#endif /* _NX_NWN_STRUCT_CNWSITEMPROPERTYHANDLER_ */
+#endif /* _NX_NWN_STRUCT_CRESGFF_ */
 
 /* vim: set sw=4: */

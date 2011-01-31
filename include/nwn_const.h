@@ -34,7 +34,7 @@
 #define OBJECT_TYPE2_CREATURE                               5
 #define OBJECT_TYPE2_ITEM                                   6
 #define OBJECT_TYPE2_TRIGGER                                7
-#define OBJECT_TYPE2_PLACEABLE                              8
+#define OBJECT_TYPE2_PLACEABLE                              9
 #define OBJECT_TYPE2_DOOR                                  10
 #define OBJECT_TYPE2_AREA_OF_EFFECT                        11
 #define OBJECT_TYPE2_WAYPOINT                              12
@@ -614,8 +614,36 @@
 #define WEAPON_TYPE_PIERCING_SLASHING		4
 #define WEAPON_TYPE_BLUDGEONING_PIERCING	5
 
+#define ALIGNMENT_ALL		0
+#define ALIGNMENT_NEUTRAL	1
+#define ALIGNMENT_LAWFUL	2
+#define ALIGNMENT_CHAOTIC	3
+#define ALIGNMENT_GOOD		4
+#define ALIGNMENT_EVIL		5
 
-//#include "nwn_const_feats.h"
+#define OBJECT_ANIM_WALK				2
+#define OBJECT_ANIM_REVERSE				3
+#define OBJECT_ANIM_RUN					4
+#define OBJECT_ANIM_SIDESTEPLEFT		78
+#define OBJECT_ANIM_SIDESTEPRIGHT		79
+#define OBJECT_ANIM_WALKSIDESTEPLEFT	84
+#define OBJECT_ANIM_WALKSIDESTEPRIGHT	85
+#define OBJECT_ANIM_RUNSIDESTEPLEFT		86
+#define OBJECT_ANIM_RUNSIDESTEPRIGHT	87
+
+#define COMBAT_MODE_PARRY               1
+#define COMBAT_MODE_POWERATTACK         2
+#define COMBAT_MODE_IMPROVEDPOWERATTACK 3
+#define COMBAT_MODE_COUNTERSPELL        4
+#define COMBAT_MODE_FLURRYOF_BLOWS      5
+#define COMBAT_MODE_RAPIDSHOT           6
+#define COMBAT_MODE_EXPERTISE           7
+#define COMBAT_MODE_IMPROVEDEXPERTISE   8
+#define COMBAT_MODE_DEFENSIVECASTING    9
+#define COMBAT_MODE_DIRTY_FIGHTING      10
+#define COMBAT_MODE_DEFENSIVE_STANCE    11
+
+#include "nwn_const_feats.h"
 //#include "nwn_const_spells.h"
 //#include "nwn_const_vfx.h"
 

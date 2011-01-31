@@ -58,9 +58,9 @@
   unsigned __int32 field_90;
   unsigned __int32 field_94_a12;
   unsigned __int32 field_98;
-  unsigned __int32 field_9C;
-  unsigned __int32 field_A0_a12;
-  unsigned __int32 field_A4;
+  CNWCCMessageData **Messages;
+  int Messages_count;
+  int Messages_alloc;
 };
 
 #endif

@@ -8,7 +8,7 @@ struct CNWSModule_s {
     uint32_t                    field_0C;
     uint32_t                    field_10;
     uint32_t                    field_14;
-    uint32_t                    *mod_areas;
+    nwn_objid_t                 *mod_areas;
     uint32_t                    mod_areas_len;
     uint32_t                    field_20;
     uint32_t                    field_24;

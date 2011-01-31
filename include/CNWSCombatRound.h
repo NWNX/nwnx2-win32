@@ -78,6 +78,7 @@
 	CNWSItem *	GetCurrentAttackWeapon(uint32_t a2);
 	void		StartCombatRound(nwn_objid_t oidDefender);
 	CNWSCombatAttackData *GetAttack(int a2);
+	int GetWeaponAttackType();
 
 };
 
