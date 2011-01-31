@@ -2,6 +2,8 @@
 #include "types.h"
 #include "nwn_internals.h"
 
+int				(__thiscall *CNWSObject__DoDamageImmunity)(CNWSObject *pTHIS, CNWSCreature *Attacker, int DamageDelivered, int DamageFlags, int _bMaxDamage, int bFeedback) = (int(__thiscall*)(CNWSObject *pTHIS, CNWSCreature *Attacker, int DamageDelivered, int DamageFlags, int _bMaxDamage, int bFeedback))0x004E1A00;
+int				(__thiscall *CNWSObject__DoDamageResistance)(CNWSObject *pTHIS, CNWSCreature *a2, int a3, signed int a4, int a5, int a6, int a7) = (int(__thiscall*)(CNWSObject *pTHIS, CNWSCreature *a2, int a3, signed int a4, int a5, int a6, int a7))0x004E07D0;
 char			(__thiscall *CNWSObject__GetDamageImmunityByFlags)(CNWSObject_s *pTHIS, uint16_t Flags) = (char (__thiscall *)(CNWSObject_s * pTHIS, uint16_t))0x004E1D50;
 int				(__thiscall *CNWSObject__RemoveEffectById)(CNWSObject_s *pTHIS, uint64_t EffID) = (int (__thiscall *)(CNWSObject_s *pTHIS, uint64_t EffID))0x004E2DE0;
 CNWSArea * 		(__thiscall *CNWSObject__GetArea)(CNWSObject_s *pTHIS) = (CNWSArea* (__thiscall *)(CNWSObject_s *pTHIS))0x004E3F50;
@@ -41,4 +43,12 @@ int CNWSObject_s::GetMaximumDamageResistanceVsDamageFlag(uint16_t DamageType, in
 
 int16_t CNWSObject_s::ApplyEffect(CGameEffect *Effect, int a3, int a4) {
 	return CNWSObject__ApplyEffect(this, Effect, a3, a4);
+}
+
+int CNWSObject_s::DoDamageImmunity(CNWSCreature *Attacker, int DamageDelivered, int DamageFlags, int _bMaxDamage, int bFeedback) {
+	return CNWSObject__DoDamageImmunity(this, Attacker, DamageDelivered, DamageFlags, _bMaxDamage, bFeedback);
+}
+
+int	CNWSObject_s::DoDamageResistance(CNWSCreature *a2, int a3, signed int a4, int a5, int a6, int a7) {
+	return CNWSObject__DoDamageResistance(this, a2, a3, a4, a5, a6, a7);
 }

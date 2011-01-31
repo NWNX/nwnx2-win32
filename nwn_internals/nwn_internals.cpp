@@ -9,7 +9,7 @@ CTlkTable **NWN_CTlkTable = (CTlkTable**)0x0066C054;
 CNWTlkTable **NWN_CNWTlkTable = (CNWTlkTable**)0x0066C058;
 CNWRules **NWN_Rules = (CNWRules**)0x0066c060;
 CExoResMan **NWN_ResMan = (CExoResMan**)0x0066C044;
-
+int **g_bEnableCombatDebugging = (int**)0x0066C978;
 
 /*
 void			(__fastcall *CNWSCreature__SetQuickbarButton_AssociateCommand)(CNWSCreature*, void*, uint8_t, int, uint16_t, uint32_t) = (void (__fastcall *)(CNWSCreature*, void*, uint8_t, int, uint16_t, uint32_t))0x004A8E10;
