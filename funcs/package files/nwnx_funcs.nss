@@ -14,8 +14,8 @@ const int EVENT_CREATURE_DAMAGED		=4;
 const int EVENT_CREATURE_DISTURBED		=5;
 const int EVENT_CREATURE_ENDCOMBAT		=6;
 const int EVENT_CREATURE_DIALOG			=7;
-const int EVENT_CREATURE_RESTED			=8;
-const int EVENT_CREATURE_SPAWN			=9;
+const int EVENT_CREATURE_SPAWN			=8;
+const int EVENT_CREATURE_RESTED			=9;
 const int EVENT_CREATURE_DEATH			=10;
 const int EVENT_CREATURE_USERDEFINDED	=11;
 const int EVENT_CREATURE_BLOCKED		=12;
@@ -330,10 +330,10 @@ void NWNXFuncs_SetPenaltyAC(object oCreature, int iValue, int iACType = AC_ARMOU
 int  NWNXFuncs_GetPenaltyAC(object oCreature, int iACType = AC_ARMOUR_ENCHANTMENT_BONUS);
 
 // Sets the Skill Points saved during level-up
-void NWNXFuncs_SetSavedSkillPoints(object oPC, int iSkillPoints);
+void NWNXFuncs_SetSavedSkillPoints(object oPC, int iSkillPoints, int nLevel=0);
 
 // Returns the Skill Points saved during level-up
-int  NWNXFuncs_GetSavedSkillPoints(object oPC);
+int  NWNXFuncs_GetSavedSkillPoints(object oPC, int nLevel=0);
 
 // Sets the Armor Check Penalty currently incured from wearing armor or a shield
 // AC_ARMOUR_ENCHANTMENT_BONUS sets the penalty from armor
@@ -395,7 +395,7 @@ void NWNXFuncs_SetCreatureSize(object oCreature, int iSize = CREATURE_SIZE_MEDIU
 int  NWNXFuncs_GetEquippedWeight(object oCreature);
 
 // Changes the number of saved skillpoints by iSkillPoints
-void NWNXFuncs_ModSavedSkillPoints(object oPC, int iSkillPoints);
+void NWNXFuncs_ModSavedSkillPoints(object oPC, int iSkillPoints, int nLevel=0);
 
 // Removes a feat from a creature
 // If bRemoveFromLevel is FALSE, the feat will only be removed from the general feat list (the feat lists for each character level are ignored; 
@@ -958,13 +958,13 @@ int NWNXFuncs_GetPenaltyAC(object oCreature, int iACType = AC_ARMOUR_ENCHANTMENT
 	return iRet;
 }
 
-void NWNXFuncs_SetSavedSkillPoints(object oPC, int iSkillPoints) {
-	SetLocalString(oPC, "NWNX!FUNCS!SETSAVEDSKILLPOINTS", IntToString(iSkillPoints)+" 0");
+void NWNXFuncs_SetSavedSkillPoints(object oPC, int iSkillPoints, int nLevel=0) {
+	SetLocalString(oPC, "NWNX!FUNCS!SETSAVEDSKILLPOINTS", IntToString(iSkillPoints)+" 0 " +IntToString(nLevel));
 	DeleteLocalString(oPC, "NWNX!FUNCS!SETSAVEDSKILLPOINTS");
 }
 
-int NWNXFuncs_GetSavedSkillPoints(object oPC) {
-	SetLocalString(oPC, "NWNX!FUNCS!GETSAVEDSKILLPOINTS", "-");
+int NWNXFuncs_GetSavedSkillPoints(object oPC, int nLevel=0) {
+	SetLocalString(oPC, "NWNX!FUNCS!GETSAVEDSKILLPOINTS", IntToString(nLevel));
 	int iRet = StringToInt(GetLocalString(oPC, "NWNX!FUNCS!GETSAVEDSKILLPOINTS"));
 	DeleteLocalString(oPC, "NWNX!FUNCS!GETSAVEDSKILLPOINTS");
 	return iRet;
@@ -1082,8 +1082,8 @@ int NWNXFuncs_GetEquippedWeight(object oCreature) {
 	return iRet;
 }
 
-void NWNXFuncs_ModSavedSkillPoints(object oPC, int iSkillPoints) {
-	SetLocalString(oPC, "NWNX!FUNCS!SETSAVEDSKILLPOINTS", IntToString(iSkillPoints)+" 1");
+void NWNXFuncs_ModSavedSkillPoints(object oPC, int iSkillPoints, int nLevel=0) {
+	SetLocalString(oPC, "NWNX!FUNCS!SETSAVEDSKILLPOINTS", IntToString(iSkillPoints)+" 1 "+IntToString(nLevel));
 	DeleteLocalString(oPC, "NWNX!FUNCS!SETSAVEDSKILLPOINTS");
 }
 

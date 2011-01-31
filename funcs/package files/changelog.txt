@@ -333,3 +333,13 @@ v 0.0.84
 		New parameter for NWNXFuncs_SetAbilityScore and NWNXFuncs_ModAbilityScore: bAdjustCurrentHitPoints
 			bAdjustCurrentHitPoints is only used when altering Constitution and determines whether current hitpoints are affected if hitpoints are changed.
 			The parameter defaults to 1 so the current functionality is preserved.
+			
+v 0.0.85
+	Added:
+		NWNXFuncs_SetSavedSkillPoints
+		NWNXFuncs_ModSavedSkillPoints
+		NWNXFuncs_GetSavedSkillPoints:
+			 Additional parameter to set/get the saved skillpoints for a specific level
+	
+	Fixed:
+		EVENT_CREATURE_SPAWN and EVENT_CREATURE_RESTED constants swapped

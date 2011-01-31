@@ -281,7 +281,6 @@ private:
 
 	int ModifyItem();
 
-
 public:
 	int SendServerToPlayerChatMessage(uint8_t Channel, nwn_objid_t Sender, char *Msg, int Msg_len, uint32_t Receiver);
 

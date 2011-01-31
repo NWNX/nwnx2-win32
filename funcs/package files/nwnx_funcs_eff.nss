@@ -47,7 +47,7 @@ Using NWNXFuncs_EffectCustomEffect gets around this problem and the overhead sho
 		}
 		e = GetNextEffect(oPC);
 	}
-
+*/
 
 
 

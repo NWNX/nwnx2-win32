@@ -223,6 +223,8 @@ int __fastcall CNWSEffectListHandler__OnApplyModifyNumAttacksHook(void *pTHIS, v
 }
 
 void HookFunctions() {
+
+
 	DWORD org_CreateNewGeometry = 0x005A9250;
 	if(NWNFuncs.bHookCreateGeometry) {
 		if (HookCode((PVOID) org_CreateNewGeometry, CreateNewGeometryHookProc, (PVOID*)&nwn_CreateNewGeometryNextHook))
@@ -241,8 +243,8 @@ void HookFunctions() {
 		if (HookCode((PVOID) org_CNWSCreatureStats__GetDEXMod, CNWSCreatureStats__GetDEXModHook, (PVOID*)&nwn_CNWSCreatureStats__GetDEXModNextHook))
 			__log(1, "* OverideMaxDexBonus hooked\n");
 	}
-
-	DWORD org_CNWSCreatureStats__GetEffectImmunity = 0x0048B770;
+*/
+/*	DWORD org_CNWSCreatureStats__GetEffectImmunity = 0x0048B770;
 	__log(0, "* CNWSCreatureStats__GetEffectImmunity hooked: %s\n", 
 		HookCode((PVOID) org_CNWSCreatureStats__GetEffectImmunity, CNWSCreatureStats__GetEffectImmunityHook, (PVOID*)&CNWSCreatureStats__GetEffectImmunityNext) ? "success" : "failure");
 */

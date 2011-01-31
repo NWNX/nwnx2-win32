@@ -113,7 +113,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) e:\games\nwn"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -446,6 +446,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\nwn_internals\CNWSCombatRound.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\nwn_internals\CNWSCreature.cpp"
 					>
 				</File>
@@ -553,6 +557,10 @@
 			</File>
 			<File
 				RelativePath=".\nwnx_funcs.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
 				>
 			</File>
 			<File

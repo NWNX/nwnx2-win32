@@ -105,8 +105,6 @@ int CNWNXFuncs::PrintOffsets() {
 	_log(1, "field_438                       : %08X\n", (uint32_t)&stats->field_438 - iGO);
 	_log(1, "*cs_specabil                    : %08X\n", (uint32_t)&stats->cs_specabil - iGO);
 	_log(1, "field_440                       : %08X\n", (uint32_t)&stats->field_440 - iGO);
-	_log(1, "field_444                       : %08X\n", (uint32_t)&stats->field_444 - iGO);
-	_log(1, "field_448                       : %08X\n", (uint32_t)&stats->field_448 - iGO);
 	_log(1, "field_44C                       : %08X\n", (uint32_t)&stats->field_44C - iGO);
 	_log(1, "field_450                       : %08X\n", (uint32_t)&stats->field_450 - iGO);
 	_log(1, "field_454                       : %08X\n", (uint32_t)&stats->field_454 - iGO);
@@ -115,7 +113,6 @@ int CNWNXFuncs::PrintOffsets() {
 	_log(1, "field_460                       : %08X\n", (uint32_t)&stats->field_460 - iGO);
 	_log(1, "field_464                       : %08X\n", (uint32_t)&stats->field_464 - iGO);
 	_log(1, "field_468                       : %08X\n", (uint32_t)&stats->field_468 - iGO);
-	_log(1, "field_46C                       : %08X\n", (uint32_t)&stats->field_46C - iGO);
 	_log(1, "field_470                       : %08X\n", (uint32_t)&stats->field_470 - iGO);
 	_log(1, "field_474                       : %08X\n", (uint32_t)&stats->field_474 - iGO);
 	_log(1, "cs_skill_points                 : %08X\n", (uint32_t)&stats->cs_skill_points - iGO);
@@ -159,8 +156,6 @@ int CNWNXFuncs::PrintOffsets() {
 	_log(1, "cs_tail                         : %08X\n", (uint32_t)&stats->cs_tail - iGO);
 	_log(1, "cs_wings                        : %08X\n", (uint32_t)&stats->cs_wings - iGO);
 	_log(1, "cs_movement_rate                : %08X\n", (uint32_t)&stats->cs_movement_rate - iGO);
-	_log(1, "field_4BC                       : %08X\n", (uint32_t)&stats->field_4BC - iGO);
-	_log(1, "field_4C0                       : %08X\n", (uint32_t)&stats->field_4C0 - iGO);
 	_log(1, "cs_save_fort                    : %08X\n", (uint32_t)&stats->cs_save_fort - iGO);
 	_log(1, "cs_save_will                    : %08X\n", (uint32_t)&stats->cs_save_will - iGO);
 	_log(1, "cs_save_reflex                  : %08X\n", (uint32_t)&stats->cs_save_reflex - iGO);
@@ -651,7 +646,14 @@ int CNWNXFuncs::GetSavedSkillPoints() {
 		return 0;
 	}
 
-	sprintf(Params, "%d", ((CNWSCreature*)(oObject))->cre_stats->cs_skill_points);
+	if (P1 == 0) {
+		sprintf(Params, "%d", ((CNWSCreature*)(oObject))->cre_stats->cs_skill_points);
+	}
+	else {
+		CNWSStats_Level *ls = nwn_GetLevelStats(((CNWSCreature*)(oObject))->cre_stats, P1);
+		if (ls) sprintf(Params, "%d", ls->ls_skillpoints);
+	}
+
 	return 1;
 }
 
@@ -661,8 +663,27 @@ int CNWNXFuncs::SetSavedSkillPoints() {
 		sprintf(Params, "-1");
 		return 0;
 	}
-	if (P2) ((CNWSCreature*)(oObject))->cre_stats->cs_skill_points += P1;
-	else ((CNWSCreature*)(oObject))->cre_stats->cs_skill_points = P1;
+
+	CNWSCreature *cre = (CNWSCreature*)(oObject);
+
+	if (P2) {
+		if (P3 > 0) {
+			CNWSStats_Level *ls = nwn_GetLevelStats(cre->cre_stats, P3);
+			if (ls) ls->ls_skillpoints += P1;
+		}
+		else {
+			cre->cre_stats->cs_skill_points += P1;
+		}
+	}
+	else {
+		if (P3 > 0) {
+			CNWSStats_Level *ls = nwn_GetLevelStats(cre->cre_stats, P3);
+			if (ls) ls->ls_skillpoints = P1;
+		}
+		else {
+			cre->cre_stats->cs_skill_points = P1;
+		}
+	}
 	return 1;
 }
 
@@ -1556,6 +1577,7 @@ int CNWNXFuncs::SetItemWeight() {
 		return 0;
 	}
 
+	oObject = oObject-0x10;
 	CNWSItem *Item = (CNWSItem*)oObject;
 	
 	Item->it_weight = P1;

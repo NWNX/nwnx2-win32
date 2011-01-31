@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
-// Used by Events.rc
+// Microsoft Visual C++ generated include file.
+// Used by nwnx_funcs.rc
 //
 
 // Next default values for new objects

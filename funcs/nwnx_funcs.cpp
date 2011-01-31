@@ -3,6 +3,9 @@
 #include "../NWNXdll/IniFile.h"
 #include <time.h>
 
+#include <stdlib.h>
+#include <string.h>
+
 
 CNWNXFuncs::CNWNXFuncs() {
 	getFirstNextEffect = NULL;
@@ -38,8 +41,7 @@ char* CNWNXFuncs::OnRequest(char *gameObject, char* Request, char* Parameters) {
 		CNWSCreature *cre = (CNWSCreature*)gameObject;
 		_log(3, "str: %08X\n", &cre->cre_stats->cs_str);
 	}
-
-	else {sprintf(Params, "-1"); _log(1, "o Could not find requested function.\n");}
+	else {sprintf(Parameters, "-1"); _log(1, "o Could not find requested function.\n");}
 
 	return NULL;
 }
