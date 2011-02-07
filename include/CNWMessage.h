@@ -25,6 +25,7 @@ struct CNWMessage_s {
 	unsigned __int8 field_44;
 	char field_45;
 
+	int 		ReadBOOL();
 	int			ReadCResRef(CResRef *ResRef, int a3);
 	int 		MessageReadOverflow(int a2);
 };

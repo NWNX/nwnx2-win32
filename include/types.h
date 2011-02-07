@@ -4,6 +4,8 @@
 #include ".\nwnx_funcs_const.h"
 #include ".\CExoString.h"
 
+struct CVirtualMachineCommands_s;			typedef struct CVirtualMachineCommands_s		CVirtualMachineCommands;
+struct CNWSObjectActionNode_s;				typedef struct CNWSObjectActionNode_s			CNWSObjectActionNode;
 struct CCodeBase_s;							typedef struct CCodeBase_s						CCodeBase;
 struct CResource_s;							typedef struct CResource_s						CResource; 
 struct CTwoDimArrays_s;						typedef struct CTwoDimArrays_s					CTwoDimArrays;
@@ -183,6 +185,8 @@ struct CEffectsStore_s; typedef struct CEffectsStore_s CEffectsStore;
 #include ".\CNWSpellArray.h"
 #include ".\CResGFF.h"
 #include ".\CCodeBase.h"
+#include ".\CNWSObjectActionNode.h"
+#include ".\CVirtualMachineCommands.h"
 
 #include ".\nwn_internals.h"
 

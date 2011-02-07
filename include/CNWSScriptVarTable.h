@@ -9,6 +9,7 @@ struct CNWSScriptVarTable_s {
 	int 				GetInt(CExoString &VarName);
 	CScriptLocation 	GetLocation(CExoString &VarName);
 	CExoString*			GetString(CExoString &VarName);
+	void 				SetFloat(CExoString &VarName, float VarValue);
 	void 				SetInt(CExoString &VarName, int VarValue, int a3);
 };
 

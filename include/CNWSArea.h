@@ -34,7 +34,7 @@ struct CNWSArea_s {
     uint32_t                    field_90;
     uint32_t                    field_94;
     uint32_t                    field_98;
-    uint32_t                    field_9C;
+    uint32_t                    NoRest;
     uint32_t                    field_A0;
     uint32_t                    field_A4;
     uint32_t                    field_A8;

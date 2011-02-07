@@ -52,8 +52,11 @@ struct CNWSObject_s {
 	
 	int32_t								obj_anim;							/* 0x00AC */
 	int32_t								obj_anim_speed;						/* 0x00B0 */
-	int32_t								obj_hp_cur;							/* 0x00B4 */
-	uint32_t							obj_hp_max;							/* 0x00B8 */
+	int16_t								obj_hp_cur;							/* 0x00B4 */
+	int16_t									field_00B6;
+	int16_t								obj_hp_max;							/* 0x00B8 */
+	int16_t									field_00BA;
+	
 	uint32_t							obj_hp_temp;						/* 0x00BC */
 	uint32_t							obj_is_commandable;					/* 0x00C0 */
 	uint32_t							obj_is_destroyable;					/* 0x00C4 */
@@ -147,16 +150,19 @@ struct CNWSObject_s {
 	uint32_t							obj_effect_postprocess;				/* 0x01B8 */
 	uint32_t							obj_door_anim_played;				/* 0x01BC */
 
+int16_t				ApplyEffect(CGameEffect *Effect, int a3, int a4);
+void 				ClearSpellEffectsOnOthers();
 int 				DoDamageImmunity(CNWSCreature *Attacker, int DamageDelivered, int DamageFlags, int _bMaxDamage, int bFeedback);
 int					DoDamageResistance(CNWSCreature *a2, int a3, signed int a4, int a5, int a6, int a7);
 CNWSArea * 			GetArea();
+int16_t 			GetCurrentHitPoints(int bExcludeTemp);
 char				GetDamageImmunityByFlags(uint16_t Flags);
 int 				GetDead();
+int					GetIsPCDying();
 int					RemoveEffectById(uint64_t EffID);
 unsigned int 		SetArea(CNWSArea *Area);
 void 				SetTag(CExoString sTag);
 int  				GetMaximumDamageResistanceVsDamageFlag(uint16_t DamageType, int *EffectIndex);
-int16_t				ApplyEffect(CGameEffect *Effect, int a3, int a4);
 
 };
 

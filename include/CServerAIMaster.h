@@ -26,6 +26,9 @@
 
 struct CServerAIMaster_s {
     void               *unknown;
+    
+	int AddEventAbsoluteTime(unsigned int a2, unsigned int a3, int a4, int a5, int Event, void *a7);
+	int AddEventDeltaTime(int Seconds, unsigned int Day, int Caller_ID, int Object_ID, int Event, void *a7);
 };
 
 #endif /* _NX_NWN_STRUCT_CSERVERAIMASTER_ */

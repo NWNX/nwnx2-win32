@@ -41,6 +41,8 @@ struct CVirtualMachine_s {
     
     int Runscript(CExoString *ScriptName, nwn_objid_t OBJECT_SELF, int a4 = 1);
     int StackPushEngineStructure(int a2, void *a3);
+    int StackPushFloat(float f);
+    int StackPushInteger(int i);
     int StackPopEngineStructure(int a2, void **a3);
     int StackPopInteger(int *iINT);
 };

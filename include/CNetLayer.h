@@ -6,6 +6,8 @@ struct CNetLayer_s {
 
 	void	SetConnectionsDisallowed(int bDisAllowConnections);
 	int		SetGameMasterPassword(CExoString dm_pwd);
+	int		DisconnectPlayer(unsigned long PlayerID, unsigned long tlkEntry, int a3);
+
 
 };
 
