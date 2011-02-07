@@ -12,16 +12,18 @@ int 			(__thiscall *CNWSCreatureStats__GetBaseAttackBonus)(CNWSCreatureStats *St
 int 			(__thiscall *CNWSCreatureStats__GetCanUseSkill)(CNWSCreatureStats *pTHIS, unsigned char Skill) = (int (__thiscall*)(CNWSCreatureStats *pTHIS, unsigned char Skill))0x0047E160;
 int				(__thiscall *CNWSCreatureStats__GetCriticalHitMultiplier)(CNWSCreatureStats *pthis, int bOffhandWeapon) = (int(__thiscall*)(CNWSCreatureStats *pthis, int bOffhandWeapon))0x00477A20;
 char 			(__thiscall *CNWSCreatureStats__GetDEXMod)(CNWSCreatureStats *pTHIS, int bMaxArmorDex) = (char (__thiscall*)(CNWSCreatureStats *pTHIS, int bMaxArmorDex))0x0047CAF0;
+int 			(__thiscall *CNWSCreatureStats__GetEffectImmunity)(CNWSCreatureStats *pTHIS, unsigned __int8 Type, CNWSCreature *a3_Versus) = (int (__thiscall*)(CNWSCreatureStats *pTHIS, unsigned __int8 Type, CNWSCreature *a3_Versus))0x0048B770;
 signed int 		(__thiscall *CNWSCreatureStats__GetEpicWeaponFocus)(CNWSCreatureStats *pTHIS, CNWSItem *weapon) = (signed int (__thiscall*)(CNWSCreatureStats *pTHIS, CNWSItem *weapon))0x00481510;
 int 			(__thiscall *CNWSCreatureStats__GetFavoredEnemyBonus)(CNWSCreatureStats *pTHIS, CNWSCreature *cre_enemy) = (int (__thiscall*)(CNWSCreatureStats *pTHIS, CNWSCreature *cre_enemy))0x00489E50;
 uint8_t			(__thiscall *CNWSCreatureStats__GetFeatRemainingUses)(CNWSCreatureStats *pTHIS, uint16_t FeatID) = (uint8_t(__thiscall*)(CNWSCreatureStats *pTHIS, uint16_t FeatID))0x0047EF10;
-int 			(__thiscall *CNWSCreatureStats__GetEffectImmunity)(CNWSCreatureStats *pTHIS, unsigned __int8 Type, CNWSCreature *a3_Versus) = (int (__thiscall*)(CNWSCreatureStats *pTHIS, unsigned __int8 Type, CNWSCreature *a3_Versus))0x0048B770;
+unsigned long 	(__thiscall *CNWSCreatureStats__GetHighestLevelKnown)(CNWSCreatureStats *pTHIS) = (unsigned long(__thiscall*)(CNWSCreatureStats *pTHIS))0x00480A30;
 unsigned char 	(__thiscall *CNWSCreatureStats__GetIsClass)(CNWSCreatureStats *pTHIS, unsigned char) = (unsigned char(__thiscall*)(CNWSCreatureStats *pTHIS, unsigned char))0x004732D0;
 int 			(__thiscall *CNWSCreatureStats__GetIsWeaponOfChoice)(CNWSCreatureStats *pTHIS, uint32_t BaseItemType) = (int (__thiscall*)(CNWSCreatureStats *pTHIS, uint32_t BaseItemType))0x0048CB10;
 uint8_t			(__thiscall *CNWSCreatureStats__GetLevel)(CNWSCreatureStats *pTHIS, int bCountNegativeLevels) = (uint8_t (__thiscall*)(CNWSCreatureStats *pTHIS, int bCountNegativeLevels))0x0046DB40;
 int				(__thiscall *CNWSCreatureStats__GetMeleeAttackBonus)(CNWSCreatureStats *, int, int, int) = (int (__thiscall *)(CNWSCreatureStats *, int, int, int))0x0046FB40;
 int 			(__thiscall *CNWSCreatureStats__GetNumLevelsOfClass)(CNWSCreatureStats *pTHIS, unsigned char) = (int (__thiscall*)(CNWSCreatureStats *pTHIS, unsigned char))0x0048F400;
 int 			(__thiscall *CNWSCreatureStats__GetNumLevelsOfClass2)(CNWSCreatureStats *pTHIS, unsigned char, int) = (int (__thiscall*)(CNWSCreatureStats *pTHIS, unsigned char, int))0x0048F240;
+void 			(__thiscall *CNWSCreatureStats__ReadySpellLevel)(CNWSCreatureStats *pTHIS, unsigned char SpellLevel) = (void(__thiscall*)(CNWSCreatureStats *pTHIS, unsigned char SpellLevel))0x00482A50;
 char 			(__thiscall *CNWSCreatureStats__GetSkillRank)(CNWSCreatureStats *pTHIS, unsigned __int8 nSkill, CNWSObject *vsObj, int bBaseRanksOnly) = (char (__thiscall*)(CNWSCreatureStats *pTHIS, unsigned __int8 nSkill, CNWSObject *vsObj, int bBaseRanksOnly))0x0047E2C0;
 signed int 		(__thiscall *CNWSCreatureStats__GetWeaponFinesse)(CNWSCreatureStats *pTHIS, CNWSItem *weapon) = (signed int (__thiscall*)(CNWSCreatureStats *pTHIS, CNWSItem *weapon))0x00481210;
 signed int 		(__thiscall *CNWSCreatureStats__GetWeaponFocus)(CNWSCreatureStats *pTHIS, CNWSItem *weapon) = (signed int (__thiscall*)(CNWSCreatureStats *pTHIS, CNWSItem *weapon))0x004812E0;
@@ -30,6 +32,8 @@ unsigned char	(__thiscall *CNWSCreatureStats__GetUnarmedDamageDie)(CNWSCreatureS
 int 			(__thiscall *CNWSCreatureStats__GetUseMonkAttackTables)(CNWSCreatureStats *pTHIS, int) = (int (__thiscall*)(CNWSCreatureStats *pTHIS, int))0x00470730;
 int 			(__thiscall *CNWSCreatureStats__HasFeat)(CNWSCreatureStats *Stats, uint16_t feat) = (int (__thiscall*)(CNWSCreatureStats *Stats, uint16_t feat))0x0047ECF0;
 bool 			(__thiscall *CNWSCreatureStats__LevelUp)(CNWSCreatureStats *pTHIS, CNWSStats_Level *a2, int a3, char a4, char a5, int a6) = (bool (__thiscall*)(CNWSCreatureStats *pTHIS, CNWSStats_Level *a2, int a3, char a4, char a5, int a6))0x004847F0;
+void			(__thiscall *CNWSCreatureStats__ResetFeatRemainingUses)(CNWSCreatureStats *pTHIS) = (void(__thiscall*)(CNWSCreatureStats *pTHIS))0x004801D0;
+void			(__thiscall *CNWSCreatureStats__ResetSpellLikeAbilities)(CNWSCreatureStats *pTHIS) = (void(__thiscall*)(CNWSCreatureStats *pTHIS))0x00488E40;
 int 			(__thiscall *CNWSCreatureStats__ResolveSpecialAttackAttackBonus)(CNWSCreatureStats *pAttackerStats, CNWSCreature *Defender) = (int (__thiscall*)(CNWSCreatureStats *pAttackerStats, CNWSCreature *Defender))0x004744F0;
 //unsigned char 	(__thiscall *CNWSCreatureStats__GetAttacksPerRound)(CNWSCreatureStats *, = (unsigned char
 
@@ -200,10 +204,26 @@ unsigned char CNWSCreatureStats_s::GetUnarmedDamageDice() {
 	return CNWSCreatureStats__GetUnarmedDamageDice(this);
 }
 
-unsigned char CNWSCreatureStats::GetUnarmedDamageDie() {
+unsigned char CNWSCreatureStats_s::GetUnarmedDamageDie() {
 	return CNWSCreatureStats__GetUnarmedDamageDie(this);
 }
 
-int CNWSCreatureStats::GetCriticalHitMultiplier(int bOffhand) {
+int CNWSCreatureStats_s::GetCriticalHitMultiplier(int bOffhand) {
 	return CNWSCreatureStats__GetCriticalHitMultiplier(this, bOffhand);
+}
+
+unsigned long CNWSCreatureStats_s::GetHighestLevelKnown() {
+	return CNWSCreatureStats__GetHighestLevelKnown(this);
+}
+
+void CNWSCreatureStats_s::ReadySpellLevel(unsigned char SpellLevel) {
+	CNWSCreatureStats__ReadySpellLevel(this, SpellLevel);
+}
+
+void CNWSCreatureStats_s::ResetFeatRemainingUses() {
+	CNWSCreatureStats__ResetFeatRemainingUses(this);
+}
+
+void CNWSCreatureStats_s::ResetSpellLikeAbilities() {
+	CNWSCreatureStats__ResetSpellLikeAbilities(this);
 }
