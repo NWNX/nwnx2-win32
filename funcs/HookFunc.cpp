@@ -222,21 +222,47 @@ int __fastcall CNWSEffectListHandler__OnApplyModifyNumAttacksHook(void *pTHIS, v
 	return 0;
 }
 
+int (__fastcall *CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyTypeNEXT)(void *pTHIS, void *pVOID, int a1, int a2);
+int __fastcall CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyTypeHOOK(void *pTHIS, void *pVOID, int a1, int a2) {
+	int iRet = NWNFuncs.GetItemPropertyInformation();
+	if (iRet != -1) return iRet;
+
+	return CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyTypeNEXT(pTHIS, NULL, a1, a2);
+}
+
+int (__fastcall *CNWVirtualMachineCommands__ExecuteCommandItemPropertyEffectNEXT)(void *pTHIS, void *pVOID, int a1, int a2);
+int __fastcall CNWVirtualMachineCommands__ExecuteCommandItemPropertyEffectHOOK(void *pTHIS, void *pVOID, int a1, int a2) {
+	// I'm hooking ItemPropertyNoDamage because I'm hoping it isn't used much and has no parameters to pop from the stack
+	int iRet = NWNFuncs.ItemPropertyCustom(pTHIS, a1);
+	if (iRet != -1) return iRet;
+
+	return CNWVirtualMachineCommands__ExecuteCommandItemPropertyEffectNEXT(pTHIS, NULL, a1, a2);
+}
+
+
 void HookFunctions() {
-
-
 	DWORD org_CreateNewGeometry = 0x005A9250;
 	if(NWNFuncs.bHookCreateGeometry) {
 		if (HookCode((PVOID) org_CreateNewGeometry, CreateNewGeometryHookProc, (PVOID*)&nwn_CreateNewGeometryNextHook))
 			__log(1, "* CreateNewGeometry hooked\n");
+		else __log(1, "* CreateNewGeometry hook failed\n");
 	}
 
 	DWORD org_ExecuteCommandEffectAppear = 0x00585110;
-	if (1) {
-		if (HookCode((PVOID) org_ExecuteCommandEffectAppear, ExecuteCommandEffectAppear_Hook, (PVOID*)&ExecuteCommandEffectAppear_Next))
-			__log(1, "* CustomEffect function hooked\n");
-	}
-	
+	if (HookCode((PVOID) org_ExecuteCommandEffectAppear, ExecuteCommandEffectAppear_Hook, (PVOID*)&ExecuteCommandEffectAppear_Next))
+		__log(1, "* CustomEffect function hooked\n");
+	else __log(1, "X CustomEffect function hook failed\n");
+
+	DWORD CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyTypeORG = 0x0058EA00;
+	if (HookCode((PVOID)CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyTypeORG, CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyTypeHOOK, (PVOID*)&CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyTypeNEXT))
+		__log(1, "* CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyType hooked\n");
+	else __log(1, "X CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyType hook failed\n");
+
+	DWORD CNWVirtualMachineCommands__ExecuteCommandItemPropertyEffectORG = 0x0058EBD0;
+	if (HookCode((PVOID)CNWVirtualMachineCommands__ExecuteCommandItemPropertyEffectORG, CNWVirtualMachineCommands__ExecuteCommandItemPropertyEffectHOOK, (PVOID*)&CNWVirtualMachineCommands__ExecuteCommandItemPropertyEffectNEXT))
+		__log(1, "* CNWVirtualMachineCommands__ExecuteCommandItemPropertyEffect hooked\n");
+	else __log(1, "X CNWVirtualMachineCommands__ExecuteCommandItemPropertyEffect hook failed\n");
+
 /*
 	DWORD org_CNWSCreatureStats__GetDEXMod = 0x0047CAF0;
 	if(0 && NWNFuncs.bOverrideMaximumDexMod) {

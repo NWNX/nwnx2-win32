@@ -13,7 +13,7 @@
 
 #define PLAYER_ID_ALL_PLAYERS						0xFFFFFFF7
 
-#define FUNCTION_COUNT 128
+#define FUNCTION_COUNT 130
 
 class CNWNXFuncs : public CNWNXBase {
 public:
@@ -45,7 +45,6 @@ public:
 	int QueueRemoveEffect();
 	int RemoveQueuedEffects();
 
-
 	// The following can be used in a regular GetFirst/NextEffect loop
 	// They use CNWSObject->obj_effect_index to get their effect
 	// but invalidate a GetFirst/NextAllEffect loop
@@ -54,6 +53,8 @@ public:
 	int GetEffectRemainingDuration();
 	int GetEffectID();
 	int GetEffectRealType();
+
+	int GetEffectDurationSubType();
 
 	// the following don't work on one specific effect but scan the effect array on their own to do their work
 	// so they should be save to use in either effect loop
@@ -216,6 +217,11 @@ public:
 	void LOG(const char *pcMsg, ...);
 
 	CNWSObject *CustomEffectObject;
+
+	int BootPCWithMessage();
+
+	int GetItemPropertyInformation();
+	int ItemPropertyCustom(void *CVirtComm, int a1);
 
 private:
 	struct effect_id_type_s {

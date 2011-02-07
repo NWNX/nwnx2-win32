@@ -342,4 +342,16 @@ v 0.0.85
 			 Additional parameter to set/get the saved skillpoints for a specific level
 	
 	Fixed:
-		EVENT_CREATURE_SPAWN and EVENT_CREATURE_RESTED constants swapped
+		EVENT_CREATURE_SPAWN and EVENT_CREATURE_RESTED constants swapped in nwnx_funcs.nss
+
+v 0.0.85
+	Added:
+		NWNXFuncs_GetEffectSubType
+		NWNXFuncs_BootPCWithMessage
+		NWNXFuncs_GetItemPropertyDuration
+		NWNXFuncs_GetItemPropertyDurationRemaining
+		NWNXFuncs_GetItemPropertyInteger
+		NWNXFuncs_GetItemPropertySpellId
+		NWNXFuncs_SetItemPropertyInteger
+		NWNXFuncs_SetItemPropertySpellId
+		NWNXFuncs_ItemPropertyCustom

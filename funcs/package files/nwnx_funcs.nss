@@ -711,7 +711,6 @@ float NWNXFuncs_GetEffectRemainingDuration(object oObject);
 int NWNXFuncs_GetEffectID(object oObject);
 int NWNXFuncs_GetEffectRealType(object oObject);
 
-
 // Applies a visual effect at a specified location that only oPC can see
 // This only works with instant visual effects (VFX_FNF_*, VFX_IMP_*)
 void NWNXFuncs_ApplyVisualEffectForPC(object oPC, int nVFX, vector vPos);
@@ -814,6 +813,26 @@ void RemoveImmunityOverride(object oCreature) ;
 
 // Returns a custom effect as defined by the gameeffect_s struct (see nwnx_funcs_effst.nss and nwnx_funcs_eff.nss)
 effect NWNXFuncs_EffectCustomEffect(struct gameeffect_s e);
+
+// Returns the duration subtype of the current effect in a GetFirst/NextEffect loop
+int NWNXFuncs_GetEffectSubType(object oObject);
+
+// Boots a PC displaying a tlk entry rather than the standard "You have been booted"
+void NWNXFuncs_BootPCWithMessage(object oPC, int iTlkEntry);
+
+// Get Information about an itemproperty
+float NWNXFuncs_GetItemPropertyDuration(itemproperty ip);
+float NWNXFuncs_GetItemPropertyDurationRemaining(itemproperty ip);
+int NWNXFuncs_GetItemPropertyInteger(itemproperty ip, int nInt);
+int NWNXFuncs_GetItemPropertySpellId(itemproperty ip);
+
+// These don't do anything (yet)
+void NWNXFuncs_SetItemPropertyInteger(itemproperty ip, int nInt, int iValue);
+void NWNXFuncs_SetItemPropertySpellId(itemproperty ip, int iSpellID);
+
+// Create a Custom ItemProperty
+// Can be used to apply itemproperties which are defined via 2DAs (itempropdef.2da, iprp_*.2da, etc) but do not have scripting functions
+itemproperty NWNXFuncs_ItemPropertyCustom(int iType, int iSubType, int iCostTableValue, int iParam1Value);
 
 //*******************************************************************************************************************
 
@@ -1763,4 +1782,82 @@ effect NWNXFuncs_EffectCustomEffect(struct gameeffect_s e) {
 	DeleteLocalString(o, "NWNXFUNCS_CUSTOMEFFECT");
 	
 	return Eff;
+}
+
+int NWNXFuncs_GetEffectSubType(object oObject) {
+	SetLocalString(oObject, "NWNX!FUNCS!GETEFFECTDURATIONSUBTYPE", "-");
+	int iRet = StringToInt(GetLocalString(oObject, "NWNX!FUNCS!GETEFFECTDURATIONSUBTYPE"));
+	DeleteLocalString(oObject, "NWNX!FUNCS!GETEFFECTDURATIONSUBTYPE");
+	return iRet;
+}
+
+void NWNXFuncs_BootPCWithMessage(object oPC, int iTlkEntry) {
+	SetLocalString(oPC, "NWNX!FUNCS!BOOTPCWITHMESSAGE", IntToString(iTlkEntry));
+	DeleteLocalString(oPC, "NWNX!FUNCS!BOOTPCWITHMESSAGE");
+}
+
+float NWNXFuncs_GetItemPropertyDuration(itemproperty ip) {
+	object oModule = GetModule();
+	
+	SetLocalString(oModule, "NWNX_FUNCS_IPRP", "1 0 0");
+	GetItemPropertyType(ip);
+	float fRet = GetLocalFloat(oModule, "NWNX_FUNCS_IPRP");
+	DeleteLocalString(oModule, "NWNX_FUNCS_IPRP");
+	DeleteLocalFloat(oModule, "NWNX_FUNCS_IPRP");
+	
+	return fRet;
+}
+
+float NWNXFuncs_GetItemPropertyDurationRemaining(itemproperty ip) {
+	object oModule = GetModule();
+	
+	SetLocalString(oModule, "NWNX_FUNCS_IPRP", "6 0 0");
+	GetItemPropertyType(ip);
+	float fRet = GetLocalFloat(oModule, "NWNX_FUNCS_IPRP");
+	DeleteLocalString(oModule, "NWNX_FUNCS_IPRP");
+	DeleteLocalFloat(oModule, "NWNX_FUNCS_IPRP");
+	
+	return fRet;
+}
+
+int NWNXFuncs_GetItemPropertyInteger(itemproperty ip, int nInt) {
+	object oModule = GetModule();
+	
+	SetLocalString(oModule, "NWNX_FUNCS_IPRP", "3 "+IntToString(nInt)+" 0");
+	int iRet = GetItemPropertyType(ip);	
+	DeleteLocalString(oModule, "NWNX_FUNCS_IPRP");
+	
+	return iRet;
+}	
+void NWNXFuncs_SetItemPropertyInteger(itemproperty ip, int nInt, int iValue) {
+	object oModule = GetModule();
+	
+	SetLocalString(oModule, "NWNX_FUNCS_IPRP", "4 "+IntToString(nInt)+" "+IntToString(iValue));
+	GetItemPropertyType(ip);
+	DeleteLocalString(oModule, "NWNX_FUNCS_IPRP");
+}
+
+int NWNXFuncs_GetItemPropertySpellId(itemproperty ip) {
+	object oModule = GetModule();
+	
+	SetLocalString(oModule, "NWNX_FUNCS_IPRP", "2 0 0");
+	int iRet = GetItemPropertyType(ip);	
+	DeleteLocalString(oModule, "NWNX_FUNCS_IPRP");
+	
+	return iRet;
+}
+
+void NWNXFuncs_SetItemPropertySpellId(itemproperty ip, int iSpellID) {
+	object oModule = GetModule();
+	
+	SetLocalString(oModule, "NWNX_FUNCS_IPRP", "5 "+IntToString(iSpellID)+" 0");
+	GetItemPropertyType(ip);
+	DeleteLocalString(oModule, "NWNX_FUNCS_IPRP");
+}
+
+itemproperty NWNXFuncs_ItemPropertyCustom(int iType, int iSubType, int iCostTableValue, int iParam1Value) {
+	SetLocalString(GetModule(), "NWNX_FUNCS_IPRP", IntToString(iType)+ " " +IntToString(iSubType)+ " " +IntToString(iCostTableValue)+ " " +IntToString(iParam1Value)); 
+	itemproperty ip = ItemPropertyNoDamage();
+	DeleteLocalString(GetModule(), "NWNX_FUNCS_IPRP");
+	return ip;
 }

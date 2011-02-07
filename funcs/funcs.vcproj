@@ -438,6 +438,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\nwn_internals\CNetLayer.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\nwn_internals\CNWSArea.cpp"
 					>
 				</File>

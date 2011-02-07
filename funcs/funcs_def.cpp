@@ -3442,3 +3442,134 @@ int CNWNXFuncs::SummonAssociate() {
 
 	return 1;
 }
+
+int CNWNXFuncs::GetEffectDurationSubType() {
+	CNWSObject *obj = (CNWSObject*)oObject;
+	if (obj->obj_effect_index < 1) {
+		sprintf(Params, "-1");
+		return 0;
+	}
+
+	getFirstNextEffect = obj->obj_effects[obj->obj_effect_index - 1];
+
+	int iSubType = getFirstNextEffect->eff_dursubtype;
+
+	getFirstNextEffect = NULL;
+	sprintf(Params, "%d", iSubType);
+	return 1;
+}
+
+int CNWNXFuncs::BootPCWithMessage() {
+	int iMsg = 0;
+	sscanf(Params, "%d", &iMsg);
+	CNWSObject *obj = (CNWSObject*)oObject;
+	nwn_objid_t plID = obj->obj_generic.obj_id;
+	CNWSPlayer* pPlayer = ((*NWN_AppManager)->app_server)->GetClientObjectByObjectId(plID);
+	if(pPlayer != NULL)
+	{
+		uint32_t pID = pPlayer->pl_id;
+		CNetLayer* netlayer = (*NWN_AppManager)->app_server->srv_internal->srv_network;
+
+		netlayer->DisconnectPlayer(pID, iMsg, 1);
+		return 1;
+	}
+	return 0; 
+}
+
+int CNWNXFuncs::GetItemPropertyInformation() {
+	CExoString varname = CExoString("NWNX_FUNCS_IPRP");
+	char *mod = (char*)((*NWN_AppManager)->app_server->srv_internal)->GetModule();
+	CNWSModule *Mod = ((CNWSModule*)(mod+=0x1C));
+	CExoString *Params = NULL;
+	int iprp=0, P2=0, P3=0;
+
+	Params = Mod->mod_vartable.GetString(varname);
+	if (Params) {
+		if (sscanf(Params->text, "%d %d %d", &iprp, &P2, &P3) == 3) {
+			int Ret = 0;
+			CGameEffect *eff = NULL;
+			CNWSItemProperty *ip = NULL;
+			void *temp;
+			if ((*NWN_VirtualMachine)->StackPopEngineStructure(4, &temp)) {
+				int iPush = -1;
+				if (temp != NULL) {
+					eff = (CGameEffect*)temp;
+					uint32_t tD, tT, eD, eT;
+					int64_t current, expire;
+					float fRemaining = 0.0;
+					switch (iprp) {
+						case 1: Mod->mod_vartable.SetFloat(varname, eff->eff_duration); iPush = 1; break;
+						case 2: iPush = eff->eff_spellid; break;
+						case 3:	if (eff->eff_integers[P2] != NULL) {iPush = eff->GetInteger(P2); } break;
+						case 4:
+							if (eff->eff_integers[P2] != NULL) {
+								eff->eff_integers[P2] = P3; iPush = 1; 
+							}
+						break;
+						case 5: eff->eff_spellid = P2; iPush = 1; break;
+						case 6: 
+							if (eff->eff_duration != 0.0) {
+								(*NWN_AppManager)->app_server->srv_internal->srv_time_world->GetWorldTime(&tD, &tT);
+								current = (tD * 2880000LL) + tT;
+
+								eD = eff->eff_expire_day;
+								eT = eff->eff_expire_time;
+								expire = (eD * 2880000LL) + eT;
+			 
+								Mod->mod_vartable.SetFloat(varname, (float)(expire - current)/1000.0);
+								iPush = 1;
+							}
+						break;
+					}
+				}
+				if (!(*NWN_VirtualMachine)->StackPushInteger(iPush)) Ret = -638;
+			}
+			else {
+				Ret = -639;
+			}
+			return Ret;
+		}
+	}
+	return -1;
+}
+
+int CNWNXFuncs::ItemPropertyCustom(void *CVirtComm, int a1) {
+	int result = -1;
+	if (a1 == 657) {
+		CExoString varname = CExoString("NWNX_FUNCS_IPRP");
+		char *mod = (char*)((*NWN_AppManager)->app_server->srv_internal)->GetModule();
+		CNWSModule *Mod = ((CNWSModule*)(mod+=0x1C));
+		CExoString *Params = NULL;
+		Params = Mod->mod_vartable.GetString(varname);
+		if (Params && Params->len > 0) {
+			int Type=0, SubType=0, CostValue=0, ParamValue=0;
+			if (sscanf(Params->text, "%d %d %d %d", &Type, &SubType, &CostValue, &ParamValue) == 4) {
+				CGameEffect *e = (CGameEffect*)malloc(0x90);
+				e->ctor(1);
+				e->SetNumIntegersInitializeToNegativeOne(9);
+				e->SetCreator(((CVirtualMachineCommands*)CVirtComm)->OBJ_SELF);
+				e->eff_type = 91;
+				e->eff_dursubtype &= 0xFFA | 2;
+
+				e->eff_integers[0] = Type;
+				e->eff_integers[1] = SubType;
+				e->eff_integers[2] = a1;
+				e->eff_integers[3] = CostValue;
+				e->eff_integers[5] = ParamValue;
+
+				e->eff_integers[7] = 100;
+				e->eff_integers[8] = 1;
+
+				if ((*NWN_VirtualMachine)->StackPushEngineStructure(4, e)) {
+					if (e) {
+						e->dtor();
+						free(e);
+					}
+					result = 0;
+				}
+				else result = -638;
+			}
+		}
+	}
+	return result;
+}
