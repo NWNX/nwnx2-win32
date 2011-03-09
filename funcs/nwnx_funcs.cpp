@@ -121,7 +121,7 @@ BOOL CNWNXFuncs::OnCreate(const char* LogDir) {
 	nSkill = iniFile.ReadInteger("FUNCS", "Number_of_Skills", 28);
 	bHookCreateGeometry = iniFile.ReadInteger("FUNCS", "HOOK_CustomTrapGeometry", 0);
 	bOverrideMaximumDexMod = iniFile.ReadInteger("FUNCS", "HOOK_OverrideMaximumDexMod", 0);
-	if ((bHookRemovePCFromWorld = iniFile.ReadInteger("FUNCS", "HOOK_HookRemovePCFromWorld", 0))) {
+	if ((bHookRemovePCFromWorld = iniFile.ReadInteger("FUNCS", "HOOK_OnPlayerLeaving", 0))) {
 		iniFile.ReadString("FUNCS", "OnPlayerLeavingScript", OnPlayerLeavingScript, 16, "onplayerleaving");
 	}
 

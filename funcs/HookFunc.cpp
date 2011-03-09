@@ -160,7 +160,7 @@ signed int __fastcall CHookFunctions::CNWSCreatureStats__GetEffectImmunityHOOK(C
 }
 
 int __fastcall CHookFunctions::CServerExoAppInternal__RemovePCFromWorldHOOK(CServerExoAppInternal *pTHIS, void *pVOID, CNWSPlayer_s *a2) {
-	_log(3, "CServerExoAppInternal__RemovePCFromWorldHOOK\n");
+	_log(3, "o CServerExoAppInternal__RemovePCFromWorldHOOK running\n");
 	(*NWN_VirtualMachine)->Runscript(&CExoString(NWNFuncs.OnPlayerLeavingScript), a2->obj_id);
 	return CServerExoAppInternal__RemovePCFromWorldNEXT(pTHIS, NULL, a2);
 }
@@ -196,9 +196,11 @@ void CHookFunctions::HookFunctions() {
 		_log(0, "* CNWSCreatureStats__GetEffectImmunity hooked\n");
 	else _log(0, "X CNWSCreatureStats__GetEffectImmunity hook failed\n");
 
-	if (HookCode((PVOID)CServerExoAppInternal__RemovePCFromWorldORG, CServerExoAppInternal__RemovePCFromWorldHOOK, (PVOID*)&CServerExoAppInternal__RemovePCFromWorldNEXT))
-		_log(0, "* CServerExoAppInternal__RemovePCFromWorld hooked\n");
-	else _log(0, "X CServerExoAppInternal__RemovePCFromWorld hook failed\n");
+	if (NWNFuncs.bHookRemovePCFromWorld) {
+		if (HookCode((PVOID)CServerExoAppInternal__RemovePCFromWorldORG, CServerExoAppInternal__RemovePCFromWorldHOOK, (PVOID*)&CServerExoAppInternal__RemovePCFromWorldNEXT))
+			_log(0, "* CServerExoAppInternal__RemovePCFromWorld hooked; script to run: %s.nss\n", NWNFuncs.OnPlayerLeavingScript);
+		else _log(0, "X CServerExoAppInternal__RemovePCFromWorld hook failed\n");
+	}
 
 }
 
