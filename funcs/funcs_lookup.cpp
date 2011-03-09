@@ -2,6 +2,8 @@
 #include "nwnx_funcs.h"
 #include <hash_map>
 
+#define _log(a,b,...) if(a<=debugLevel)LOG(b,__VA_ARGS__)
+
 void CNWNXFuncs::CreateFunctionLookup() {
 	_log(1, "* CreateLookupTable\n");
 	int i=0;
@@ -125,13 +127,21 @@ void CNWNXFuncs::CreateFunctionLookup() {
 	FunctionLookup["TIMEBARSTART"] =                      i = 117;  pFunc[i] = &CNWNXFuncs::TimebarStart;
 	FunctionLookup["TIMEBARSTOP"] =                       i = 118;  pFunc[i] = &CNWNXFuncs::TimebarStop;
 	FunctionLookup["SETAGE"] =                            i = 119;  pFunc[i] = &CNWNXFuncs::SetAge;
-	FunctionLookup["MODIFYITEM"] =                        i = 120;  pFunc[i] = &CNWNXFuncs::ModifyItem;
-	FunctionLookup["CLEARTURDLIST"] =                     i = 121;  pFunc[i] = &CNWNXFuncs::ClearTURDList;
-	FunctionLookup["POSSESSCREATURE"] =                   i = 122;  pFunc[i] = &CNWNXFuncs::PossessCreature;
-	FunctionLookup["SETCLASSBYLEVEL"] =                   i = 123;  pFunc[i] = &CNWNXFuncs::SetClassByLevel;
-	FunctionLookup["REPLACECLASS"] =                      i = 125;  pFunc[i] = &CNWNXFuncs::ReplaceClass;
-	FunctionLookup["UPDATECHARSHEET"] =                   i = 126;  pFunc[i] = &CNWNXFuncs::UpdateCharSheet;
-	FunctionLookup["SUMMONASSOCIATE"] =                   i = 127;  pFunc[i] = &CNWNXFuncs::SummonAssociate;
-	FunctionLookup["GETEFFECTDURATIONSUBTYPE"] =          i = 128;  pFunc[i] = &CNWNXFuncs::GetEffectDurationSubType;
-	FunctionLookup["BOOTPCWITHMESSAGE"] =                 i = 129;  pFunc[i] = &CNWNXFuncs::BootPCWithMessage;
+	FunctionLookup["CLEARTURDLIST"] =                     i = 120;  pFunc[i] = &CNWNXFuncs::ClearTURDList;
+	FunctionLookup["POSSESSCREATURE"] =                   i = 121;  pFunc[i] = &CNWNXFuncs::PossessCreature;
+	FunctionLookup["SETCLASSBYLEVEL"] =                   i = 122;  pFunc[i] = &CNWNXFuncs::SetClassByLevel;
+	FunctionLookup["REPLACECLASS"] =                      i = 123;  pFunc[i] = &CNWNXFuncs::ReplaceClass;
+	FunctionLookup["UPDATECHARSHEET"] =                   i = 124;  pFunc[i] = &CNWNXFuncs::UpdateCharSheet;
+	FunctionLookup["SUMMONASSOCIATE"] =                   i = 125;  pFunc[i] = &CNWNXFuncs::SummonAssociate;
+	FunctionLookup["GETEFFECTDURATIONSUBTYPE"] =          i = 126;  pFunc[i] = &CNWNXFuncs::GetEffectDurationSubType;
+	FunctionLookup["BOOTPCWITHMESSAGE"] =                 i = 127;  pFunc[i] = &CNWNXFuncs::BootPCWithMessage;
+	FunctionLookup["SET_VISIBILITY_OVERRIDE"] =           i = 128;  pFunc[i] = &CNWNXFuncs::SetVisibilityOverride;
+	FunctionLookup["SET_VISIBILITY"] =					  i = 129;  pFunc[i] = &CNWNXFuncs::SetVisibility;
+	FunctionLookup["GET_VISIBILITY_OVERRIDE"] =           i = 130;  pFunc[i] = &CNWNXFuncs::GetVisibilityOverride;
+	FunctionLookup["GET_VISIBILITY"] =					  i = 131;  pFunc[i] = &CNWNXFuncs::GetVisibility;
+	FunctionLookup["GETREGENERATION"] =					  i = 132;  pFunc[i] = &CNWNXFuncs::GetRegeneration;
+
+	FunctionLookup["GETAUTOREMOVEKEY"] =				  i = 133;  pFunc[i] = &CNWNXFuncs::GetAutoRemoveKey;
+	FunctionLookup["SETAUTOREMOVEKEY"] =				  i = 134;  pFunc[i] = &CNWNXFuncs::SetAutoRemoveKey;
+
 }

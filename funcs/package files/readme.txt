@@ -15,7 +15,11 @@ INSTALLATION INSTRUCTIONS
 		;Set this to 1 to use the CustomTrapGeometry functions
 		HOOK_CustomTrapGeometry=1
 
-
+		;Hook for a new OnPlayerLeave event which runs before OnClientLeave
+		;Makes it possible to retrieve information about the player object as usual (GetName, GetArea, etc)
+		;In the onplayerleaving script, OBJECT_SELF is the player object about to leave
+		HOOK_OnPlayerLeaving=1
+		OnPlayerLeavingScript=onplayerleaving
 
 
 Dll compiled with Visual C++ 2008 Express

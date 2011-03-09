@@ -8,15 +8,14 @@
 #include <list>
 #include <string>
 #include <hash_map>
-
-#define _log(a,b,...) if(a<=debugLevel)LOG(b,__VA_ARGS__)
+#include "CVisibility.h"
 
 #define PLAYER_ID_ALL_PLAYERS						0xFFFFFFF7
 
-#define FUNCTION_COUNT 130
+#define FUNCTION_COUNT 135
 
 class CNWNXFuncs : public CNWNXBase {
-public:
+public: // main plugin functions
 	CNWNXFuncs();
 	virtual ~CNWNXFuncs();
 	
@@ -24,6 +23,64 @@ public:
 	BOOL OnCreate(const char *LogDir);
 	BOOL OnRelease();
 
+	void LOG(const char *pcMsg, ...);
+
+	CNWSObject *CustomEffectObject;
+private:
+
+	unsigned long OnRequestObject (char *gameObject, char *Request);
+	void WriteLogHeader(int debug);
+	void SetParameters();
+
+	int (__thiscall CNWNXFuncs::*pFunc[FUNCTION_COUNT])();
+	stdext::hash_map<std::string, int> FunctionLookup;
+	void CreateFunctionLookup();
+
+	CHookFunctions *FunctionHooks;
+	unsigned long gameID;
+	char *Params;
+	char *oObject;
+	signed long int P1, P2, P3, P4;
+
+
+private: //internal functions helper/utility declarations
+	nwn_objid_t getFirstNextVarObj;
+	int getFirstNextVarIndex;
+
+	int getFirstNextAreaIndex;
+
+	// effects stuff
+	std::vector<uint64_t>EffectRemovalIDs;
+	CGameEffect *getFirstNextEffect;
+	nwn_objid_t getFirstNextEffectObj;
+	int getFirstNextEffectScriptIndex;
+	bool getFirstNextEffectScriptEffect;
+	CNWSObject *getFirstNextEffectObject;
+
+	CNWSScriptVarTable *GetVarTable(); //get the scriptvar table for a given object type
+	CNWSStats_Level *nwn_GetLevelStats (const CNWSCreatureStats *stats, int level);
+	BOOL GetIsCreature();
+	BOOL GetIsItem();
+	BOOL ValidEffectObject();
+	char *GetScriptVarType(int i);
+
+	void nwn_SetWorldTime(uint32_t wtDate, uint32_t wtTime, int P3=0);
+	void nwn_UpdateQuickBar(CGenericObject* obj);
+	CNWSModule *nwn_GetModule(bool addOffset=true);
+
+	int GetEventScriptInfo(int &ScriptNumber, std::string &ScriptName, int Max);
+
+public:
+	//ini file values
+	int debugLevel;
+	bool bHookCreateGeometry;
+	bool bOverrideMaximumDexMod;
+	bool bHookRemovePCFromWorld;
+	char OnPlayerLeavingScript[17];
+
+	uint8_t nSkill;
+
+public: //scripts functions
 	nwn_objid_t StringToObject(const char * soID);
 
 	//***************  Effects  *******************//
@@ -62,9 +119,7 @@ public:
 	int SetEffectCreatorByEffectID(int bRecurse = 1); //because of Haste/Slow this is called recursivley, we stop if bRecurse is 0 as a safty measure, although it should never happen
 	int SetEffectSpellIDByEffectID(int bRecurse = 1);
 
-
-
-	//***********  Local Vars  **************//
+	//*** Local Vars ***//
 	int PrintLocalVars();
 	int GetLocalVariableCount();
 	int GetLocalVariableByPosition(int iIndex = -1);
@@ -72,13 +127,13 @@ public:
 	int GetNextLocalVariable();
 	int GetHasLocalVariable();
 
-	// Area
+	//*** Area ***//
 	int GetAreaCount();
 	uint32_t GetAreaByPosition(int iPos=-1);
 	uint32_t GetFirstArea();
 	uint32_t GetNextArea();
 
-	// creature stats
+	//*** Creature Stats ***/
 	int SetGold();
 	int SetAbilityScore();
 	int GetBABOverride();
@@ -116,15 +171,6 @@ public:
 
 	int GetDamageImmunity();
 
-	//Feats
-	int AddFeat();
-	int AddFeatAtLevel();
-	int RemoveFeat();
-	int GetFeatKnown();
-	int GetAllKnownFeats();
-	int ClearFeatList();
-	int GetFeatCount();
-
 	int ZeroAllSkills();
 	int SetDomain();
 	int GetDomain();
@@ -136,22 +182,23 @@ public:
 	int GetSpellsGainedAtLevel();
 	int GetStatsGainedAtLevel();
 
-	int SetTag();
-	int SetEvent();
-	int GetEvent();
-	int SetConversation();
-	int GetConversation();
-	int SetBodyBag();
-	int GetBodyBag();
-	int GetFactionID();
-	int SetFactionID();
-	int GetSoundSetID();
-	int SetSoundSetID();
-
 	int SetCreatureSize();
 	int GetEquippedWeight();
 
-	//spells
+	int SetGender();
+
+	int GetRegeneration();
+
+	//*** Feats ***//
+	int AddFeat();
+	int AddFeatAtLevel();
+	int RemoveFeat();
+	int GetFeatKnown();
+	int GetAllKnownFeats();
+	int ClearFeatList();
+	int GetFeatCount();
+
+	//*** Spells ***//
 	int AddKnownSpell();
 	int RemoveKnownSpell();
 	int RemoveAllSpells();
@@ -169,16 +216,28 @@ public:
 	int SetMaxSpellSlots();
 	int GetKnownsSpell();
 
+	//*** Items ***//
 	int SetItemWeight();
 	int SetItemValue();
 	int SetItemCharges();
 	int GetItemValue();
 
+	//*** Misc stuff ***/
+	int SetTag();
+	int SetEvent();
+	int GetEvent();
+	int SetConversation();
+	int GetConversation();
+	int SetBodyBag();
+	int GetBodyBag();
+	int GetFactionID();
+	int SetFactionID();
+	int GetSoundSetID();
+	int SetSoundSetID();
+
 	int GetQuickSlot();
 	int SetQuickSlot();
 	int UpdateQuickbar();
-
-	int SetGender();
 
 	int GetWorldTime();
 
@@ -196,12 +255,8 @@ public:
 	int AbsoluteCoordinates;
 	std::list<float> Floats;
 	void NWN_CreateGeometry(CNWSTrigger *Trigger, CScriptLocation *Loc, CNWSArea *Area);
-	bool bHookCreateGeometry;
-	
-	bool bOverrideMaximumDexMod;
 
 	int SetDebugLevel();
-	int debugLevel;
 
 	int TimebarStart();
 	int TimebarStop();
@@ -214,82 +269,22 @@ public:
 
 	int SummonAssociate();
 
-	void LOG(const char *pcMsg, ...);
-
-	CNWSObject *CustomEffectObject;
+	int PrintOffsets();
+	void PrintIPs();
 
 	int BootPCWithMessage();
 
 	int GetItemPropertyInformation();
 	int ItemPropertyCustom(void *CVirtComm, int a1);
 
-private:
-	struct effect_id_type_s {
-		uint64_t id;
-		uint8_t type;
-	}EffIdType;
+	CVisibility Visibility;
+	int SetVisibilityOverride();
+	int SetVisibility();
+	int GetVisibilityOverride();
+	int GetVisibility();
 
-	unsigned long OnRequestObject (char *gameObject, char *Request);
-	void WriteLogHeader(int debug);
-	void SetParameters();
-
-	int PrintOffsets();
-	void PrintIPs();
-
-	CNWSScriptVarTable *GetVarTable(); //get the scriptvar table for a given object type
-	CNWSStats_Level *nwn_GetLevelStats (const CNWSCreatureStats *stats, int level);
-	BOOL GetIsCreature();
-	BOOL GetIsItem();
-	BOOL ValidEffectObject();
-	char *GetScriptVarType(int i);
-
-	unsigned long gameID;
-	char *Params;
-	char *oObject;
-
-	uint8_t nSkill;
-
-	signed long int P1, P2, P3, P4;
-
-	nwn_objid_t getFirstNextVarObj;
-	int getFirstNextVarIndex;
-
-	int getFirstNextAreaIndex;
-
-	// effects stuff
-	std::vector<uint64_t>EffectRemovalIDs;
-	CGameEffect *getFirstNextEffect;
-	nwn_objid_t getFirstNextEffectObj;
-	int getFirstNextEffectScriptIndex;
-	bool getFirstNextEffectScriptEffect;
-	CNWSObject *getFirstNextEffectObject;
-
-	CGameEffect *GetNthEffect(const CNWSObject *obj, long P1, long P2);
-
-// internal functions helper declarations
-
-	void nwn_SetWorldTime(uint32_t wtDate, uint32_t wtTime, int P3=0);
-	void nwn_UpdateQuickBar(CGenericObject* obj);
-	CNWSModule *nwn_GetModule(bool addOffset=true);
-	void nwn_JumpCreatureToLimbo(CNWSCreature *cre);
-
-	void nwn_UpdateObject(nwn_objid_t plID, nwn_objid_t objID, CNWSObject* obj);
-
-	void nwn_SendServerToPlayerGameObjUpdate(CGenericObject *obj);
-
-	void RunTestFunc(CGenericObject* obj);
-
-	void CreateFunctionLookup();
-	int (__thiscall CNWNXFuncs::*pFunc[FUNCTION_COUNT])();
-	stdext::hash_map<std::string, int> FunctionLookup;
-
-	int GetEventScriptInfo(int &ScriptNumber, std::string &ScriptName, int Max);
-
-	int ModifyItem();
-
-public:
-	int SendServerToPlayerChatMessage(uint8_t Channel, nwn_objid_t Sender, char *Msg, int Msg_len, uint32_t Receiver);
-
+	int GetAutoRemoveKey();
+	int SetAutoRemoveKey();
 };
 
 #endif;

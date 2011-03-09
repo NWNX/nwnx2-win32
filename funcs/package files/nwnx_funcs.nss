@@ -159,6 +159,10 @@ const int TIMINGBAR_LABEL_UNLOCK = 7;
 const int TIMINGBAR_LABEL_LOCK = 8;
 const int TIMINGBAR_LABEL_NONE = 9;
 
+const int REGENERATION_ALL = 1;
+const int REGENERATION_ITEM = 2;
+const int REGENERATION_EFFECT = 3;
+
 struct localvar_s {
 	int iType;
 	string sName;
@@ -199,11 +203,6 @@ struct quickslot_s {
 	// The following 2 strings are used with Macros (iType = 18) and DM Creator objects (iType = 11-17)
 	string sS1;	//the label of the quickslot for Macros and DM Creator objects
 	string sS2; //for Macros this is the command, for DM Creator objects it's the ResRef of the object to be spawned
-};
-
-struct immunity_override_s {
-	int Override1;
-	int Override_Death;
 };
 
 // Returns the object given by soID 
@@ -798,19 +797,6 @@ void NWNXFuncs_ReplaceClass(object oCreature, int iOldClass, int iNewClass);
 // of sync (can happen with NWNXFuncs_ReplaceClass)
 void NWNXFuncs_UpdateCharacterSheet(object oPC);
 
-
-// Helper function to add overrides for specific immunities
-// Assigning "OR-able" constants to the first 31 immunity types is no problem,
-// the last one (DEATH) would be 2^32 which a script INT cannot hold (max is 2^(32-1)) and
-// it also doesn't simply overflow in the negatives.
-struct immunity_override_s AddImmunityOverride(struct immunity_override_s Overrides, int iImmunity);
-
-// Sets immunity overrides for a creature
-void SetImmunityOverride(object oCreature, struct immunity_override_s Override);
-
-// Removes immunity overrides for a creature
-void RemoveImmunityOverride(object oCreature) ;
-
 // Returns a custom effect as defined by the gameeffect_s struct (see nwnx_funcs_effst.nss and nwnx_funcs_eff.nss)
 effect NWNXFuncs_EffectCustomEffect(struct gameeffect_s e);
 
@@ -833,6 +819,54 @@ void NWNXFuncs_SetItemPropertySpellId(itemproperty ip, int iSpellID);
 // Create a Custom ItemProperty
 // Can be used to apply itemproperties which are defined via 2DAs (itempropdef.2da, iprp_*.2da, etc) but do not have scripting functions
 itemproperty NWNXFuncs_ItemPropertyCustom(int iType, int iSubType, int iCostTableValue, int iParam1Value);
+
+
+//**** Original work by virusman ****
+
+const int VISIBILITY_TYPE_DEFAULT = 0;
+const int VISIBILITY_TYPE_VISIBLE = 1;
+const int VISIBILITY_TYPE_INVISIBLE = 2;
+
+// Sets the visibility of oObject for everybody
+void NWNXFuncs_SetVisibilityOverride(object oObject, int nVisibilityType);
+
+// Sets whether oObject2 can see oObject1
+void NWNXFuncs_SetVisibility(object oObject1, object oObject2, int nVisibility);
+
+// Gets the visibility of oObject
+int NWNXFuncs_GetVisibilityOverride(object oObject);
+
+// Gets whether oObject2 can see oObject1
+int NWNXFuncs_GetVisibility(object oObject1, object oObject2);
+
+//**************************************
+
+// Gets the amount of regeneration a creature currently possess
+int NWNXFuncs_GetRegeneration(object oCreature, int nType=REGENERATION_ALL);
+
+// Helper function to add overrides for specific immunities
+// The override is simply a bitfield (integer)
+// the last one (DEATH) would be 2^32 which a script INT cannot hold (max is 2^(32-1)) but Death has to be explicitly checked for anyways
+// Overrides |= 2 << (iImmunity - 1)
+int NWNXFuncs_ImmunityOverride(int Overrides, int iImmunity);
+
+// Sets immunity overrides for a creature
+void NWNXFuncs_SetImmunityOverride(object oCreature, int Override);
+
+// Removes all immunity overrides for a creature
+void NWNXFuncs_RemoveAllImmunityOverrides(object oCreature);
+
+// Directly adds a single immunity override to a creature
+void NWNXFuncs_AddImmunityOverride(object oCreature, int iImmunity);
+
+// Remove a single immunity override from a creature
+void NWNXFuncs_RemoveImmunityOverride(object oCreature, int iImmunity);
+
+//Get the AutoRemoveKey flag from a door or placeable object
+int NWNXFuncs_GetAutoRemoveKeyFlag(object oObject);
+
+//Set the AutoRemoveKey flag from a door or placeable object
+void NWNXFuncs_SetAutoRemoveKeyFlag(object oObject, int iFlag);
 
 //*******************************************************************************************************************
 
@@ -893,7 +927,7 @@ void NWNXFuncs_SetGold(object oCreature, int iGold) {
 	DeleteLocalString(oCreature, "NWNX!FUNCS!SETGOLD");
 }
 
-void NWNXFuncs_SetAbilityScore(object oCreature, int iAbility, int iValue, int bAdjustCurrentHitPoints) {
+void NWNXFuncs_SetAbilityScore(object oCreature, int iAbility, int iValue, int bAdjustCurrentHitPoints = 1) {
 	SetLocalString(oCreature, "NWNX!FUNCS!SETABILITYSCORE", IntToString(iAbility)+" "+IntToString(iValue)+ " 0"+ " "+IntToString(bAdjustCurrentHitPoints));
 	DeleteLocalString(oCreature, "NWNX!FUNCS!SETABILITYSCORE");
 }
@@ -1740,26 +1774,6 @@ void NWNXFuncs_UpdateCharacterSheet(object oPC) {
 	DeleteLocalString(oPC, "NWNX!FUNCS!UPDATECHARSHEET");
 }
 
-struct immunity_override_s AddImmunityOverride(struct immunity_override_s Overrides, int iImmunity) {
-	if (iImmunity < 32) {
-		Overrides.Override1 |= (1 << (iImmunity-1));
-	}
-	else {
-		Overrides.Override_Death = 1;
-	}
-	return Overrides;
-}
-
-void SetImmunityOverride(object oCreature, struct immunity_override_s Override) {
-	SetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE1", Override.Override1);
-	SetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE2", Override.Override_Death);
-}
-
-void RemoveImmunityOverride(object oCreature) {
-	DeleteLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE1");
-	DeleteLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE2");
-}
-
 /*
 struct gameeffect_s {
 	int Type;
@@ -1856,8 +1870,79 @@ void NWNXFuncs_SetItemPropertySpellId(itemproperty ip, int iSpellID) {
 }
 
 itemproperty NWNXFuncs_ItemPropertyCustom(int iType, int iSubType, int iCostTableValue, int iParam1Value) {
-	SetLocalString(GetModule(), "NWNX_FUNCS_IPRP", IntToString(iType)+ " " +IntToString(iSubType)+ " " +IntToString(iCostTableValue)+ " " +IntToString(iParam1Value)); 
+	object oModule = GetModule();
+	SetLocalString(oModule, "NWNX_FUNCS_IPRP", IntToString(iType)+ " " +IntToString(iSubType)+ " " +IntToString(iCostTableValue)+ " " +IntToString(iParam1Value)); 
 	itemproperty ip = ItemPropertyNoDamage();
-	DeleteLocalString(GetModule(), "NWNX_FUNCS_IPRP");
+	DeleteLocalString(oModule, "NWNX_FUNCS_IPRP");
 	return ip;
+}
+
+void NWNXFuncs_SetVisibilityOverride(object oObject, int nVisibilityType) {
+    SetLocalString(oObject, "NWNX!FUNCS!SET_VISIBILITY_OVERRIDE", IntToString(nVisibilityType));
+}
+
+void NWNXFuncs_SetVisibility(object oObject1, object oObject2, int nVisibility) {
+    SetLocalString(oObject1, "NWNX!FUNCS!SET_VISIBILITY", ObjectToString(oObject2)+" "+IntToString(nVisibility));
+}
+
+int NWNXFuncs_GetVisibilityOverride(object oObject) {
+    SetLocalString(oObject, "NWNX!FUNCS!GET_VISIBILITY_OVERRIDE", "'-");
+    int iRet = StringToInt(GetLocalString(oObject, "NWNX!FUNCS!GET_VISIBILITY_OVERRIDE"));
+    DeleteLocalString(oObject, "NWNX!FUNCS!GET_VISIBILITY_OVERRIDE");
+    return iRet;
+}
+
+int NWNXFuncs_GetVisibility(object oObject1, object oObject2) {
+    SetLocalString(oObject1, "NWNX!FUNCS!GET_VISIBILITY", ObjectToString(oObject2));
+    int iRet = StringToInt(GetLocalString(oObject1, "NWNX!FUNCS!GET_VISIBILITY"));
+    DeleteLocalString(oObject1, "NWNX!FUNCS!GET_VISIBILITY");
+    return iRet;
+}
+
+int NWNXFuncs_GetRegeneration(object oCreature, int nType=REGENERATION_ALL) {
+	SetLocalString(oCreature, "NWNX!FUNCS!GETREGENERATION", IntToString(nType));
+	int iRet = StringToInt(GetLocalString(oCreature, "NWNX!FUNCS!GETREGENERATION"));
+	DeleteLocalString(oCreature, "NWNX!FUNCS!GETREGENERATION");
+	return iRet;
+}
+
+int NWNXFuncs_ImmunityOverride(int Overrides, int iImmunity) {
+	if (iImmunity == 0 ) return Overrides | 1;
+	return Overrides | (2 << (iImmunity -1));
+}
+
+void NWNXFuncs_SetImmunityOverride(object oCreature, int Override) {
+	SetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE", Override);
+}
+
+void NWNXFuncs_RemoveAllImmunityOverrides(object oCreature) {
+	DeleteLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE");
+}
+
+void NWNXFuncs_AddImmunityOverride(object oCreature, int iImmunity) {
+	int Override = GetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE");
+	if (iImmunity == 0) Override |= 1;
+	else Override |= 2 << (iImmunity-1);
+	SetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE", Override);
+}
+
+/* For some reason my prc compiler doesn't like the NOT operator
+void NWNXFuncs_RemoveImmunityOverride(object oCreature, int iImmunity) {
+	int Override = GetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE");
+	if (iImmunity == 0) Override = Override ~ 1;
+	else Override = Override ~ (2 << (iImmunity-1));
+	SetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE", Override);
+}
+*/
+
+int NWNXFuncs_GetAutoRemoveKeyFlag(object oObject) {
+	SetLocalString(oObject, "NWNX!FUNCS!GETAUTOREMOVEKEY", "-");
+	int iRet = StringToInt(GetLocalString(oObject, "NWNX!FUNCS!GETAUTOREMOVEKEY"));
+	DeleteLocalString(oObject, "NWNX!FUNCS!GETAUTOREMOVEKEY");
+	return iRet;
+}
+
+void NWNXFuncs_SetAutoRemoveKeyFlag(object oObject, int iFlag) {
+	SetLocalString(oObject, "NWNX!FUNCS!SETAUTOREMOVEKEY", IntToString(iFlag));
+	DeleteLocalString(oObject, "NWNX!FUNCS!SETAUTOREMOVEKEY");
 }

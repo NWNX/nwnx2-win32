@@ -3,6 +3,9 @@
 #include <string>
 #include <list>
 #include <math.h>
+#include "nwn_const.h"
+
+#define _log(a,b,...) if(a<=debugLevel)LOG(b,__VA_ARGS__)
 
 int CNWNXFuncs::PrintOffsets() {
 	CGenericObject *obj = (CGenericObject*)oObject;
@@ -326,9 +329,9 @@ int CNWNXFuncs::PrintEffects() {
 	CGameEffect *eff = NULL;
 	obj = (CNWSObject*)oObject;
 
-	if (!ValidEffectObject()) {
+	if (0 && !ValidEffectObject()) {
 		sprintf(Params, "-1");
-		_log(2, "o Error: SetLAstEffectSpellID used on non-effect object.\n");
+		_log(2, "o Error: PrintEffects used on non-effect object.\n");
 		return 0;
 	}
 
@@ -2701,7 +2704,13 @@ int CNWNXFuncs::JumpToLimbo() {
 		return 0;
 	}
 
-	nwn_JumpCreatureToLimbo((CNWSCreature*)oObject);
+	CNWSModule *mod = ((*NWN_AppManager)->app_server->srv_internal)->GetModule(); 
+	CNWSCreature *cre = (CNWSCreature*)oObject;
+
+	if (mod != NULL && cre != NULL) {
+		cre->RemoveFromArea(0);
+		mod->AddObjectToLimbo(cre->obj.obj_generic.obj_id);
+	}
 	return 1;
 }
 
@@ -3325,14 +3334,6 @@ int CNWNXFuncs::SetAge() {
 	return 1;
 }
 
-int CNWNXFuncs::ModifyItem() {
-	CNWSItem *Item = ((*NWN_AppManager)->app_server->srv_internal)->GetItemByGameObjectID(((CGenericObject*)oObject)->obj_id);
-	if (Item) {
-		Item->ModelPart1 = 1;
-	}
-	return 1;
-}
-
 int CNWNXFuncs::ClearTURDList() {
 	CNWSModule *Mod = ((*NWN_AppManager)->app_server->srv_internal)->GetModule();
 	
@@ -3494,6 +3495,7 @@ int CNWNXFuncs::GetItemPropertyInformation() {
 				int iPush = -1;
 				if (temp != NULL) {
 					eff = (CGameEffect*)temp;
+					_log(3, "temp %08X|teff: %08X\n", temp, eff);
 					uint32_t tD, tT, eD, eT;
 					int64_t current, expire;
 					float fRemaining = 0.0;
@@ -3520,9 +3522,21 @@ int CNWNXFuncs::GetItemPropertyInformation() {
 								iPush = 1;
 							}
 						break;
+						case 7:
+							_log(3, "Set Creator\n");
+							eff->eff_creator = P2; iPush = 1;
+						break;
 					}
 				}
-				if (!(*NWN_VirtualMachine)->StackPushInteger(iPush)) Ret = -638;
+				if ((*NWN_VirtualMachine)->StackPushInteger(iPush)) {
+					if (eff) {
+						eff->dtor();
+						free (eff);
+					}
+				}
+				else {
+					Ret = -638;
+				}
 			}
 			else {
 				Ret = -639;
@@ -3559,7 +3573,6 @@ int CNWNXFuncs::ItemPropertyCustom(void *CVirtComm, int a1) {
 
 				e->eff_integers[7] = 100;
 				e->eff_integers[8] = 1;
-
 				if ((*NWN_VirtualMachine)->StackPushEngineStructure(4, e)) {
 					if (e) {
 						e->dtor();
@@ -3572,4 +3585,90 @@ int CNWNXFuncs::ItemPropertyCustom(void *CVirtComm, int a1) {
 		}
 	}
 	return result;
+}
+
+int CNWNXFuncs::SetVisibilityOverride() {
+	Visibility.SetVisibilityOverride(((CNWSObject*)oObject)->obj_generic.obj_id, (OverrideType) atoi(Params));
+	return 1;
+}
+
+int CNWNXFuncs::SetVisibility() {
+	nwn_objid_t oObject2;
+	int nValue;
+	if(sscanf(Params, "%x %d", &oObject2, &nValue)<2) {
+		_log(0, "o sscanf error\n");
+		return 0;
+	}
+	Visibility.SetVisibility(((CNWSObject*)oObject)->obj_generic.obj_id, oObject2, nValue);
+	return 1;
+}
+
+int CNWNXFuncs::GetVisibilityOverride() {
+	sprintf(Params, "%d", Visibility.GetVisibilityOverride(((CNWSObject*)oObject)->obj_generic.obj_id));
+	return 1;
+}
+
+int CNWNXFuncs::GetVisibility() {
+	nwn_objid_t oObject2;
+	if(sscanf(Params, "%x", &oObject2)<1) {
+		sprintf(Params, "0");
+		_log(0, "o sscanf error\n");
+		return 0;
+	}
+	sprintf(Params, "%d", Visibility.GetVisibility(((CNWSObject*)oObject)->obj_generic.obj_id, oObject2));
+	return 1;
+}
+
+int CNWNXFuncs::GetRegeneration() {
+	CNWSObject *obj = (CNWSObject*)oObject;
+	int regen=0;
+	int eff_len = obj->obj_effects_len;
+	if (eff_len > 0) {
+		int i=0;
+		int DurType=0;
+		CGameEffect *eff;
+		while (i<eff_len) {
+			eff = obj->obj_effects[i];
+			if (eff->eff_type > 7) break;
+
+			DurType = eff->eff_dursubtype & 7;
+			if (eff->eff_type == 7 && (
+			P1 == 1 ||
+			(P1 == 2 && DurType >= 3) ||
+			(P1 == 3 && DurType < 3))) {
+				regen += eff->eff_integers[0];
+			}
+			i++;
+		}
+	}
+	sprintf(Params, "%d", regen);
+	return 1;
+}
+
+int CNWNXFuncs::GetAutoRemoveKey() {
+	CNWSObject *obj = (CNWSObject*)oObject;
+	if (obj->obj_generic.obj_type2 = OBJECT_TYPE2_DOOR) {
+		sprintf (Params, "%d", ((CNWSDoor*)obj)->AutoRemoveKey);
+		return 1;
+	}
+/*	else if (obj->obj_generic.obj_type2 = OBJECT_TYPE2_PLACEABLE) {
+		sprintf (Params, "%d", ((CNWSPlaceable*)obj)->plc_auto_remove_key);
+		return 1;
+	}*/
+	else sprintf(Params, "0");
+	return 1;
+}
+
+int CNWNXFuncs::SetAutoRemoveKey() {
+	CNWSObject *obj = (CNWSObject*)oObject;
+	if (obj->obj_generic.obj_type2 = OBJECT_TYPE2_DOOR) {
+		((CNWSDoor*)obj)->AutoRemoveKey = (unsigned char)P1;
+		return 1;
+	}
+/*	else if (obj->obj_generic.obj_type2 = OBJECT_TYPE2_PLACEABLE) {
+		((CNWSPlaceable*)obj)->plc_auto_remove_key = (unsigned char)P1;
+		return 1;
+	}*/
+	else sprintf(Params, "-1");
+	return 1;
 }

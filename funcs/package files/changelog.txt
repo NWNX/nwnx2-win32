@@ -344,10 +344,9 @@ v 0.0.85
 	Fixed:
 		EVENT_CREATURE_SPAWN and EVENT_CREATURE_RESTED constants swapped in nwnx_funcs.nss
 
-v 0.0.85
+v 0.0.86
 	Added:
 		NWNXFuncs_GetEffectSubType
-		NWNXFuncs_BootPCWithMessage
 		NWNXFuncs_GetItemPropertyDuration
 		NWNXFuncs_GetItemPropertyDurationRemaining
 		NWNXFuncs_GetItemPropertyInteger
@@ -355,3 +354,33 @@ v 0.0.85
 		NWNXFuncs_SetItemPropertyInteger
 		NWNXFuncs_SetItemPropertySpellId
 		NWNXFuncs_ItemPropertyCustom
+
+	Copied from nwnx_functions and Baaleos' code
+		NWNXFuncs_BootPCWithMessage
+		
+v 0.0.87
+	Copied From Virusman's nwnx_visibility plugin for linux
+		NWNXFuncs_SetVisibilityOverride
+		NWNXFuncs_SetVisibility
+			Added
+				NWNXFuncs_GetVisibilityOverride
+				NWNXFuncs_GetVisibility
+			
+	Added:
+		NWNXFuncs_GetRegeneration
+		NWNXFuncs_ImmunityOverride
+		NWNXFuncs_SetImmunityOverride
+		NWNXFuncs_RemoveAllImmunityOverrides
+		NWNXFuncs_AddImmunityOverride
+		NWNXFuncs_RemoveImmunityOverride
+		
+	Removed some unnessecary/unused stuff leftover from when I used this plugin as a test bed
+	Restructured the class definition for more clarity
+	Remove the old Immunity override functions (didn't do anything anyways)
+	
+v 0.0.88
+	Added
+		GetAutoRemoveKeyFlag (doesn't work for placeables yet)
+		SetAutoRemoveKeyFlag (doesn't work for placeables yet)
+		Script hook for RemovePCFromWorld
+			Fires before the player actually leaves the server, which means GetName, GetArea, etc works

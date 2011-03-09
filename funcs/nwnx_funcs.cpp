@@ -6,12 +6,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define _log(a,b,...) if(a<=debugLevel)LOG(b,__VA_ARGS__)
 
 CNWNXFuncs::CNWNXFuncs() {
 	getFirstNextEffect = NULL;
 }
 
 CNWNXFuncs::~CNWNXFuncs() {
+	delete FunctionHooks;
 	OnRelease();
 }
 
@@ -113,15 +115,19 @@ BOOL CNWNXFuncs::OnCreate(const char* LogDir) {
 	sprintf (_log, "%s\\nwnx_funcs.txt", LogDir);
 	if (!CNWNXBase::OnCreate(_log))
 		return false;
+
 	CIniFile iniFile ("nwnx.ini");
 	debugLevel = iniFile.ReadInteger("FUNCS", "DebugLevel", 0);
 	nSkill = iniFile.ReadInteger("FUNCS", "Number_of_Skills", 28);
 	bHookCreateGeometry = iniFile.ReadInteger("FUNCS", "HOOK_CustomTrapGeometry", 0);
 	bOverrideMaximumDexMod = iniFile.ReadInteger("FUNCS", "HOOK_OverrideMaximumDexMod", 0);
+	if ((bHookRemovePCFromWorld = iniFile.ReadInteger("FUNCS", "HOOK_HookRemovePCFromWorld", 0))) {
+		iniFile.ReadString("FUNCS", "OnPlayerLeavingScript", OnPlayerLeavingScript, 16, "onplayerleaving");
+	}
 
 	WriteLogHeader(debugLevel);
 	CreateFunctionLookup();
-	HookFunctions();
+	FunctionHooks = new CHookFunctions(debugLevel);
 
 	AbsoluteCoordinates = 0;
 
@@ -212,36 +218,12 @@ BOOL CNWNXFuncs::GetIsItem() {
 BOOL CNWNXFuncs::ValidEffectObject() {
 	switch (((CGenericObject*)oObject)->obj_type) {
 		case OBJECT_TYPE_CREATURE:
+		case OBJECT_TYPE_ITEM:
 		case OBJECT_TYPE_PLACEABLE:
 		case OBJECT_TYPE_DOOR:
 		return 1;
 	}
 	return 0;
-}
-
-CGameEffect *CNWNXFuncs::GetNthEffect(const CNWSObject *obj, long nNth, long bExposedOnly) {
-	CGameEffect *eff = NULL;
-	if (nNth < 0) nNth = 0;
-
-	uint16_t durType, subType;
-	BOOL bIsExposed;
-	unsigned int i=0;
-	int nEffect = 0;
-	for (i=0; i< obj->obj_effects_len; i++) {
-		eff = obj->obj_effects[i];
-		if (eff != NULL) {
-			durType = eff->eff_dursubtype & 7;
-			subType = eff->eff_dursubtype & 24;
-			bIsExposed = eff->eff_is_exposed && (durType == 1 || durType == 2);
-			if ((!bExposedOnly || bIsExposed)) {
-				if (nNth == nEffect) {
-					return eff;
-				}
-				nEffect++;
-			}
-		}
-	}
-	return NULL;
 }
 
 void CNWNXFuncs::NWN_CreateGeometry(CNWSTrigger *Trigger, CScriptLocation *Loc, CNWSArea *Area) {
