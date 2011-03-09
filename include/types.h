@@ -4,6 +4,7 @@
 #include ".\nwnx_funcs_const.h"
 #include ".\CExoString.h"
 
+struct CResStruct_s;						typedef struct CResStruct_s						CResStruct;
 struct CVirtualMachineCommands_s;			typedef struct CVirtualMachineCommands_s		CVirtualMachineCommands;
 struct CNWSObjectActionNode_s;				typedef struct CNWSObjectActionNode_s			CNWSObjectActionNode;
 struct CCodeBase_s;							typedef struct CCodeBase_s						CCodeBase;
@@ -187,6 +188,7 @@ struct CEffectsStore_s; typedef struct CEffectsStore_s CEffectsStore;
 #include ".\CCodeBase.h"
 #include ".\CNWSObjectActionNode.h"
 #include ".\CVirtualMachineCommands.h"
+#include ".\CResStruct.h"
 
 #include ".\nwn_internals.h"
 

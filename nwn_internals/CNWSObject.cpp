@@ -15,6 +15,32 @@ void 			(__thiscall *CNWSObject__SetTag)(CNWSObject_s *pTHIS, CExoString sTag) =
 int 			(__thiscall *CNWSObject__GetDead)(CNWSObject_s *pTHIS) = (int (__thiscall*)(CNWSObject_s *pTHIS))0x004E59D0;
 unsigned int 	(__thiscall *CNWSObject__SetArea)(CNWSObject_s *pTHIS, CNWSArea *Area) = (unsigned int (__thiscall*)(CNWSObject_s *pTHIS, CNWSArea *Area))0x004E3F90;
 int 			(__thiscall *CNWSObject__GetMaximumDamageResistanceVsDamageFlag)(CNWSObject_s *pTHIS, uint16_t DamageType, int *EffectIndex) = (int (__thiscall*)(CNWSObject_s *pTHIS, uint16_t DamageType, int *EffectIndex))0x004E1920;
+void 			(__thiscall *CNWSObject__SaveVarTable)(CNWSObject *pTHIS, CResGFF *pResGFF, CResStruct *pResStruct) = (void(__thiscall*)(CNWSObject *pTHIS, CResGFF *pResGFF, CResStruct *pResStruct))0x004DEF40;
+void 			(__thiscall *CNWSObject__LoadVarTable)(CNWSObject *pTHIS, CResGFF *pResGFF, CResStruct *pResStruct) = (void(__thiscall*)(CNWSObject *pTHIS, CResGFF *pResGFF, CResStruct *pResStruct))0x004DEF20;
+void 			(__thiscall *CNWSObject__SetPosition)(CNWSObject *pTHIS, Vector v, int a3) = (void(__thiscall*)(CNWSObject *pTHIS, Vector v, int a3))0x004E25D0;
+void 			(__thiscall *CNWSObject__SetOrientation)(CNWSObject *pTHIS, Vector v) = (void(__thiscall*)(CNWSObject *pTHIS, Vector v))0x004E25B0;
+
+CNWSItem *CNWSObject_s::AsNWSItem() {
+	return ((CNWSItem*)((char*)this-0x10));
+}
+
+CNWSModule *CNWSObject_s::AsModule() {
+	return ((CNWSModule*)((char*)this-0x1C));
+}
+
+CNWSAreaOfEffectObject *CNWSObject_s::AsNWSAreaOfEffectObject() {
+	return (CNWSAreaOfEffectObject*)this;
+	
+}
+
+CNWSArea *CNWSObject_s::AsNWSArea() {
+	return ((CNWSArea*)((char*)this-0xC4));
+}
+
+CNWSStore *CNWSObject_s::AsNWSStore() {
+	return (CNWSStore*)this;
+}
+
 
 CNWSArea *CNWSObject_s::GetArea() {
 	return CNWSObject__GetArea(this);
@@ -66,4 +92,20 @@ void CNWSObject::ClearSpellEffectsOnOthers() {
 
 int16_t CNWSObject_s::GetCurrentHitPoints(int bExcludeTemp) {
 	return CNWSObject__GetCurrentHitPoints(this, bExcludeTemp);
+}
+
+void CNWSObject_s::SaveVarTable(CResGFF *pResGFF, CResStruct *pResStruct) {
+	CNWSObject__SaveVarTable(this, pResGFF, pResStruct);
+}
+
+void CNWSObject_s::LoadVarTable(CResGFF *pResGFF, CResStruct *pResStruct) {
+	CNWSObject__LoadVarTable(this, pResGFF, pResStruct);
+}
+
+void CNWSObject_s::SetPosition(Vector v, int a3) {
+	CNWSObject__SetPosition(this, v, a3);
+}
+
+void CNWSObject_s::SetOrientation(Vector v) {
+	CNWSObject__SetOrientation(this, v);
 }

@@ -4,6 +4,7 @@
 struct CNWSPlaceable_s {
     CNWSObject                  obj;
     CExoLocString              *plc_firstname;
+    unsigned 				__int32 field_1C8;
     CExoString                  plc_displayname;
     uint32_t                    plc_displayname_update;
     uint32_t                    plc_appearance;
@@ -25,7 +26,10 @@ struct CNWSPlaceable_s {
     uint32_t                    plc_key_req_message;
     uint32_t                    field_224;
     uint32_t                    plc_key_required;
-    uint32_t                    plc_auto_remove_key;
+    uint8_t                    plc_auto_remove_key;
+    uint8_t                     c1;
+    uint8_t                     c2;
+    uint8_t                     c3;
     uint8_t                     plc_open_lock_dc;
     uint8_t                     plc_close_lock_dc;
     uint8_t                     field_232;
@@ -48,7 +52,6 @@ struct CNWSPlaceable_s {
     uint8_t                     field_25B;
     uint32_t                    plc_active;
     uint32_t                    plc_trap_faction;
-    uint32_t					unknown;
 	CExoString 					OnClosed;
 	CExoString 					OnDamaged;
 	CExoString 					OnDeath;
@@ -116,9 +119,12 @@ struct CNWSPlaceable_s {
     uint32_t                    plc_static;
     uint32_t                    plc_never_static;
 
+	CNWSPlaceable_s(nwn_objid_t oID);
 	int32_t	AcquireItem(CNWSItem **a2, nwn_objid_t oid_From, int a4, int a5, int bSendFeedBack);
+	void 	AddToArea(CNWSArea *Area, Vector v, int a2);
+	int 	LoadPlaceable(CResGFF *ResGFF, CResStruct *ResStruct, CExoString *Tag);
+	int 	SavePlaceable(CResGFF *ResGFF, void *ResStruct);
 	void 	SetScriptName(int iScript, CExoString ScriptName);
-	int SavePlaceable(CResGFF *ResGFF, void *ResStruct);
 };
 
 

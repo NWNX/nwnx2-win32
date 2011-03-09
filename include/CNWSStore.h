@@ -91,8 +91,12 @@ struct CNWSStore_s {
   unsigned __int8 field_235;
   unsigned __int8 field_236;
   unsigned __int8 field_237;
+
+	CNWSStore_s(nwn_objid_t oID);
 	
+	void AddToArea(CNWSArea *Area, Vector Position, int a3);
 	void SetScriptName(int iScript, CExoString ScriptName);
+	int LoadStore(CResGFF *pResGFF, CResStruct *pResStruct, CExoString *Tag);
 	int SaveStore(CResGFF *ResGFF, void *ResStruct);
 };
 

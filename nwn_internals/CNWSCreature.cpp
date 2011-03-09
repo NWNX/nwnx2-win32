@@ -53,8 +53,8 @@ void 				(__thiscall *CNWSCreature__SetPVPPlayerLikesMe)(CNWSCreature *pTHIS, un
 	//CNWSCreature__dtor_CNWSCreature(this, c);
 //}
 
-signed int CNWSCreature_s::AcquireItem(CNWSItem **Item, nwn_objid_t From_oID, nwn_objid_t a4, char a5, char a6, int a7, int bFeedback) {
-	return CNWSCreature__AcquireItem(this, Item, From_oID, a4, a5, a6, a7, bFeedback);
+signed int CNWSCreature_s::AcquireItem(CNWSItem **Item, nwn_objid_t From_oID, nwn_objid_t a4, char a5, char a6, int a7, int bUpdateEncumbrance) {
+	return CNWSCreature__AcquireItem(this, Item, From_oID, a4, a5, a6, a7, bUpdateEncumbrance);
 }
 
 int CNWSCreature_s::GetBlind() {

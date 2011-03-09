@@ -643,6 +643,7 @@
 #define COMBAT_MODE_DIRTY_FIGHTING      10
 #define COMBAT_MODE_DEFENSIVE_STANCE    11
 
+#define CServerAIMaster__EVENT_REMOVE_EFFECT	14
 #include "nwn_const_feats.h"
 //#include "nwn_const_spells.h"
 //#include "nwn_const_vfx.h"

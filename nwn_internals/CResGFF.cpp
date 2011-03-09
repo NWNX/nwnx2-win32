@@ -11,6 +11,14 @@ int 		(__thiscall *CResGFF__GetTopLevelStruct)(CResGFF *pTHIS, char *ResStruct) 
 void 		(__thiscall *CResGFF__GetGFFFileInfo)(CResGFF *pTHIS, CExoString &, CExoString &) = (void(__thiscall*)(CResGFF *pTHIS, CExoString &, CExoString &))0x00612C60;
 void		(__thiscall *CResGFF_dtor)(CResGFF *pTHIS) = (void(__thiscall*)(CResGFF *pTHIS))0x00611AF0;
 
+CResGFF_s::CResGFF_s() {
+	CResGFF__CResGFF(this);
+}
+
+CResGFF_s::~CResGFF_s() {
+	CResGFF_dtor(this);
+}
+
 CResGFF_s *CResGFF_s::ctor() {
 	return CResGFF__CResGFF(this);
 }
@@ -31,8 +39,8 @@ int CResGFF::GetDataFromPointer(char *Pointer, int a3) {
 	return 	CResGFF__GetDataFromPointer(this, Pointer, a3);
 }
 
-int CResGFF::GetTopLevelStruct(char *ResStruct) {
-	return CResGFF__GetTopLevelStruct(this, ResStruct);
+int CResGFF::GetTopLevelStruct(CResStruct *ResStruct) {
+	return CResGFF__GetTopLevelStruct(this, (char*)ResStruct);
 }
 
 void CResGFF::GetGFFFileInfo(CExoString &Type, CExoString &Version) {

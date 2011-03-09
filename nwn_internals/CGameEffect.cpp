@@ -9,6 +9,14 @@ int				(__thiscall *CGameEffect__GetScriptEffectType)(CGameEffect *pTHIS) = (int
 //int			(__thiscall *CGameEffect__GetInteger)(CGameEffect, pTHIS, int nInt) = (int (__thiscall*)(CGameEffect, pTHIS, int nInt))0x004E8130;
 int				(__thiscall *CGameEffect__SetCreator)(CGameEffect *pTHIS, nwn_objid_t oidCreator) = (int (__thiscall*)(CGameEffect *pTHIS, nwn_objid_t oidCreator))0x004E8C00;
 CGameEffect*	(__thiscall *CGameEffect__CGameEffect_c)(CGameEffect *pTHIS, CGameEffect *Effect, int bCopy) = (CGameEffect* (__thiscall*)(CGameEffect *pTHIS, CGameEffect *Effect, int bCopy))0x004E7E70;
+CGameEffect*	(__thiscall *CGameEffect__SetLinked)(CGameEffect *pTHIS, CGameEffect *a2, CGameEffect *a3) = (CGameEffect*(__thiscall*)(CGameEffect *pTHIS, CGameEffect *a2, CGameEffect *a3))0x004E8450;
+
+CGameEffect_s::CGameEffect_s(int a1) {
+	CGameEffect__CGameEffect(this, a1);
+}
+CGameEffect_s::CGameEffect_s(CGameEffect *Effect, int bCopy) {
+	CGameEffect__CGameEffect_c(this, Effect, bCopy);
+}
 
 CGameEffect *CGameEffect_s::ctor(int a2) {
 	return CGameEffect__CGameEffect(this, a2);
@@ -61,4 +69,8 @@ int CGameEffect_s::SetNumIntegersInitializeToNegativeOne(int nInts) {
 
 void CGameEffect_s::CopyEffect(CGameEffect *Source, int bCopyVars) {
 	CGameEffect__CopyEffect(this, Source, bCopyVars);
+}
+
+CGameEffect* CGameEffect_s::SetLinked(CGameEffect *a2, CGameEffect *a3) {
+	return CGameEffect__SetLinked(this, a2, a3);
 }

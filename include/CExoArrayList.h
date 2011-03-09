@@ -90,7 +90,7 @@
         if (idx < 0 || idx >= list->len)                                                                       \
             return (T)0;                                                                                       \
         return list->data[idx];                                                                                \
-    }
+    }                                                                                                          
 
 NX_NWN_CEXOARRAYLIST_CONTAINS(int8,   int8_t)
 NX_NWN_CEXOARRAYLIST_CONTAINS(int32,  int32_t)

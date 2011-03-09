@@ -150,6 +150,13 @@ struct CNWSObject_s {
 	uint32_t							obj_effect_postprocess;				/* 0x01B8 */
 	uint32_t							obj_door_anim_played;				/* 0x01BC */
 
+CNWSItem *AsNWSItem();
+CNWSModule *AsModule();
+CNWSAreaOfEffectObject *AsNWSAreaOfEffectObject();
+CNWSArea *AsNWSArea();
+CNWSStore *AsNWSStore();
+
+
 int16_t				ApplyEffect(CGameEffect *Effect, int a3, int a4);
 void 				ClearSpellEffectsOnOthers();
 int 				DoDamageImmunity(CNWSCreature *Attacker, int DamageDelivered, int DamageFlags, int _bMaxDamage, int bFeedback);
@@ -159,10 +166,17 @@ int16_t 			GetCurrentHitPoints(int bExcludeTemp);
 char				GetDamageImmunityByFlags(uint16_t Flags);
 int 				GetDead();
 int					GetIsPCDying();
+int  				GetMaximumDamageResistanceVsDamageFlag(uint16_t DamageType, int *EffectIndex);
+void 				LoadVarTable(CResGFF *pResGFF, CResStruct *pResStruct);
 int					RemoveEffectById(uint64_t EffID);
 unsigned int 		SetArea(CNWSArea *Area);
+void 				SetOrientation(Vector v);
+void 				SetPosition(Vector v, int a3);
 void 				SetTag(CExoString sTag);
-int  				GetMaximumDamageResistanceVsDamageFlag(uint16_t DamageType, int *EffectIndex);
+void 				SaveVarTable(CResGFF *pResGFF, CResStruct *pResStruct);
+
+
+
 
 };
 

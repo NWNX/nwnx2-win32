@@ -6,6 +6,7 @@ struct CNWSMessage_s {
 
 	nwn_objid_t ReadOBJECTIDServer();
 	int 		SendServerToPlayerArea_VisualEffect(CNWSPlayer* player, int VFX_number, float Px, float Py, float Pz);
+	int 		SendServerToPlayerCCMessage(unsigned long a1, unsigned char a2, CNWCCMessageData *mData, CNWSCombatAttackData *CombatAttackData);
 	int 		SendServerToPlayerChat_Party(unsigned long, unsigned long, char*, int);
 	int 		SendServerToPlayerChat_ServerTell(uint32_t Receiver_id, CExoString Msg);
 	int 		SendServerToPlayerChat_Shout(uint32_t Receiver, nwn_objid_t Sender, CExoString Msg);

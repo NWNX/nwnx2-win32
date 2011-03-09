@@ -6,6 +6,12 @@ http://nwn.bioware.com/developers/Bioware_Aurora_LocalizedStrings_Format.pdf
 
 #include "nwnx_funcs_const.h"
 #include "CExoLinkedList.h"
+#include "CExoString.h"
+
+typedef struct CExoLocStringNode_s {
+	uint32_t nLanguage;
+	CExoString Text;
+}CExoLocStringNode;
 
 struct _CExoString {
     char               *text;

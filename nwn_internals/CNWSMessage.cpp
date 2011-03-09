@@ -17,7 +17,7 @@ int 		(__thiscall *CNWSMessage__SendServerToPlayerChat_Party)(CNWSMessage *pTHIS
 int 		(__thiscall *CNWSMessage__SendServerToPlayerChatMessage)(CNWSMessage *pTHIS, uint8_t Channel, nwn_objid_t Sender, char* Msg, uint32_t msg_len, uint32_t player_id) = (int (__thiscall*)(CNWSMessage *pTHIS, uint8_t Channel, nwn_objid_t Sender, char* Msg, uint32_t msg_len, uint32_t player_id))0x0043CA00;
 void		(__thiscall *CNWSMessage__WriteGameObjUpdate_CharacterSheet)(CNWSMessage *pTHIS, CNWSPlayer *player, uint32_t a3) = (void (__thiscall*)(CNWSMessage *pTHIS, CNWSPlayer *player, uint32_t a3))0x00447B10;
 int			(__thiscall *CNWSMessage__SendServerToPlayerPVP_Attitude_Change)(CNWSMessage *pTHIS, int oidPlayer1, int oidPlayer2, int a4) = (int(__thiscall*)(CNWSMessage *pTHIS, int oidPlayer1, int oidPlayer2, int a4))0x00450630;
-
+int 		(__thiscall *CNWSMessage__SendServerToPlayerCCMessage)(CNWSMessage *pTHIS, unsigned long a1, unsigned char a2, CNWCCMessageData *mData, CNWSCombatAttackData *CombatAttackData) = (int(__thiscall*)(CNWSMessage *pTHIS, unsigned long a1, unsigned char a2, CNWCCMessageData *mData, CNWSCombatAttackData *CombatAttackData))0x0044B630;
 
 nwn_objid_t CNWSMessage_s::ReadOBJECTIDServer() {
 	return CNWSMessage__ReadOBJECTIDServer(this);
@@ -77,4 +77,8 @@ void CNWSMessage_s::WriteGameObjUpdate_UpdateObject(CNWSPlayer* a1, CNWSObject* 
 
 int CNWSMessage_s::SendServerToPlayerPVP_Attitude_Change(int oidPlayer1, int oidPlayer2, int a4) {
 	return CNWSMessage__SendServerToPlayerPVP_Attitude_Change(this, oidPlayer1, oidPlayer2, a4);
+}
+
+int CNWSMessage_s::SendServerToPlayerCCMessage(unsigned long a1, unsigned char a2, CNWCCMessageData *mData, CNWSCombatAttackData *CombatAttackData) {
+	return CNWSMessage__SendServerToPlayerCCMessage(this, a1, a2, mData, CombatAttackData);
 }

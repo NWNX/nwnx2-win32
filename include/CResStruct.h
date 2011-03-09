@@ -25,7 +25,7 @@
 #define _NX_NWN_STRUCT_CRESSTRUCT_
 
 struct CResStruct_s {
-    void                *unknown;
+    unsigned long       *unknown;
 };
 
 #endif /* _NX_NWN_STRUCT_CRESSTRUCT_ */

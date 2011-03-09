@@ -70,7 +70,7 @@ struct CNWSItem_s {
     
     nwn_objid_t					it_container_obj;		/* 0x0240 */
     
-    uint32_t					field_0244;				/* 0x0244 */
+    CItemRepository				*it_itemrepository;				/* 0x0244 */
     
     uint8_t						it_posx;				/* 0x0248 */
     uint8_t						it_posy;				/* 0x0249 */
@@ -78,7 +78,17 @@ struct CNWSItem_s {
     uint8_t						field_024A;				/* 0x024A */
     uint8_t						field_024B;				/* 0x024B */
 
-    uint32_t					spacer_24C[14];			/* 0x024C */
+    CExoLinkedList				*it_DescIdentified;	/* 0x024C */
+    uint32_t					spacer_250;			/* 0x0250 */
+    CExoLinkedList				*it_DescUnIdentified; /* 0x0254 */
+    uint32_t					spacer_258;			/* 0x0258 */
+    CExoString					it_DescOverrideIdentified;			/* 0x025C */
+    CExoString					it_DescOverrideUnIdentified;			/* 0x0264 */
+    CExoLinkedList				*it_LocNames;		/* 0x026C */
+    uint32_t					spacer_270;			/* 0x0270 */
+    CExoString					it_displayname;		/* 0x0274 */
+    uint32_t					spacer_27C;			/* 0x027C */
+    uint32_t					spacer_280;			/* 0x0280 */
     
     uint8_t						it_droppable;			/* 0x0284 */
     
@@ -105,16 +115,25 @@ struct CNWSItem_s {
 	uint32_t					field_29C;
 	uint32_t					field_2A0;
 
-	CNWSItem *CNWSItem_s::ctor(unsigned int a1);
+	CNWSItem_s(nwn_objid_t oID);
+	CNWSItem_s *ctor(unsigned int a1);
 
+	void AddToArea(CNWSArea *Area, float x, float y, float z, int a5);
 	int ComputeArmorClass();
 	unsigned short GetDamageFlags();
-	int SetPossessor(unsigned int a2_Possessor_id, int a3_Signalevent, int a4_bFeedback, int i);
 	int GetPropertyByType(CNWSItemProperty **iprp, uint16_t ipType, uint16_t ipSubType);
 	int GetPropertyByTypeExists(unsigned short a1, unsigned short a2);
-	int SaveItem(CResGFF *ResGFF, void *ResStruct, int a3);
+	int LoadFromTemplate(CResRef CRes, CExoString *Tag);
 	int LoadItem(CResGFF *ResGFF, void *CResStruct, int a3);
-	void AddToArea(CNWSArea *Area, float x, float y, float z, int a5);
+	int SaveItem(CResGFF *ResGFF, void *ResStruct, int a3);
+	void SetDisplayName(CExoString Name);
+	int SetPossessor(unsigned int a2_Possessor_id, int a3_Signalevent, int a4_bFeedback, int i);
+	
+	//non-nwn server functions
+	
+	//returns the name for language id 0
+	CExoString GetName();
+	CExoString *GetDescription();
 };
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef _NX_NWN_STRUCT_CNWSCREATURE_
 #define _NX_NWN_STRUCT_CNWSCREATURE_
 
+#include "CExoArrayList_2.h"
+
 struct CNWSCreature_s {
     CNWSObject                  		obj;
   unsigned __int32							spacer_01;
@@ -1034,7 +1036,7 @@ struct CNWSCreature_s {
 	uint32_t							field_C6C;
 	
 	void				ActivityManager(unsigned long Activity);
-	signed int 			AcquireItem(CNWSItem **Item, nwn_objid_t From_oID, nwn_objid_t a4, char a5, char a6, int a7, int bFeedback);
+	signed int 			AcquireItem(CNWSItem **Item, nwn_objid_t From_oID, nwn_objid_t a4, char a5, char a6, int a7, int bUpdateEncumbrance);
 	int					ApplyDiseasePayload(CGameEffect *eff, unsigned long a3, unsigned long a4);
 	int 				ApplyPoisonPayload(CGameEffect *eff, unsigned long t1, unsigned long t2);
 	void 				CancelRest(unsigned short a1);

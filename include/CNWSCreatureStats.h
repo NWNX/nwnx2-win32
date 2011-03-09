@@ -156,10 +156,12 @@ int 				GetAttackModifierVersus(CNWSCreature *Vs);
 int 				GetBaseAttackBonus(int bPreEpicOnly);
 int					GetCriticalHitMultiplier(int bOffhand);
 int 				GetCanUseSkill(unsigned char Skill);
+unsigned char		GetCONStat();
 char 				GetDEXMod(int bMaxArmorDex);
 signed int 			GetEpicWeaponFocus(CNWSItem *weapon);
 int 				GetEffectImmunity(unsigned __int8 Type, CNWSCreature *a3_Versus);
 int 				GetFavoredEnemyBonus(CNWSCreature *cre_enemy);
+char 				GetFortSavingThrow(int bBaseOnly);
 unsigned long 		GetHighestLevelKnown();
 int 				GetIsWeaponOfChoice(uint32_t BaseItemType);
 uint8_t				GetLevel(int bCountNegativeLevels);
@@ -186,6 +188,12 @@ void				SetINTBase(uint8_t INTBase);
 void				SetSTRBase(uint8_t STRBase);
 void				SetWISBase(uint8_t WISBase);
 
+unsigned char 		GetCHAStat();
+unsigned char 		GetDEXStat();
+unsigned char 		GetINTStat();
+unsigned char 		GetSTRStat();
+unsigned char 		GetWISStat();
+	
 int16_t				GetDamageRoll(CNWSObject *Defender, int bOffHand, int AttackResult, int SneakAttack, int DeathAttack, int a7);
 
 int GetNumLevelsOfClass(unsigned char nClassType);
