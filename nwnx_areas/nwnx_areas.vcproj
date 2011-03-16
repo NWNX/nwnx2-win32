@@ -45,7 +45,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NWNX_AREAS_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="0"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				WarningLevel="2"
 				DebugInformationFormat="4"
@@ -61,8 +61,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="madCHook.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories=".\"
 				GenerateDebugInformation="true"
+				AssemblyDebug="1"
+				ProgramDatabaseFile="e:\games\nwn\nwnx_areas.pdb"
+				GenerateMapFile="true"
+				MapFileName="e:\games\nwn\nwnx_areas.map"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -91,6 +97,84 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="2"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="..\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;NWNX_AREAS_EXPORTS"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="2"
+				WarningLevel="2"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="madCHook.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories=".\"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="copy $(TargetPath) e:\games\nwn"
+			/>
+		</Configuration>
+		<Configuration
+			Name="test|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
@@ -197,6 +281,15 @@
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="test|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\HookFunc.cpp"
@@ -225,6 +318,14 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="test|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<Filter
 				Name="nwnxBase"
@@ -241,6 +342,10 @@
 			<Filter
 				Name="nwn_internals"
 				>
+				<File
+					RelativePath="..\nwn_internals\CAutoMap.cpp"
+					>
+				</File>
 				<File
 					RelativePath="..\nwn_internals\CExoLinkedList.cpp"
 					>
@@ -262,6 +367,18 @@
 					>
 				</File>
 				<File
+					RelativePath="..\nwn_internals\CNWSCombatRound.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSCreature.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CNWSItem.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\nwn_internals\CNWSMessage.cpp"
 					>
 				</File>
@@ -271,6 +388,10 @@
 				</File>
 				<File
 					RelativePath="..\nwn_internals\CNWSScriptVarTable.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CResGFF.cpp"
 					>
 				</File>
 				<File
@@ -292,6 +413,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\include\CAutoMap.h"
+				>
+			</File>
 			<File
 				RelativePath=".\HookFunc.h"
 				>

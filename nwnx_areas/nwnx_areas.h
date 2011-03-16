@@ -1,6 +1,8 @@
 #pragma once
 #include "..\NWNXDLL\NWNXBase.h"
 #include "types.h"
+#include <vector>
+
 
 class CNWNXAreas : public CNWNXBase {
 public:
@@ -20,6 +22,8 @@ public:
 
 	CNWSArea *GetOverrideArea(CNWSCreature *cre);
 	int CheckArea(CNWSPlayerTURD *TURD);
+	void AddToCreatureList(nwn_objid_t oidCreature);
+	void RemoveFromCreatureList(nwn_objid_t oidCreature);
 
 private:
 	void WriteLogHeader(int debug);
@@ -31,8 +35,12 @@ private:
 	int UpdateAreasForDMs();
 	int SetAreaName(CNWSArea *pArea, char *sNewName);
 
+	void AddAreaToTURDS(CNWSModule *pModule, nwn_objid_t nAreaID);
+	void CleanUpTURDS(CNWSModule *pModule, nwn_objid_t nAreaID);
 
 	nwn_objid_t nLastAreaID;
+
+	std::vector<nwn_objid_t> CreatureList;
 
 
 };

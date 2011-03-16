@@ -2,12 +2,13 @@
 #include "nwnx_areas.h"
 #include "../NWNXdll/IniFile.h"
 #include "HookFunc.h"
-#include "vector"
+
 
 #define _log(a,b,...) if(a<=debugLevel)LOG(b,__VA_ARGS__)
 
 CNWNXAreas::CNWNXAreas() {
 	nLastAreaID = 0x7F000000;
+	CreatureList.reserve(20);
 }
 
 CNWNXAreas::~CNWNXAreas() {
@@ -65,6 +66,9 @@ char* CNWNXAreas::OnRequest(char *gameObject, char* Request, char* Parameters) {
 	else if (strncmp(Request, "SET_AREA_NAME", 13) == 0) {
 		if (SetAreaName((CNWSArea*)gameObject, Parameters)) sprintf(Parameters, "1");
 		else sprintf(Parameters, "0");
+	}
+	else if (strncmp(Request, "TEST", 4) == 0) {
+		_log(3, "%08X\n", gameObject);
 	}
 
 	return 0;
@@ -152,7 +156,7 @@ int CNWNXAreas::LoadArea(char* ResRef) {
 	char *pMod = (char*)((*NWN_AppManager)->app_server->srv_internal)->GetModule();
 	CNWSModule *pModule = (CNWSModule*)(pMod+0x1C);
 
-	_log(3, "o AreaCount: %d\n", pModule->mod_areas_len);
+	_log(3, "[LoadArea] AreaCount: %d\n", pModule->mod_areas_len);
 
 	CResRef res;
 	CResRef____as(&res, sResRef);
@@ -161,7 +165,7 @@ int CNWNXAreas::LoadArea(char* ResRef) {
 	pArea->CNWSArea(res, 0, OBJECT_INVALID);
 
 	if (!pArea->LoadArea(0)) {
-		_log(1, "o Error: Load failed: '%s'\n", sResRef);
+		_log(1, "\to Error: Load failed: '%s'\n", sResRef);
 		pArea->scalar_Destructor(1);
 		nLastAreaID = OBJECT_INVALID;
 		return 0;
@@ -171,12 +175,14 @@ int CNWNXAreas::LoadArea(char* ResRef) {
 	void *pArray = ((uint32_t *)pModule+0x6);
 	CExoArrayList_uint32___Add(pArray, NULL, nAreaID);
 
-	_log(3, "o Area added\n", nAreaID);
+	_log(3, "\to Area added\n\n", nAreaID);
 
 	nLastAreaID = nAreaID;
 	AddAreaToCreatures(pModule, nAreaID);
+	AddAreaToTURDS(pModule, nAreaID);
 	UpdateAreasForDMs();
 
+	_log(3, "[/LoadArea] AreaCount: %d\n", pModule->mod_areas_len);
 	return 1;
 }
 
@@ -196,9 +202,10 @@ int CNWNXAreas::DestroyArea(nwn_objid_t nAreaID) {
 	char *pMod = (char*)((*NWN_AppManager)->app_server->srv_internal)->GetModule();
 	CNWSModule *pModule = (CNWSModule*)(pMod+0x1C);
 	
+	_log(3, "[DestroyArea] AreaCount: %d\n", pModule->mod_areas_len);
+
 	CGameObjectArray *objArray = ((*NWN_AppManager)->app_server)->GetObjectArray();
 
-	_log(1, "o Destroying objects in area %08X\n", nAreaID);
 	nwn_objid_t nTmpObj;
 
 	std::vector<uint32_t> Objects;
@@ -218,7 +225,7 @@ int CNWNXAreas::DestroyArea(nwn_objid_t nAreaID) {
 		if (!pObject) continue;
 
 		CNWSArea *Area = NULL;
-		_log(3, "o Object: %08X\tAddr: %08X\tObjtype: %d\n", pObject->obj_id, pObject, pObject->obj_type2);
+		//_log(3, "\tObject: %08X\tAddr: %08X\tObjtype: %d\n", pObject->obj_id, pObject, pObject->obj_type2);
 		if (pObject->obj_type2 == 16) {
 			// move the playerTURD to a different area instead of deleting it
 			CNWSPlayerTURD *TURD = (CNWSPlayerTURD*)pObject;
@@ -232,7 +239,7 @@ int CNWNXAreas::DestroyArea(nwn_objid_t nAreaID) {
 			if (svTable) {
 				Loc = svTable->GetLocation(VarName);
 				Area = ((*NWN_AppManager)->app_server->srv_internal)->GetAreaByGameObjectID(Loc.loc_area);
-				_log(3, "o Creature LocationFailSafe AreaID: %08X\n", Loc.loc_area);
+				_log(3, "\tCreature LocationFailSafe AreaID: %08X\n", Loc.loc_area);
 				if (!Area) {
 					char *mod = (char*)((*NWN_AppManager)->app_server->srv_internal->GetModule());
 					CNWSModule *Mod= (CNWSModule*)(mod+0x1C);
@@ -240,7 +247,7 @@ int CNWNXAreas::DestroyArea(nwn_objid_t nAreaID) {
 
 					if (svTable) {
 						Loc = svTable->GetLocation(VarName);
-						_log(3, "o Module LocationFailSafe AreaID: %08X\n", Loc.loc_area);
+						_log(3, "\tModule LocationFailSafe AreaID: %08X\n", Loc.loc_area);
 						Area = ((*NWN_AppManager)->app_server->srv_internal)->GetAreaByGameObjectID(Loc.loc_area);
 					}
 				}
@@ -261,49 +268,46 @@ int CNWNXAreas::DestroyArea(nwn_objid_t nAreaID) {
 
 	}
 
-	_log(1, "o Unregistering area %08X\n", nAreaID);
+	_log(3, "\tUnregistering area %08X\n", nAreaID);
 	void *pArray = ((uint32_t *)pModule+0x6);
 	CExoArrayList_uint32___Remove(pArray, NULL, nAreaID);
 
-	_log(1, "o Destroying area %08X\n", nAreaID);
+	_log(1, "\tDestroying area %08X\n\n", nAreaID);
 	pArea->scalar_Destructor(1);
 	RemoveAreaForCreatures(pModule, nAreaID);
+	CleanUpTURDS(pModule, nAreaID);
 	UpdateAreasForDMs();
 
+	_log(3, "[/DestroyArea] AreaCount: %d\n\n", pModule->mod_areas_len);
 	return 1;
 }
 
 int CNWNXAreas::AddAreaToCreatures(CNWSModule *pModule, nwn_objid_t nAreaID) {
 	CGameObjectArray *pGameObjArray = ((*NWN_AppManager)->app_server)->GetObjectArray();
 
-	_log(3, "o Module Area Count: %d\n", pModule->mod_areas_len);
-	if (!pGameObjArray) return NULL;
-	for (int i=0; i<=0xFFF; i++) {
+	_log(3, "[AddAreaToCreatures]Module Area Count: %d\n", pModule->mod_areas_len);
+	if(!pGameObjArray) return NULL;
+	for(int i=0; i<=0xFFF; i++)	{
 		CGameObjectArrayElement **pObjects = pGameObjArray->Objects;
-		CGameObjectArrayElement  *pElement = pObjects[i];
-		if (!pElement) continue;
-		CNWSCreature *pObject = (CNWSCreature*)pElement->Object;
-		if (!pObject) continue;
-		if (pObject->obj.obj_generic.obj_type2 == 5) {
-			if (pObject->cre_areaminimaps) {
-				_log(3, "o Adding minimap to creature '%08X'\n", pObject->obj.obj_generic.obj_id);
-				pObject->cre_areaminimaps = (void**)realloc(pObject->cre_areaminimaps, pModule->mod_areas_len *4);
-				void *pMinimap = new char[0x80];
-				memset(pMinimap, 0, 0x80);
-				pObject->cre_areaminimaps[pModule->mod_areas_len-1] = pMinimap;
-				CExoArrayList_uint32_add((CExoArrayList_uint32*)&pObject->cre_arealist, nAreaID);
-				_log(3, "o Creature area count: %d\n", pObject->cre_areacount);
-
+		CGameObjectArrayElement *pElement = pObjects[i];
+		if(!pElement) continue;
+		CNWSCreature *pObject = (CNWSCreature *) pElement->Object;
+		if(!pObject) continue;
+		if(pObject->obj.obj_generic.obj_type2 == 5) {
+			if(pObject->AreaData.MiniMap) {
+				_log(3, "pObject: %08X\n", pObject);
+				pObject->AreaData.AddArea(nAreaID);
 			}
 		}
 	}
+	_log(3, "[/AddAreaToCreatures]\n\n");
 	return 1;
 }
 
 int CNWNXAreas::RemoveAreaForCreatures(CNWSModule *pModule, nwn_objid_t nAreaID) {
 	CGameObjectArray *pGameObjArray = ((*NWN_AppManager)->app_server)->GetObjectArray();
 
-	_log(3, "o Module Area Count: %d\n", pModule->mod_areas_len);
+	_log(3, "[RemoveAreaForCreatures] Module Area Count: %d\n", pModule->mod_areas_len);
 	if (!pGameObjArray) return 0;
 	for (int i=0; i<=0xFFF; i++) {
 		CGameObjectArrayElement **pObjects = pGameObjArray->Objects;
@@ -312,24 +316,18 @@ int CNWNXAreas::RemoveAreaForCreatures(CNWSModule *pModule, nwn_objid_t nAreaID)
 		CNWSCreature *pObject = (CNWSCreature*)pElement->Object;
 		if (!pObject) continue;
 		if (pObject->obj.obj_generic.obj_type2 == 5) {
-			if (pObject->cre_areaminimaps) {
-			
-				//TODO: cleanup minimap data
-				/*
-				_log(3, "Removing minimaps for creature '%08X'\n", pObject->Object.ObjectID);
-				*/
-				
-				pObject->cre_areaminimaps = (void**)realloc(pObject->cre_areaminimaps, pModule->mod_areas_len *4);
-				CExoArrayList_uint32___Remove(&pObject->cre_arealist, NULL, nAreaID);
-				_log(3, "Object area count: %d\n", pObject->cre_areacount);
+			if (pObject->AreaData.MiniMap) {
+				pObject->AreaData.RemoveArea(nAreaID);
 			}
 		}
 	}
+	_log(3, "[/RemoveAreaForCreatures]\n\n");
 	return 1;
 }
 
 int CNWNXAreas::SetAreaName(CNWSArea *pArea, char *sNewName) {
 	_log(3, "o SetAreaName: %08X, '%s'\n", pArea->are_id, sNewName);
+	_log(3, "o Module Language: %d\n", (*NWN_AppManager)->app_server->GetModuleLanguage());
 	CExoLocString *lsName = (CExoLocString *)&pArea->area_name;
 	if (!lsName) return 0;
 	char *newstr = new char[strlen(sNewName)+1];
@@ -408,4 +406,60 @@ int CNWNXAreas::CheckArea(CNWSPlayerTURD *TURD) {
 	}
 
 	return 0;
+}
+
+void CNWNXAreas::AddToCreatureList(nwn_objid_t oidCreature) {
+	if (CreatureList.capacity() == CreatureList.size()) {
+		CreatureList.reserve(CreatureList.size() * 2);
+	}
+	CreatureList.push_back(oidCreature);
+}
+
+void CNWNXAreas::RemoveFromCreatureList(nwn_objid_t oidCreature) {
+	std::vector<nwn_objid_t>::iterator it = CreatureList.begin();
+	while (it != CreatureList.end()) {
+		if (*it == oidCreature) {
+			CreatureList.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+}
+
+void CNWNXAreas::CleanUpTURDS(CNWSModule *pModule, nwn_objid_t nAreaID) {
+	pModule = (CNWSModule*)(((char*)pModule)-0x1C);
+	_log(3, "[CleanUpTURDS]\n");
+	if ((pModule->mod_PlayerTURDList.ListHeader) && (pModule->mod_PlayerTURDList.ListHeader->Count > 0)) {
+		CExoLinkedListHeader *Header = pModule->mod_PlayerTURDList.ListHeader;
+		CExoLinkedListElement *Element = Header->FirstElement;
+		CNWSPlayerTURD *TURD = NULL;
+		while (Element) {
+			TURD = (CNWSPlayerTURD*)Element->Data;
+			if (TURD->AreaData.MiniMap) {
+				TURD->AreaData.AddArea(nAreaID);
+			}
+			Element = Element->NextElement;
+		}
+	}
+	_log(3, "[/CleanUpTURDS]\n\n");
+}
+
+void CNWNXAreas::AddAreaToTURDS(CNWSModule *pModule, nwn_objid_t nAreaID) {
+	pModule = (CNWSModule*)(((char*)pModule)-0x1C);
+	_log(3, "[AddAreaToTURDS]\n");
+	if ((pModule->mod_PlayerTURDList.ListHeader) && (pModule->mod_PlayerTURDList.ListHeader->Count > 0)) {
+		CExoLinkedListHeader *Header = pModule->mod_PlayerTURDList.ListHeader;
+		CExoLinkedListElement *Element = Header->FirstElement;
+		CNWSPlayerTURD *TURD = NULL;
+		while (Element) {
+			TURD = (CNWSPlayerTURD*)Element->Data;
+			if (TURD->AreaData.MiniMap) {
+				TURD->AreaData.AddArea(nAreaID);
+			}
+
+			Element = Element->NextElement;
+		}
+	}
+	_log(3, "[/AddAreaToTURDS]\n\n");
 }
