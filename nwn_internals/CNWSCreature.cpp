@@ -49,9 +49,21 @@ void 				(__thiscall *CNWSCreature__UpdateEncumbranceState)(CNWSCreature *pTHIS,
 
 void				(__thiscall *CNWSCreature__SetAutoMapData)(CNWSCreature *pTHIS, int a2, int a3, int a4) = (void(__thiscall*)(CNWSCreature *pTHIS, int a2, int a3, int a4))0x004B1DD0;
 void 				(__thiscall *CNWSCreature__SetPVPPlayerLikesMe)(CNWSCreature *pTHIS, unsigned long oid_Player2, int a3, int a4) = (void(__thiscall*)(CNWSCreature *pTHIS, unsigned long oid_Player2, int a3, int a4))0x004D0450;
+
+CNWSCreature*		(__thiscall *CNWSCreature__CNWSCreature)(CNWSCreature *pTHIS, int a2, unsigned int a3, unsigned int a4) = (CNWSCreature*(__thiscall*)(CNWSCreature *pTHIS, int a2, unsigned int a3, unsigned int a4))0x0048F5B0;
+void				(__thiscall *CNWSCreature___CNWSCreature)(CNWSCreature *pTHIS) = (void(__thiscall*)(CNWSCreature *pTHIS))0x00490000;
+
 //void Destructor(char c) {
 	//CNWSCreature__dtor_CNWSCreature(this, c);
 //}
+
+CNWSCreature_s::CNWSCreature_s(int a2, unsigned int a3, unsigned int a4) {
+	CNWSCreature__CNWSCreature(this, a2, a3, a4);
+}
+
+CNWSCreature_s::~CNWSCreature_s() {
+	CNWSCreature___CNWSCreature(this);
+}
 
 signed int CNWSCreature_s::AcquireItem(CNWSItem **Item, nwn_objid_t From_oID, nwn_objid_t a4, char a5, char a6, int a7, int bUpdateEncumbrance) {
 	return CNWSCreature__AcquireItem(this, Item, From_oID, a4, a5, a6, a7, bUpdateEncumbrance);
