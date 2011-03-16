@@ -2,6 +2,7 @@
 #define _NX_NWN_STRUCT_CNWSCREATURE_
 
 #include "CExoArrayList_2.h"
+#include "CAutoMap.h"
 
 struct CNWSCreature_s {
     CNWSObject                  		obj;
@@ -437,14 +438,12 @@ struct CNWSCreature_s {
 	uint8_t 								spacer2_438;    /* 0x0 */
 	uint8_t 								spacer2_439;    /* 0x0 */
 	uint8_t 								spacer2_440;    /* 0x0 */
-	void 								**cre_areaminimaps;    /* 0x048C */
-	CNWSArea 							**cre_arealist;    /* 0x0490 */
-	uint32_t 							cre_areacount;    /* 0x0494 */
-	uint32_t 							cre_areaalloc;    /* 0x0498 */
-	uint8_t 								spacer2_457;	/* 0x049C */
-	uint8_t 								spacer2_458;    /* 0x0 */
-	uint8_t 								spacer2_459;    /* 0x0 */
-	uint8_t 								spacer2_460;    /* 0x0 */
+	CCreatureMaps							AreaData;
+//	void								**cre_areaminimaps;    /* 0x048C */
+//	nwn_objid_t							*cre_arealist;    /* 0x0490 */
+//	uint32_t 							cre_areacount;    /* 0x0494 */
+//	uint32_t 							cre_areaalloc;    /* 0x0498 */
+//	uint32_t 								cre_minimapcount;	/* 0x049C */
 	uint8_t 								spacer2_461;    /* 0x04A0 */
 	uint8_t 								spacer2_462;    /* 0x0 */
 	uint8_t 								spacer2_463;    /* 0x0 */
@@ -1034,6 +1033,9 @@ struct CNWSCreature_s {
 	CNWSCreatureStats 				*cre_stats;			/* 0x0C64 */
 	uint32_t							field_C68;
 	uint32_t							field_C6C;
+
+	CNWSCreature_s(int a2, unsigned int a3, unsigned int a4);
+	~CNWSCreature_s();
 	
 	void				ActivityManager(unsigned long Activity);
 	signed int 			AcquireItem(CNWSItem **Item, nwn_objid_t From_oID, nwn_objid_t a4, char a5, char a6, int a7, int bUpdateEncumbrance);

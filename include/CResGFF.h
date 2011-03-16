@@ -56,6 +56,12 @@ struct CResGFF_s {
 	void GetGFFFileInfo(CExoString &Type, CExoString &Version);
 	void dtor();
 
+	int ReadFieldINT(CResStruct *ResStruct, char *Source, int &a3, int a4);
+	int GetList(void *a2, CResStruct *a3, char *a4);
+	unsigned long GetListCount(void *a2);
+	int GetListElement(CResStruct *a2, void *a3, unsigned long a4);
+	int ReadFieldVOID(CResStruct* a2, void *a3, unsigned long a4, char *Source, int &a6, void *a7);
+
 };
 
 #endif /* _NX_NWN_STRUCT_CRESGFF_ */

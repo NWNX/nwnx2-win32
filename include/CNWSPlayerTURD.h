@@ -1,6 +1,8 @@
 #ifndef _H_CNWSPLAYERTURD_H_
 #define _H_CNWSPLAYERTURD_H_
 
+#include "CAutoMap.h"
+
 struct CNWSPlayerTURD_s {
   unsigned __int32 field_000;
   unsigned __int8 TURD_id;
@@ -448,9 +450,10 @@ struct CNWSPlayerTURD_s {
   unsigned __int32 TURD_TimeOfDay;
   unsigned __int32 TURD_RepAmount;
   unsigned __int32 TURD_PersonalRep;
-  unsigned __int32 Mod_MapNumAreas;
-  unsigned __int32 field_1F0;
-  unsigned __int32 field_1F4;
+  CTURDMaps AreaData;
+//  unsigned __int32 Mod_MapNumAreas;
+//  nwn_objid_t *AreaList;
+//  void **MapData;
   
   void *ScalarDestructor(uint32_t Flags);
 };
