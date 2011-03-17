@@ -12,7 +12,9 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <malloc.h>
+#include "LogFile.h"
 
+#define _LOG LogFile::Instance(".\\logs.0\\nwnx_areas.txt").LOG
 
 
 // TODO: reference additional headers your program requires here

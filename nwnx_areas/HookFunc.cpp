@@ -2,159 +2,37 @@
 #include "nwnx_areas.h"
 #include "madchook.h"
 #include <string>
+#include <malloc.h>
+#include "HookFunc.h"
 
-extern CNWNXAreas NWNXAreas;
+int CHookFunctions::debugLevel = 0;
+char *CHookFunctions::m_sourcePath = NULL;
 
-#define _log(a,b,...) if(a<=NWNXAreas.debugLevel)NWNXAreas.LOG(b,__VA_ARGS__)
+#define _log(a,b,...) if(a<=debugLevel)_LOG(b,__VA_ARGS__)
 
-void (*nwn_CExoResMan__ExistsNextHook)();
-void (*nwn_OverridePlayerTURDAreaNextHook)();
-void (*nwn_OverrideSetPlayerAreaFromTURDNextHook)();
 
-char *git;
-int iType;
-std::string resPath;
-FILE *GIT = NULL;
-void __declspec(naked)CExoResMan__ExistsHookProc() {
-	__asm {
-		pushad	
-		mov eax, [esp+0x24]
-		mov git, eax
-		mov eax, [esp+0x28]
-		mov iType, eax;
-	}
-
-	if (iType != 2023) {
-		__asm {
-			popad
-			jmp nwn_CExoResMan__ExistsNextHook
-		}
-	}
-	else {
-		//_log(3, "o GIT request\n");
-		resPath = NWNXAreas.m_sourcePath;
-		resPath += "are\\";
-		resPath += git;
-		resPath += ".git";
-		GIT = fopen(resPath.c_str(), "rb");
-		if (GIT == NULL) {
-			_log(3, "o File not found\n");
-			__asm {
-				popad
-				jmp nwn_CExoResMan__ExistsNextHook
-			}
-		}
-		else {
-			//_log(2, "o external git found: %s\n", resPath.c_str());
-			fclose(GIT); // just needed to know it was there
-			__asm {
-				popad
-				mov eax, 1
-				retn 0x0C;
-			}
-		}
-	}
-}
-
-uint32_t *pTHIS = NULL;
-CNWSArea *OverrideArea = NULL;
-void __declspec(naked)OverridePlayerTURDAreaHookProc() {
-	__asm {
-		mov ecx, esi //this
-		pushad
-		mov pTHIS, ecx
-	}
+int __fastcall CHookFunctions::CExoResMan__ExistsHOOK(CExoResMan *pTHIS, void *pVOID, CResRef const &ResRef, unsigned short Type, unsigned long *a3) {
+	if (Type != 2023) return CExoResMan__ExistsNEXT(pTHIS, NULL, ResRef, Type, a3);
 	
-	OverrideArea = NWNXAreas.GetOverrideArea((CNWSCreature*)pTHIS);
-
-	if (!OverrideArea) {
-		_asm {
-			popad
-			jmp nwn_OverridePlayerTURDAreaNextHook // no override area, let the function do it's thing
-		}
+	char ref[17];
+	memcpy(ref, &ResRef, 16); ref[16] = 0;
+	std::string resPath = m_sourcePath;
+	resPath += "are\\";
+	resPath += ref;
+	resPath += ".git";
+	FILE *GIT = fopen(resPath.c_str(), "rb");
+	if (GIT == NULL) {
+		_log(3, "o External area (%s) file not found\n", ref);
+		return CExoResMan__ExistsNEXT(pTHIS, NULL, ResRef, Type, a3);
 	}
 	else {
-		__asm {
-			popad
-			mov eax, OverrideArea
-			mov ebx, 0x0042F5EB
-			jmp ebx 
-		}
+		//_log(2, "o external git found: %s\n", resPath.c_str());
+		fclose(GIT); // just needed to know it was there
+		return 1;
 	}
 }
 
-CNWSPlayerTURD *TURD;
-CNWSCreature *Cre;
-uint32_t AreaID=OBJECT_INVALID;
-float P_X, P_Y, P_Z, O_X, O_Y, O_Z;
-void __declspec(naked)OverrideSetPlayerAreaFromTURDHookProc() {
-	__asm {
-		mov eax, edi //get turd
-
-		pushad
-		mov TURD, eax
-	}
-
-	_log(3, "TURD OVERRIDE");
-
-	if (NWNXAreas.CheckArea(TURD)) {
-		AreaID = TURD->TURD_AreaId;
-		P_X = TURD->TURD_PositionX;
-		P_Y = TURD->TURD_PositionY;
-		P_Z = TURD->TURD_PositionZ;
-		O_X = TURD->TURD_OrientatX;
-		O_Y = TURD->TURD_OrientatY;
-		O_Z = TURD->TURD_OrientatZ;
-
-		__asm {
-			popad
-			mov eax, AreaID
-			mov [edi+0x74], eax
-			mov eax, P_X
-			mov [edi+0x78], eax
-			mov eax, P_Y
-			mov [edi+0x7C], eax
-			mov eax, P_Z 
-			mov [edi+0x80], eax
-			mov eax, O_X
-			mov [edi+0x84], eax
-			mov eax, O_Y
-			mov [edi+0x88], eax
-			mov eax, O_Z
-			mov [edi+0x90], eax
-
-			jmp nwn_OverrideSetPlayerAreaFromTURDNextHook
-
-		}
-	}
-	else {
-		__asm {
-			popad
-			jmp nwn_OverrideSetPlayerAreaFromTURDNextHook
-		}
-	}
-}
-
-CNWSCreature* (__fastcall *CNWSCreature__CNWSCreatureNEXT)(CNWSCreature *pTHIS, void *pVOID, int a2, unsigned int a3, unsigned int a4);
-CNWSCreature* __fastcall CNWSCreature__CNWSCreatureHOOK(CNWSCreature *pTHIS, void *pVOID, int a2, unsigned int a3, unsigned int a4) {
-	CNWSCreature *cre = CNWSCreature__CNWSCreatureNEXT(pTHIS, NULL, a2, a3, a4);
-	// There's probably an internal list that keeps track of creatures, but we'll do it this way
-	NWNXAreas.AddToCreatureList(cre->obj.obj_generic.obj_id);
-	return cre;
-}
-
-void (__fastcall *CNWSCreature___CNWSCreatureNEXT)(CNWSCreature *pTHIS);
-void __fastcall CNWSCreature___CNWSCreatureHOOK(CNWSCreature *pTHIS) {
-	NWNXAreas.RemoveFromCreatureList(pTHIS->obj.obj_generic.obj_id);
-	CNWSCreature___CNWSCreatureNEXT(pTHIS);
-}
-
-void (__fastcall *CNWSModule__AddToTURDListNEXT)(CNWSModule *pTHIS, void *pVOID, CNWSPlayerTURD *TURD);
-void __fastcall CNWSModule__AddToTURDListHOOK(CNWSModule *pTHIS, void *pVOID, CNWSPlayerTURD *TURD) {
-	_log(3, "%08X\n%08X\n", pTHIS, TURD);
-	CNWSModule__AddToTURDListNEXT(pTHIS, NULL, TURD);
-}
-
+#ifdef _DEBUG
 void *(__fastcall *CNWSCreature__SetAutoMapDataNEXT)(CNWSCreature *pTHIS, void *pVOID, int AreaCount, nwn_objid_t *AreaList, CMiniMapData **MiniMapData);
 void *__fastcall CNWSCreature__SetAutoMapDataHOOK(CNWSCreature *pTHIS, void *pVOID, int AreaCount, nwn_objid_t *AreaList, CMiniMapData **MiniMapData) {
 	_log(3, "CNWSCreature__SetAutoMapData\n");
@@ -292,7 +170,45 @@ void ** __fastcall CNWSPlayerTURD__CopyAutomapDataHOOK(CNWSPlayerTURD *pTHIS, vo
 	return (void**)AreaCount;
 }
 
-void HookFunctions() {
+void* (*operator_newNEXT)(unsigned int a1);
+void *__cdecl operator_newHOOK(unsigned int a1) {
+	return malloc(a1);
+}
+
+void (*operator_deleteNEXT)(unsigned int a1);
+void __cdecl operator_deleteHOOK(void *a1) {
+	free(a1);
+}
+#endif
+
+void CHookFunctions::HookFunctions() {
+
+	if (strlen(m_sourcePath) > 0 && HookCode((PVOID) CExoResMan__ExistsORG, CExoResMan__ExistsHOOK, (PVOID*)&CExoResMan__ExistsNEXT)) {
+		_log(0, "* CExoResMan__Exists hooked; SourcePath: '%s'\n", m_sourcePath);
+	}
+	else _log(0, "x CExoResMan_Exists hook failed\n");
+
+#ifdef _DEBUG
+// we only need this for debug compiling/linking since in that mode memory allocation/deallocation adds all kinds of
+// additional data which can overwrite actual data from the server process
+	if (1) {
+		DWORD operator_newORG = 0x00601C2C;
+		if (HookCode((PVOID) operator_newORG, operator_newHOOK, (PVOID*)&operator_newNEXT))	_log(0, "* nwn_operator_new hooked\n");
+		else _log(0, "x nwn_operator_new hook failed\n");
+
+		DWORD operator_deleteORG = 0x00601C21;
+		if (HookCode((PVOID) operator_deleteORG, operator_deleteHOOK, (PVOID*)&operator_deleteNEXT))	_log(0, "* nwn_operator_new hooked\n");
+		else _log(0, "x nwn_operator_new hook failed\n");
+	}
+
+	if (1) { //OnClientLeave: Copys the area data from the player object to the player TURD
+		DWORD CNWSPlayerTURD__CopyAutomapDataORG = 0x004DD210;
+		if (HookCode((PVOID) CNWSPlayerTURD__CopyAutomapDataORG, CNWSPlayerTURD__CopyAutomapDataHOOK, (PVOID*)&CNWSPlayerTURD__CopyAutomapDataNEXT))
+			_log(0, "* CNWSPlayerTURD__CopyAutomapData hooked\n");
+		else 
+			_log(0, "x CNWSPlayerTURD__CopyAutomapData hook failed\n");
+	}
+
 	if (1) { //OnClientLeave: Copys the area data from the player object to the player TURD
 		DWORD CNWSPlayerTURD__CopyAutomapDataORG = 0x004DD210;
 		if (HookCode((PVOID) CNWSPlayerTURD__CopyAutomapDataORG, CNWSPlayerTURD__CopyAutomapDataHOOK, (PVOID*)&CNWSPlayerTURD__CopyAutomapDataNEXT))
@@ -313,36 +229,8 @@ void HookFunctions() {
 		DWORD CNWSCreature__SetAutoMapDataORG = 0x004B1DD0;
 		if (HookCode((PVOID) CNWSCreature__SetAutoMapDataORG, CNWSCreature__SetAutoMapDataHOOK, (PVOID*)&CNWSCreature__SetAutoMapDataNEXT))
 			_log(0, "* CNWSCreature__SetAutoMapData hooked\n");
-		else 
+		else
 			_log(0, "x CNWSCreature__SetAutoMapData hook failed\n");
 	}
-
-/*
-	DWORD CNWSCreature__CNWSCreatureORG = 0x0048F5B0;
-	if (HookCode((PVOID) CNWSCreature__CNWSCreatureORG, CNWSCreature__CNWSCreatureHOOK, (PVOID*)&CNWSCreature__CNWSCreatureNEXT))
-		_log(0, "* CNWSCreature__CNWSCreature hooked\n");
-	else 
-		_log(0, "x CNWSCreature__CNWSCreature hook failed\n");
-
-	DWORD CNWSCreature___CNWSCreatureORG = 0x00490000;
-	if (HookCode((PVOID) CNWSCreature___CNWSCreatureORG, CNWSCreature___CNWSCreatureHOOK, (PVOID*)&CNWSCreature___CNWSCreatureNEXT))
-		_log(0, "* CNWSCreature___CNWSCreature hooked\n");
-	else 
-		_log(0, "x CNWSCreature___CNWSCreature hook failed\n");
-*/
-	//DWORD org_OverridePlayerTURDArea=0x0042F5D9;
-
-	//DWORD org_OverrideSetPlayerAreaFromTURD=0x0042F830;
-
-	DWORD org_CExoResMan__Exists=0x00416BE0;
-	if (strlen(NWNXAreas.m_sourcePath) > 0) {
-		if (HookCode((PVOID) org_CExoResMan__Exists, CExoResMan__ExistsHookProc, (PVOID*)&nwn_CExoResMan__ExistsNextHook)) _log(0, "* CExoResMan__Exists hooked; SourcePath: '%s'\n", NWNXAreas.m_sourcePath);
-	}
-
-	// catch and change the area on logout
-	//if (HookCode((PVOID) org_OverridePlayerTURDArea, OverridePlayerTURDAreaHookProc, (PVOID*)&nwn_OverridePlayerTURDAreaNextHook)) _log(0, "* nwn_OverridePlayerTURDArea hooked\n");
-	
-	// catch and change the area on login
-	// this crashes the server when the player logs back in: CNWSModule::LoadTURDLIST: virtual GetFirstName
-//	if (HookCode((PVOID) org_OverrideSetPlayerAreaFromTURD, OverrideSetPlayerAreaFromTURDHookProc, (PVOID*)&nwn_OverrideSetPlayerAreaFromTURDNextHook)) _log(0, "* OverrideSetPlayerAreaFromTURD hooked\n");
+#endif
 }

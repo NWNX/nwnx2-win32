@@ -92,7 +92,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) e:\games\nwn"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -170,7 +170,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) e:\games\nwn"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -293,6 +293,10 @@
 			</File>
 			<File
 				RelativePath=".\HookFunc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LogFile.cpp"
 				>
 			</File>
 			<File

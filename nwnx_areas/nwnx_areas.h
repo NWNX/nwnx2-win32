@@ -2,6 +2,7 @@
 #include "..\NWNXDLL\NWNXBase.h"
 #include "types.h"
 #include <vector>
+#include "HookFunc.h"
 
 
 class CNWNXAreas : public CNWNXBase {
@@ -14,16 +15,12 @@ public:
 	BOOL OnCreate(const char *LogDir);
 	BOOL OnRelease();
 
-	void LOG(const char *pcMsg, ...);
-
 	int debugLevel;
 	char m_sourcePath[512];
 	char LocationFailSafe[512];
 
 	CNWSArea *GetOverrideArea(CNWSCreature *cre);
 	int CheckArea(CNWSPlayerTURD *TURD);
-	void AddToCreatureList(nwn_objid_t oidCreature);
-	void RemoveFromCreatureList(nwn_objid_t oidCreature);
 
 private:
 	void WriteLogHeader(int debug);
@@ -40,7 +37,5 @@ private:
 
 	nwn_objid_t nLastAreaID;
 
-	std::vector<nwn_objid_t> CreatureList;
-
-
+	CHookFunctions *HookFunctions;
 };

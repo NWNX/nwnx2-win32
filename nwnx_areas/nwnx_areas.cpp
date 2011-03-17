@@ -1,17 +1,16 @@
 #include "StdAfx.h"
 #include "nwnx_areas.h"
 #include "../NWNXdll/IniFile.h"
-#include "HookFunc.h"
 
-
-#define _log(a,b,...) if(a<=debugLevel)LOG(b,__VA_ARGS__)
+#define _log(a,b,...) if(a<=debugLevel)_LOG(b,__VA_ARGS__)
 
 CNWNXAreas::CNWNXAreas() {
 	nLastAreaID = 0x7F000000;
-	CreatureList.reserve(20);
 }
 
 CNWNXAreas::~CNWNXAreas() {
+	_log(0, "o Shutting down\n");
+	delete HookFunctions;
 	OnRelease();
 }
 
@@ -24,7 +23,7 @@ BOOL CNWNXAreas::OnCreate(const char* LogDir) {
 
 	LoadConfiguration();
 	WriteLogHeader(debugLevel);
-	HookFunctions();
+	HookFunctions = new CHookFunctions(debugLevel, m_sourcePath);
 
 	return true;
 }
@@ -39,8 +38,6 @@ void CNWNXAreas::LoadConfiguration() {
 }
 
 BOOL CNWNXAreas::OnRelease() {
-	LOG("o Shutting down\n");
-
 	// call base class function
 	return CNWNXBase::OnRelease();
 }
@@ -86,47 +83,9 @@ unsigned long CNWNXAreas::OnRequestObject (char *gameObject, char* Request){
 	return OBJECT_INVALID; 
 }
 
-void CNWNXAreas::LOG(const char *pcMsg, ...) {
-	va_list argList;
-	char *pos;
-
-	if (m_fFile)
-	{  
-
-		if (ftell(m_fFile) > m_maxLogSizeKB)
-		{	
-			fclose(m_fFile);
-			m_fFile = fopen (m_LogFile, "w");
-			WriteLogHeader(debugLevel);
-			fprintf(m_fFile, "o Logfile hit maximum size limit, starting again.\n");
-		}
-
-		// build up the string
-		va_start(argList, pcMsg);
-		vsprintf(acBuffer, pcMsg, argList);
-		va_end(argList);
-
-		// replace any percent signs
-		pos = strchr(acBuffer, '%');
-		while (pos)
-		{
-			*pos = '~';
-			pos = strchr(acBuffer, '%');
-		}
-
-		// _log string in file
-		fprintf (m_fFile, acBuffer);
-		fflush (m_fFile);
-	}
-}
-
-void CNWNXAreas::WriteLogHeader(int debug)
-{
-	fprintf(m_fFile, "Windows NWNX Areas plugin v.0.0.1");
-	if (!debug) fprintf(m_fFile, " [logging off]");
-	else fprintf(m_fFile, " [_log level: %i]", debug);
-	fprintf(m_fFile, "\n");
-	fflush (m_fFile);
+void CNWNXAreas::WriteLogHeader(int debug) {
+	_log(0, "Windows NWNX Areas plugin v.0.0.3\n");
+	_log(0, "Log level: %i\n", debug);
 }
 
 CResRef *CResRef____as(CResRef *res, char *str)
@@ -328,12 +287,18 @@ int CNWNXAreas::RemoveAreaForCreatures(CNWSModule *pModule, nwn_objid_t nAreaID)
 int CNWNXAreas::SetAreaName(CNWSArea *pArea, char *sNewName) {
 	_log(3, "o SetAreaName: %08X, '%s'\n", pArea->are_id, sNewName);
 	_log(3, "o Module Language: %d\n", (*NWN_AppManager)->app_server->GetModuleLanguage());
-	CExoLocString *lsName = (CExoLocString *)&pArea->area_name;
+/*	CExoLocString *lsName = (CExoLocString *)&pArea->area_name;
 	if (!lsName) return 0;
 	char *newstr = new char[strlen(sNewName)+1];
 	memcpy(newstr, sNewName, strlen(sNewName));
 	newstr[strlen(sNewName)] = 0;
 	lsName->AddString(0, newstr);
+*/
+	CExoLinkedList *NameList = pArea->area_name.List;
+	if (NameList) {
+		CExoLocStringNode *NameNode = (CExoLocStringNode*)NameList->ListHeader->FirstElement->Data;
+		NameNode->Text = sNewName;
+	}
 	UpdateAreasForDMs();
 	return 1;
 }
@@ -408,25 +373,6 @@ int CNWNXAreas::CheckArea(CNWSPlayerTURD *TURD) {
 	return 0;
 }
 
-void CNWNXAreas::AddToCreatureList(nwn_objid_t oidCreature) {
-	if (CreatureList.capacity() == CreatureList.size()) {
-		CreatureList.reserve(CreatureList.size() * 2);
-	}
-	CreatureList.push_back(oidCreature);
-}
-
-void CNWNXAreas::RemoveFromCreatureList(nwn_objid_t oidCreature) {
-	std::vector<nwn_objid_t>::iterator it = CreatureList.begin();
-	while (it != CreatureList.end()) {
-		if (*it == oidCreature) {
-			CreatureList.erase(it);
-		}
-		else {
-			++it;
-		}
-	}
-}
-
 void CNWNXAreas::CleanUpTURDS(CNWSModule *pModule, nwn_objid_t nAreaID) {
 	pModule = (CNWSModule*)(((char*)pModule)-0x1C);
 	_log(3, "[CleanUpTURDS]\n");
@@ -457,7 +403,6 @@ void CNWNXAreas::AddAreaToTURDS(CNWSModule *pModule, nwn_objid_t nAreaID) {
 			if (TURD->AreaData.MiniMap) {
 				TURD->AreaData.AddArea(nAreaID);
 			}
-
 			Element = Element->NextElement;
 		}
 	}
