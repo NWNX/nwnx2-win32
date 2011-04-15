@@ -144,4 +144,6 @@ void CNWNXFuncs::CreateFunctionLookup() {
 	FunctionLookup["GETAUTOREMOVEKEY"] =				  i = 133;  pFunc[i] = &CNWNXFuncs::GetAutoRemoveKey;
 	FunctionLookup["SETAUTOREMOVEKEY"] =				  i = 134;  pFunc[i] = &CNWNXFuncs::SetAutoRemoveKey;
 
+	FunctionLookup["GETDESTINATIONTAG"] =				  i = 135;  pFunc[i] = &CNWNXFuncs::GetDestinationTag;
+	FunctionLookup["SETDESTINATIONTAG"] =				  i = 136;  pFunc[i] = &CNWNXFuncs::SetDestinationTag;
 }

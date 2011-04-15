@@ -165,7 +165,6 @@ int __fastcall CHookFunctions::CServerExoAppInternal__RemovePCFromWorldHOOK(CSer
 	return CServerExoAppInternal__RemovePCFromWorldNEXT(pTHIS, NULL, a2);
 }
 
-
 void CHookFunctions::HookFunctions() {
 	if(NWNFuncs.bHookCreateGeometry) {
 		if (HookCode((PVOID) org_CreateNewGeometry, CreateNewGeometryHookProc, (PVOID*)&nwn_CreateNewGeometryNextHook))

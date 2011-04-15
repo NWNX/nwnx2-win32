@@ -1185,25 +1185,26 @@ int CNWNXFuncs::SetEvent() {
 }
 
 int CNWNXFuncs::SetTag() {
-	_log(3, "SetTag: %s\n", Params);
-	uint32_t oID = ((CNWSObject*)oObject)->obj_generic.obj_id;
-	CNWSModule *Mod = ((*NWN_AppManager)->app_server->srv_internal)->GetModule();
-	CLookupTableObject *LookupObject = Mod->lookuptable;
-	int i=0;
-	while (i<Mod->lookuptable_len) {
-		if (LookupObject->obj_oid == oID) {
-			CGenericObject *obj = LookupObject->pObject;
-			CExoString sNewTag(Params);
-			((CNWSObject*)oObject)->SetTag(sNewTag);
+//	_log(3, "SetTag: %s\n", Params);
 
-			strcpy(LookupObject->Tag, Params);
-			break;
-			//CExoString Newtag(Params);
+	CExoString sNewTag(Params);
+
+	CGenericObject *obj = (CGenericObject*)oObject;
+	if (obj->obj_type2 >= 4) {
+		uint32_t oID = obj->obj_id;
+
+		CNWSModule *Mod = ((*NWN_AppManager)->app_server->srv_internal)->GetModule();
+		Mod->RemoveObjectFromLookupTable(obj->obj_tag, oID);
+		Mod->AddObjectToLookupTable(sNewTag, oID);
+
+		if (obj->obj_type2 == 4) {
+			CNWSArea *Area = ((CNWSObject*)obj)->AsNWSArea();
+			Area->are_tag = sNewTag;
 		}
-		LookupObject++;
-		i++;
+		else {
+			obj->obj_tag = sNewTag;
+		}
 	}
-	
 	return 1;
 }
 
@@ -2208,8 +2209,14 @@ int CNWNXFuncs::SetConversation() {
 	if (len > 16) len = 16;
 
 	switch(((CGenericObject*)oObject)->obj_type) {
-		case OBJECT_TYPE_CREATURE: memcpy_s(((CNWSCreature*)oObject)->cre_stats->cs_conv, len, Params, len); break;
-		case OBJECT_TYPE_PLACEABLE: memcpy_s(((CNWSPlaceable*)oObject)->plc_conv, len, Params, len); break;
+		case OBJECT_TYPE_CREATURE: 
+			memset(((CNWSCreature*)oObject)->cre_stats->cs_conv, 0, 16);
+			memcpy_s(((CNWSCreature*)oObject)->cre_stats->cs_conv, len, Params, len);
+		break;
+		case OBJECT_TYPE_PLACEABLE: 
+			memset(((CNWSPlaceable*)oObject)->plc_conv, 0, 16);
+			memcpy_s(((CNWSPlaceable*)oObject)->plc_conv, len, Params, len);
+		break;
 		default :
 			sprintf(Params, "-1");
 			return 0;
@@ -3670,5 +3677,42 @@ int CNWNXFuncs::SetAutoRemoveKey() {
 		return 1;
 	}*/
 	else sprintf(Params, "-1");
+	return 1;
+}
+
+int CNWNXFuncs::GetDestinationTag() {
+	CGenericObject *Obj = (CGenericObject*)oObject;
+	CExoString *DestTag = NULL;
+	if (Obj->obj_type2 == OBJECT_TYPE2_DOOR) {
+		DestTag = &((CNWSDoor*)Obj)->LinkedToTag;
+	}
+	else if (Obj->obj_type2 == OBJECT_TYPE2_TRIGGER) {
+		DestTag = &((CNWSTrigger*)Obj)->LinkedTo;
+	}
+	else {
+		sprintf(Params, "");
+		return 0;
+	}
+	if (DestTag && DestTag->text) {
+		sprintf(Params, "%s", DestTag->text);
+	}
+	else sprintf(Params, "");
+	return 1;
+}
+
+int CNWNXFuncs::SetDestinationTag() {
+	CGenericObject *Obj = (CGenericObject*)oObject;
+	CExoString *DestTag = NULL;
+	if (Obj->obj_type2 == OBJECT_TYPE2_DOOR) {
+		DestTag = &((CNWSDoor*)Obj)->LinkedToTag;
+	}
+	else if (Obj->obj_type2 == OBJECT_TYPE2_TRIGGER) {
+		DestTag = &((CNWSTrigger*)Obj)->LinkedTo;
+	}
+	else {
+		sprintf(Params, "-1");
+		return 0;
+	}
+	*DestTag = Params;
 	return 1;
 }

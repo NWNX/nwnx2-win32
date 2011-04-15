@@ -39,6 +39,12 @@ char* CNWNXFuncs::OnRequest(char *gameObject, char* Request, char* Parameters) {
 	else if (strcmp(Request, "SETEFFECTSPELLIDBYEFFECTID") == 0) SetEffectSpellIDByEffectID();
 	else if (strcmp(Request, "SETWORLDTIME") == 0) nwn_SetWorldTime(P1, P2, P3);
 
+	else if (strcmp(Request, "TEST") == 0) {
+		CNWSArea *Area = ((CNWSObject*)oObject)->AsNWSArea();
+		_log(3, "%08X\n", Area);
+		
+	}
+
 	else {sprintf(Parameters, "-1"); _log(1, "o Could not find requested function.\n");}
 
 	return NULL;

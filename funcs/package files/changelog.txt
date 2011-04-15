@@ -379,8 +379,21 @@ v 0.0.87
 	Remove the old Immunity override functions (didn't do anything anyways)
 	
 v 0.0.88
-	Added
+	Added:
 		GetAutoRemoveKeyFlag (doesn't work for placeables yet)
 		SetAutoRemoveKeyFlag (doesn't work for placeables yet)
 		Script hook for RemovePCFromWorld
 			Fires before the player actually leaves the server, which means GetName, GetArea, etc works
+			
+v 0.0.89
+	Fixed:
+		NWNXFuncs_SetTag should now work correctly
+		NWNXFuncs_SetConversation should now work correctly
+		
+		NWNXFuncs_SetVisibilityOverride, NWNXFuncs_SetVisibility
+			Addded DeleteLocalString to the script functions which should prevent the server from crashing on shutdown
+	
+	Added:
+		NWNXFuncs_Get/SetDestinationTag
+			Get and change the tag of the destination for area transitions (doors or triggers)
+		

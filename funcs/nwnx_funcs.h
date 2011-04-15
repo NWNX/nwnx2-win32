@@ -12,7 +12,7 @@
 
 #define PLAYER_ID_ALL_PLAYERS						0xFFFFFFF7
 
-#define FUNCTION_COUNT 135
+#define FUNCTION_COUNT 137
 
 class CNWNXFuncs : public CNWNXBase {
 public: // main plugin functions
@@ -285,6 +285,9 @@ public: //scripts functions
 
 	int GetAutoRemoveKey();
 	int SetAutoRemoveKey();
+
+	int GetDestinationTag();
+	int SetDestinationTag();
 };
 
 #endif;

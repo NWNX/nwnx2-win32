@@ -26,7 +26,7 @@ private:
 	DWORD CNWSMessage__TestObjectVisibleORG;
 	DWORD CNWSCreatureStats__GetEffectImmunityORG;
 	DWORD CServerExoAppInternal__RemovePCFromWorldORG;
-
+	
 	static void __fastcall CreateNewGeometryHookProc(CNWSTrigger *pTHIS, void *pVOID, float size, CScriptLocation *Loc, CNWSArea *Area);
 	static int __fastcall ExecuteCommandEffectAppear_Hook(void *pTHIS, void *pVOID, int a2, int a3);
 	static int __fastcall CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyTypeHOOK(void *pTHIS, void *pVOID, int a1, int a2);

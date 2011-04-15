@@ -868,6 +868,12 @@ int NWNXFuncs_GetAutoRemoveKeyFlag(object oObject);
 //Set the AutoRemoveKey flag from a door or placeable object
 void NWNXFuncs_SetAutoRemoveKeyFlag(object oObject, int iFlag);
 
+//Get the Destination Tag of an area transition (Door or Trigger)
+string NWNXFuncs_GetDestinationTag(object oObject);
+
+//Set the Destination Tag of an area transition (Door or Trigger)
+void NWNXFuncs_SetDestinationTag(object oObject, string sTag);
+
 //*******************************************************************************************************************
 
 object NWNXFuncs_StringToObject(string soID) {
@@ -1879,10 +1885,12 @@ itemproperty NWNXFuncs_ItemPropertyCustom(int iType, int iSubType, int iCostTabl
 
 void NWNXFuncs_SetVisibilityOverride(object oObject, int nVisibilityType) {
     SetLocalString(oObject, "NWNX!FUNCS!SET_VISIBILITY_OVERRIDE", IntToString(nVisibilityType));
+    DeleteLocalString(oObject, "NWNX!FUNCS!SET_VISIBILITY_OVERRIDE");
 }
 
 void NWNXFuncs_SetVisibility(object oObject1, object oObject2, int nVisibility) {
     SetLocalString(oObject1, "NWNX!FUNCS!SET_VISIBILITY", ObjectToString(oObject2)+" "+IntToString(nVisibility));
+    DeleteLocalString(oObject1, "NWNX!FUNCS!SET_VISIBILITY");
 }
 
 int NWNXFuncs_GetVisibilityOverride(object oObject) {
@@ -1945,4 +1953,16 @@ int NWNXFuncs_GetAutoRemoveKeyFlag(object oObject) {
 void NWNXFuncs_SetAutoRemoveKeyFlag(object oObject, int iFlag) {
 	SetLocalString(oObject, "NWNX!FUNCS!SETAUTOREMOVEKEY", IntToString(iFlag));
 	DeleteLocalString(oObject, "NWNX!FUNCS!SETAUTOREMOVEKEY");
+}
+
+string NWNXFuncs_GetDestinationTag(object oObject) {
+	SetLocalString(oObject, "NWNX!FUNCS!GETDESTINATIONTAG", "---------------------------------");
+	string sTag = GetLocalString(oObject, "NWNX!FUNCS!GETDESTINATIONTAG");
+	DeleteLocalString(oObject, "NWNX!FUNCS!GETDESTINATIONTAG");
+	return sTag;
+}
+
+void NWNXFuncs_SetDestinationTag(object oObject, string sTag) {
+	SetLocalString(oObject, "NWNX!FUNCS!SETDESTINATIONTAG", sTag);
+	DeleteLocalString(oObject, "NWNX!FUNCS!SETDESTINATIONTAG");
 }
