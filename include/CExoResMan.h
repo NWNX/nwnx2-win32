@@ -23,7 +23,7 @@ struct CExoResMan_s {
 
 	int Exists(CResRef *ResRef, unsigned short a2, unsigned long *a3);
 	int FreeChunk();
-
+	int ServiceFromResFile(void *a2, int a3);
 };
 
 #endif

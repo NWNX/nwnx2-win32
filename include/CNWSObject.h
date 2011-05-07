@@ -158,6 +158,7 @@ CNWSStore *AsNWSStore();
 
 
 int16_t				ApplyEffect(CGameEffect *Effect, int a3, int a4);
+void *				BroadcastDialog(CExoString Msg, float Max_Distance);
 void 				ClearSpellEffectsOnOthers();
 int 				DoDamageImmunity(CNWSCreature *Attacker, int DamageDelivered, int DamageFlags, int _bMaxDamage, int bFeedback);
 int					DoDamageResistance(CNWSCreature *a2, int a3, signed int a4, int a5, int a6, int a7);

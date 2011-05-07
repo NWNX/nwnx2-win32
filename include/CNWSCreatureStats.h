@@ -1,14 +1,16 @@
 #ifndef _NX_NWN_STRUCT_CNWSCREATURESTATS_
 #define _NX_NWN_STRUCT_CNWSCREATURESTATS_
 
+#include "CExoLocString2.h"
+
 struct CNWSCreatureStats_s {
   CExoArrayList_uint16 cs_feats;
   CExoArrayList_ptr cs_featuses;
   CExoArrayList_uint16 cs_skin_feats;
   CNWSCreature *cs_original;
   CExoArrayList_ptr cs_levelstat;
-  CExoLocString cs_firstname;
-  CExoLocString cs_lastname;
+  CExoLocString2 cs_firstname;
+  CExoLocString2 cs_lastname;
   char cs_conv[16];
   unsigned int cs_conv_interruptable;
   CExoLocString cs_desc_base;

@@ -27,6 +27,7 @@
 #define PLAYER_ID_ALL_PLAYERS						0xFFFFFFF7
 
 #define OBJECT_INVALID                            0x7F000000
+#define PLAYER_INVALID							  0xFFFFFFFF
 
 
 #define OBJECT_TYPE2_MODULE                                 3

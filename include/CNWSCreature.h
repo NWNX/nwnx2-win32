@@ -1044,6 +1044,7 @@ struct CNWSCreature_s {
 	void 				CancelRest(unsigned short a1);
 	int 				GetBlind();
 	int					GetDamageFlags();
+	CNWSFaction * 		GetFaction();
 	bool 				GetFlanked(CNWSCreature *Target);
 	int 				GetFlatFooted();
 	int 				GetInvisible(CNWSObject* obj, int i);

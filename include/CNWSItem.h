@@ -121,6 +121,7 @@ struct CNWSItem_s {
 	void AddToArea(CNWSArea *Area, float x, float y, float z, int a5);
 	int ComputeArmorClass();
 	unsigned short GetDamageFlags();
+	unsigned char GetMinEquipLevel();
 	int GetPropertyByType(CNWSItemProperty **iprp, uint16_t ipType, uint16_t ipSubType);
 	int GetPropertyByTypeExists(unsigned short a1, unsigned short a2);
 	int LoadFromTemplate(CResRef CRes, CExoString *Tag);

@@ -59,8 +59,7 @@ struct CNWSArea_s {
     uint32_t                    field_F4;
     uint32_t                    field_F8;
     uint32_t                    field_FC;
-    uint32_t                    field_100;
-    uint32_t                    field_104;
+    CExoString                  are_tag;
     uint32_t                    field_108;
     uint32_t                    field_10C;
     CNWSScriptVarTable          area_vartable;	/* 0x0110 */

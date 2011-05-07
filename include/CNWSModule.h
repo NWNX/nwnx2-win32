@@ -67,13 +67,13 @@ struct CNWSModule_s {
     uint32_t					mod_objlist_alloc;				/* 0x0138 */
     
     uint32_t					spacer2_01;						/* 0x013C */
-    uint32_t					spacer2_02;						/* 0x013C */
-    uint32_t					spacer2_03;						/* 0x013C */
-    uint32_t					spacer2_04;						/* 0x013C */
-    CLookupTableObject			*lookuptable;					/* 0x013C */
-    uint32_t					lookuptable_len;				/* 0x013C */
-    uint32_t					lookuptable_alloc;				/* 0x013C */
-    uint32_t					spacer2[26];					/* 0x013C */
+    uint32_t					spacer2_02;						/* 0x0140 */
+    uint32_t					spacer2_03;						/* 0x0144 */
+    uint32_t					spacer2_04;						/* 0x0148 */
+    CLookupTableObject			*lookuptable;					/* 0x014C */
+    uint32_t					lookuptable_len;				/* 0x0150 */
+    uint32_t					lookuptable_alloc;				/* 0x0154 */
+    uint32_t					spacer2[26];					/* 0x0158 */
     
     uint32_t					mod_date_year;					/* 0x01C0 */
     uint32_t					mod_date_month;					/* 0x01C4 */
@@ -94,11 +94,12 @@ struct CNWSModule_s {
     }
 
 	void				AddObjectToLimbo(nwn_objid_t oID);
-	int 				AddObjectToLookupTable(CExoString Tag, int a3, nwn_objid_t oID);
+	int 				AddObjectToLookupTable(CExoString Tag, nwn_objid_t oID);
 	CNWSArea * 			GetArea(nwn_objid_t oID);
 	CNWSPlayerTURD* 	GetPlayerTURDFromList(CNWSPlayer *Player);
 	void 				SetScriptName(int iScript, CExoString ScriptName);
-	int					FindObjectByTagOrdinal(CExoString *sTag, int nNth);
+	int 				RemoveObjectFromLookupTable(CExoString Tag, nwn_objid_t oID);
+	nwn_objid_t			FindObjectByTagOrdinal(CExoString *sTag, int nNth);
 };
 
 #endif

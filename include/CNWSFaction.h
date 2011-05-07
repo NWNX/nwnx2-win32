@@ -14,7 +14,7 @@ struct CNWSFaction_s {
     char               *fac_name;
 
 	uint32_t GetFactionMember(int nNth, int bNPCs);
-
+	void SendChatMessage(nwn_objid_t Sender_oID, CExoString Msg);
 };
 
 #endif
