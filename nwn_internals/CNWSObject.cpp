@@ -19,6 +19,7 @@ void 			(__thiscall *CNWSObject__SaveVarTable)(CNWSObject *pTHIS, CResGFF *pResG
 void 			(__thiscall *CNWSObject__LoadVarTable)(CNWSObject *pTHIS, CResGFF *pResGFF, CResStruct *pResStruct) = (void(__thiscall*)(CNWSObject *pTHIS, CResGFF *pResGFF, CResStruct *pResStruct))0x004DEF20;
 void 			(__thiscall *CNWSObject__SetPosition)(CNWSObject *pTHIS, Vector v, int a3) = (void(__thiscall*)(CNWSObject *pTHIS, Vector v, int a3))0x004E25D0;
 void 			(__thiscall *CNWSObject__SetOrientation)(CNWSObject *pTHIS, Vector v) = (void(__thiscall*)(CNWSObject *pTHIS, Vector v))0x004E25B0;
+void *			(__thiscall *CNWSObject__BroadcastDialog)(CNWSObject *pTHIS, CExoString Msg, float Max_Distance) = (void*(__thiscall*)(CNWSObject *pTHIS, CExoString Msg, float Max_Distance))0x004E54B0;
 
 CNWSItem *CNWSObject_s::AsNWSItem() {
 	return ((CNWSItem*)((char*)this-0x10));
@@ -108,4 +109,8 @@ void CNWSObject_s::SetPosition(Vector v, int a3) {
 
 void CNWSObject_s::SetOrientation(Vector v) {
 	CNWSObject__SetOrientation(this, v);
+}
+
+void *CNWSObject_s::BroadcastDialog(CExoString Msg, float Max_Distance) {
+	return CNWSObject__BroadcastDialog(this, Msg, Max_Distance);
 }

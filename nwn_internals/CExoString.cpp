@@ -107,13 +107,13 @@ bool CExoString::operator==(CExoString const &Comp) {
 	return true;
 }
 
-bool CExoString::operator==(char const &c) {
+bool CExoString::operator==(char const *c) {
 	if (!text && !c) return true;
 	else if (!text && c || text && !c)
 		return false;
 	
 	//both have to be valid pointers at this point
-	if (strcmp(text, &c))
+	if (strcmp(text, c))
 		return false;
 		
 	return true;
@@ -147,22 +147,22 @@ CExoString &CExoString::operator=(CExoString const &Op) {
 	return *this;
 }
 
-CExoString &CExoString::operator=(char const &Op) {
-	if (Op && text && (strcmp(&Op, text) == 0)) return *this;
+CExoString &CExoString::operator=(char const *Op) {
+	if (Op && text && (strcmp(Op, text) == 0)) return *this;
 
 	if (text) {
-		if (!Op || strlen(&Op)+1 > len) {
+		if (!Op || strlen(Op)+1 > len) {
 			len = 0;
 			delete[] text;
 			text = NULL;
 		}
 	}
-	if (Op && strlen(&Op)+1 > 1) {
+	if (Op && strlen(Op)+1 > 1) {
 		if (!text) {
-			len = strlen(&Op)+1;
+			len = strlen(Op)+1;
 			text = new char[len];
 		}
-		strcpy_s(text, len, &Op);
+		strcpy_s(text, len, Op);
 	}
 	else {
 		if (text) {
@@ -207,12 +207,12 @@ CExoString CExoString::operator+(CExoString const &Op) {
 	return result;
 }
 
-CExoString CExoString::operator+(char const &Op) {
+CExoString CExoString::operator+(char const *Op) {
 	char *c=NULL;
 	int iLength=0;
 
 	int strlenThis = this->text ? this->len-1 : 0,
-		strlenOp = strlen(&Op);
+		strlenOp = strlen(Op);
 
 	CExoString result;
 
@@ -226,11 +226,11 @@ CExoString CExoString::operator+(char const &Op) {
 		
 		if (strlenThis > 0 && strlenOp > 0) {
 			strcpy_s(c, iLength, this->text);
-			strcat_s(c, iLength, &Op);
+			strcat_s(c, iLength, Op);
 		}
 		else {
 			if (strlenThis > 0) strcpy_s(c, iLength, this->text);
-			else if (strlenOp > 0) strcpy_s(c, iLength, &Op);
+			else if (strlenOp > 0) strcpy_s(c, iLength, Op);
 		}
 
 		result = c;

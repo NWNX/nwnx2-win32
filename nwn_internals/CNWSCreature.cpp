@@ -11,6 +11,7 @@ __int16 			(__thiscall *CNWSCreature__GetArmorClass)(CNWSCreature *pTHIS) = (__i
 int 				(__thiscall *CNWSCreature__GetRelativeWeaponSize)(CNWSCreature *pTHIS, CNWSItem *weapon) = (int (__thiscall*)(CNWSCreature *pTHIS, CNWSItem *weapon))0x004A6D00;
 int 				(__thiscall *CNWSCreature__GetTotalEffectBonus)(CNWSCreature *pTHIS, char a2, CNWSObject *obj_a, int a4, int a5, unsigned __int8 a6, unsigned __int8 a7, unsigned __int8 a8, unsigned __int8 a9, int a10) = (int (__thiscall*)(CNWSCreature *pTHIS, char a2, CNWSObject *obj_a, int a4, int a5, unsigned __int8 a6, unsigned __int8 a7, unsigned __int8 a8, unsigned __int8 a9, int a10))0x004AB140;
 int 				(__thiscall *CNWSCreature__GetBlind)(CNWSCreature *Cre) = (int (__thiscall*)(CNWSCreature *Cre))0x004AEB40;
+CNWSFaction * 		(__thiscall *CNWSCreature__GetFaction)(CNWSCreature *pTHIS) = (CNWSFaction*(__thiscall*)(CNWSCreature *pTHIS))0x004C7770;
 bool 				(__thiscall *CNWSCreature__GetFlanked)(CNWSCreature *pTHIS, CNWSCreature *Target) = (bool (__thiscall*)(CNWSCreature *pTHIS, CNWSCreature *Target))0x00551250;
 int 				(__thiscall *CNWSCreature__GetFlatFooted)(CNWSCreature *pTHIS) = (int (__thiscall*)(CNWSCreature *pTHIS))0x00551170;
 int 				(__thiscall *CNWSCreature__GetInvisible)(CNWSCreature *pTHIS, CNWSObject* obj, int i) = (int (__thiscall*)(CNWSCreature *pTHIS, CNWSObject* obj, int i))0x004AEB60;
@@ -247,4 +248,8 @@ int16_t CNWSCreature_s::GetMaxHitPoints(int a2) {
 
 void CNWSCreature_s::UnpossessCreature() {
 	CNWSCreature__UnpossessCreature(this);
+}
+
+CNWSFaction * CNWSCreature_s::GetFaction() {
+	return CNWSCreature__GetFaction(this);
 }

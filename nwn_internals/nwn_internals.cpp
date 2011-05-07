@@ -48,7 +48,7 @@ void (__fastcall *CNWSCreature__dtor_CNWSCreature)						(void *pThis, void *pVOI
 
 /*
 void SendFeedbackmessage(nwn_objid_t oID, char *Msg) {
-	CNWSCreature *cre = CServerExoAppInternal__GetCreatureByGameObjectID((*NWN_AppManager)->app_server->srv_internal, NULL, oID);
+	CNWSCreature *cre = CServerExoAppInternal__GetCreatureByGameObjectID(Serversrv_internal, NULL, oID);
 	CNWCCMessageData *Data = (CNWCCMessageData*)malloc(52);
 	CNWCCMessageData__ctor(Data, NULL);
 	CExoString cstr(Msg);
