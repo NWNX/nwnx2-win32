@@ -3,15 +3,9 @@
 #include "madchook.h"
 #include <math.h>
 
-int CHookFunctions::debugLevel = 0;
-
 extern CNWNXFuncs NWNFuncs;
 
-#define _log(a,b,...) if(a<=debugLevel)NWNFuncs.LOG(b,__VA_ARGS__)
-
-CHookFunctions::CHookFunctions(int debugLevel) {
-	this->debugLevel = debugLevel;
-
+CHookFunctions::CHookFunctions() {
 	org_CreateNewGeometry = 0x005A9250;
 	org_ExecuteCommandEffectAppear = 0x00585110;
 	CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyTypeORG = 0x0058EA00;
@@ -24,86 +18,14 @@ CHookFunctions::CHookFunctions(int debugLevel) {
 }
 
 int __fastcall CHookFunctions::ExecuteCommandEffectAppear_Hook(void *pTHIS, void *pVOID, int a2, int a3) {
-	CNWSScriptVarTable *vartable = NULL;
-	if (NWNFuncs.CustomEffectObject == NULL) {
-		char *mod = (char*)((*NWN_AppManager)->app_server->srv_internal)->GetModule();
-		CNWSModule *Mod = (CNWSModule*)(mod+=0x1C);
-		vartable = &Mod->mod_vartable;
-	}
-	else {
-		vartable = &NWNFuncs.CustomEffectObject->obj_vartable;
-	}
-
-
-	CExoString VarName("NWNXFUNCS_CE");
-	if (vartable->GetInt(VarName)) {
-		CExoString *effectstruct = NULL;
-		VarName = "NWNXFUNCS_CE_EFFECT";
-		effectstruct = vartable->GetString(VarName);
-		int NumInts=0;
-		std::string Ints;
-		VarName = "NWNXFUNCS_CE_NUMINTS";
-		NumInts = vartable->GetInt(VarName);
-		if (NumInts > 0) {
-			VarName = "NWNXFUNCS_CE_INTS";
-			Ints = (vartable->GetString(VarName))->text;
-		}
-		if (effectstruct) {
-			_log(3, "%s\n", effectstruct->text);
-			if (strlen(effectstruct->text) > 0) {
-				int i=0;
-				if (a3 <= 0 || (*NWN_VirtualMachine)->StackPopInteger(&i)) {
-					int type=0, creator=0, spellid=0;
-					if (sscanf(effectstruct->text, "%d %x %d", &type, &creator, &spellid) == 3) {
-						_log(3, "scanned: %d %x %d\n", type, creator, spellid);
-
-						CGameEffect *e = (CGameEffect*)malloc(0x90);
-						e->ctor(1);
-					
-						e->eff_type = type;
-						e->eff_creator = creator;
-						e->eff_spellid = spellid;
-						e->eff_dursubtype = e->eff_dursubtype & 0xFFEF | 8;
-
-						_log(3, "NumInts: %d\n", NumInts);
-						if (e->eff_num_integers < NumInts) {
-							e->SetNumIntegers(NumInts);
-						}
-
-						int iP=0, iStart=0;
-						int value;
-						for (int j=0; j<NumInts; j++) {
-							iP = Ints.find(" ", iStart);
-							value = atoi(Ints.substr(iStart, iP-iStart).c_str());
-							_log(3, "Int[%d]: %d\n", j, value);
-							e->eff_integers[j] = value;
-							iStart = iP+1;
-						}
-
-						if ((*NWN_VirtualMachine)->StackPushEngineStructure(0, e)) {
-							if (e) {
-								e->dtor();
-								free(e);
-							}
-							return 0;
-						}
-						else {
-							return -638;
-						}
-					}
-				}
-				else {
-					return -639;
-				}
-			}
-		}
-	}
+	int iRet = NWNFuncs.NssEffects->CreateCustomEffect(a3);
+	if (iRet != -1) return iRet;
 
 	return ExecuteCommandEffectAppear_Next(pTHIS, NULL, a2, a3);
 }
 
 int __fastcall CHookFunctions::CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyTypeHOOK(void *pTHIS, void *pVOID, int a1, int a2) {
-	int iRet = NWNFuncs.GetItemPropertyInformation();
+	int iRet = NWNFuncs.NssItemProperty->GetItemPropertyInformation();
 	if (iRet != -1) return iRet;
 
 	return CNWVirtualMachineCommands__ExecuteCommandGetItemPropertyTypeNEXT(pTHIS, NULL, a1, a2);
@@ -111,32 +33,25 @@ int __fastcall CHookFunctions::CNWVirtualMachineCommands__ExecuteCommandGetItemP
 
 int __fastcall CHookFunctions::CNWVirtualMachineCommands__ExecuteCommandItemPropertyEffectHOOK(void *pTHIS, void *pVOID, int a1, int a2) {
 	// I'm hooking ItemPropertyNoDamage because I'm hoping it isn't used much and has no parameters to pop from the stack
-	int iRet = NWNFuncs.ItemPropertyCustom(pTHIS, a1);
+	int iRet = NWNFuncs.NssItemProperty->ItemPropertyCustom(pTHIS, a1);
 	if (iRet != -1) return iRet;
 
 	return CNWVirtualMachineCommands__ExecuteCommandItemPropertyEffectNEXT(pTHIS, NULL, a1, a2);
 }
 
 int __fastcall CHookFunctions::CNWSMessage__TestObjectVisibleHOOK(void *pMessage, void *pVOID, CNWSObject *pObject1, CNWSObject *pObject2) {
-	nwn_objid_t oObject1 = pObject1->obj_generic.obj_id;
-	nwn_objid_t oObject2 = pObject2->obj_generic.obj_id;
+	nwn_objid_t oObject1 = pObject1->obj_id;
+	nwn_objid_t oObject2 = pObject2->obj_id;
 	int nResult = 0;
-	if(!NWNFuncs.Visibility.TestVisibility(oObject1, oObject2, nResult)){
+	if(!NWNFuncs.Visibility->TestVisibility(oObject1, oObject2, nResult)){
 		nResult = CNWSMessage__TestObjectVisibleNEXT(pMessage, NULL, pObject1, pObject2);
 	}
-//	_log(3, "Visibility check: %x - %x: %d\n", pObject1->obj_generic.obj_id, pObject2->obj_generic.obj_id, nResult);
+//	_log(3, "Visibility check: %x - %x: %d\n", pObject1->obj_id, pObject2->obj_id, nResult);
 	return nResult;
 }
 
 void __fastcall CHookFunctions::CreateNewGeometryHookProc(CNWSTrigger *pTHIS, void *pVOID, float size, CScriptLocation *Loc, CNWSArea *Area) {
-	if (NWNFuncs.CustomTriggerGeometry) {
-
-		NWNFuncs.NWN_CreateGeometry(pTHIS, Loc, Area);
-		NWNFuncs.CustomTriggerGeometry = 0;
-		CExoString ScriptName("__test");
-		(*NWN_VirtualMachine)->Runscript(&ScriptName, pTHIS->obj.obj_generic.obj_id);
-		NWNFuncs.Floats.clear();
-
+	if (NWNFuncs.NssCustomTrigger->CreateCustomGeometry(pTHIS, Loc, Area)) {
 		return;
 	}
 	else {
@@ -148,7 +63,7 @@ signed int __fastcall CHookFunctions::CNWSCreatureStats__GetEffectImmunityHOOK(C
 	CNWSCreature * cre = Stats_this->cs_original;
 
 	CExoString OverrideVar("NWNXFUNCS_IMMOVERRIDE");
-	unsigned long int ImmunityOverride = cre->obj.obj_vartable.GetInt(OverrideVar);
+	unsigned long int ImmunityOverride = cre->obj_vartable.GetInt(OverrideVar);
 	unsigned long int Immunity = (2 << (a2-1));
 	int bOverride = ImmunityOverride & Immunity;
 	_log(3, "ImmunityOverride: %d\ta2: %d\t[override: %d]\n", ImmunityOverride, a2, bOverride);
@@ -310,7 +225,7 @@ signed int __fastcall CHookFunctions::CNWSCreatureStats__GetEffectImmunityHook(C
 int __fastcall CHookFunctions::CNWSEffectListHandler__OnApplyModifyNumAttacksHook(void *pTHIS, void *pVOID, CNWSObject* obj, CGameEffect *Eff, int a3) {
 	if (obj->GetDead() && !a3)
 		return 1;
-	if (obj->obj_generic.obj_type2 == 5) {
+	if (obj->obj_type2 == 5) {
 		CNWSCreature *cre = (CNWSCreature*)obj;
 		cre->cre_combat_round->EffectAttacks += Eff->GetInteger(0);
 	}

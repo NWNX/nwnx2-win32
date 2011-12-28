@@ -397,3 +397,24 @@ v 0.0.89
 		NWNXFuncs_Get/SetDestinationTag
 			Get and change the tag of the destination for area transitions (doors or triggers)
 		
+v 0.0.9
+	Mainly code base changes:
+		- Reworked the log mechanism so that it can be used in anywhere without a reference to CNWNXFuncs
+		- Changed the name of CGenericObject to CGameObject to conform to the general server api.
+		- Classes derived from CNWSObject use inheritance now instead of composition; saves some typing but true polymorphism seems out of the question since it would add
+		  new virtual function tables and screw up the overlays.
+		- Fixed CNWSModule by adding CResHelper to the beginning which should make using the "mod+0x1C" pointer arithmatic obsolete
+		- Encapsulated script functions in their own classes
+		  - Cleaner code 
+		  - Easier to add new functions (no more overflow of the function pointer array)
+		  - Cuts down on recompile time
+		  
+	Fixed:
+		NWNXFuncs_Get/SetAutoRemoveKey should now work correctly (noob mistake in an if())
+		NWNXFuncs_Get/SetAutoRemoveKey should now also work on placeables
+		NWNXFuncs_Get/SetSoundSet should now work correctly ("get" called "set" and vice versa)
+		
+		
+		
+	
+	

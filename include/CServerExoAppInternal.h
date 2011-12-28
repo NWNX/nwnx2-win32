@@ -115,7 +115,7 @@ struct CServerExoAppInternal_s {
 	CNWSDoor * 				GetDoorByGameObjectID(nwn_objid_t oID);
 	CNWSEncounter * 		GetEncounterByGameObjectID(nwn_objid_t oID);
 	int 					GetFactionOfObject(nwn_objid_t oID, uint32_t *ret_factionID);
-	CGenericObject * 		GetGameObject(nwn_objid_t oID);
+	CGameObject * 		GetGameObject(nwn_objid_t oID);
 	CNWSItem * 				GetItemByGameObjectID(nwn_objid_t oID);
 	CNWSModule*				GetModule();
 	CNWSPlaceable * 		GetPlaceableByGameObjectID(nwn_objid_t oID);

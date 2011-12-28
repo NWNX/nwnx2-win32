@@ -21,6 +21,8 @@
 #include "types.h"
 #include <map>
 #include <string>
+#include "CFuncLookup.h"
+
 using namespace std;
 
 enum OverrideType {
@@ -38,19 +40,28 @@ struct ObjectEntry {
 
 typedef map< unsigned int, ObjectEntry, less<unsigned int> > ObjectsMap;
 
-class CVisibility {
+class CVisibility : public CFuncLookup {
 public:
 	CVisibility();
 	~CVisibility();
 
+	int TestVisibility(nwn_objid_t oObject1, nwn_objid_t oObject2, int &nResult);
+
+private:
 	ObjectsMap objects;
 	ObjectsMap::iterator it;
 	ObjectVisMap::iterator it_Vis;
 
-	int TestVisibility(nwn_objid_t oObject1, nwn_objid_t oObject2, int &nResult);
 	void SetVisibilityOverride(nwn_objid_t oObject1, OverrideType eOverrideType);
 	void SetVisibility(nwn_objid_t oObject1, nwn_objid_t oObject2, unsigned int nValue);
 
 	int GetVisibilityOverride(nwn_objid_t oObject);
 	int GetVisibility(nwn_objid_t oObject1, nwn_objid_t oObject2);
+
+public:
+	int NssSetVisibility(CGameObject *oObject, char *Params);
+	int NssGetVisibility(CGameObject *oObject, char *Params);
+
+	int NssSetVisibilityOverride(CGameObject *oObject, char *Params);
+	int NssGetVisibilityOverride(CGameObject *oObject, char *Params);
 };

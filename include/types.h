@@ -5,6 +5,7 @@
 #include ".\CExoString.h"
 
 struct CResStruct_s;						typedef struct CResStruct_s						CResStruct;
+struct CResHelper_s;						typedef struct CResHelper_s						CResHelper;
 struct CVirtualMachineCommands_s;			typedef struct CVirtualMachineCommands_s		CVirtualMachineCommands;
 struct CNWSObjectActionNode_s;				typedef struct CNWSObjectActionNode_s			CNWSObjectActionNode;
 struct CCodeBase_s;							typedef struct CCodeBase_s						CCodeBase;
@@ -75,6 +76,7 @@ struct CNWSObject_s;						typedef struct CNWSObject_s                     CNWSOb
 struct CNWSItemProperty_s;                 	typedef struct CNWSItemProperty_s               CNWSItemProperty; 
 struct CNWSInventory_s;                     typedef struct CNWSInventory_s                   CNWSInventory; 
 struct CNWSItemPropertyHandler_s;			typedef struct CNWSItemPropertyHandler_s		CNWSItemPropertyHandler;
+struct CNWItem_s;                          	typedef struct CNWItem_s                       	CNWItem; 
 struct CNWSItem_s;                          typedef struct CNWSItem_s                       CNWSItem; 
 struct CNWTile_s;							typedef struct CNWTile_s						CNWTile;
 struct CNWSTile_s;							typedef struct CNWSTile_s						CNWSTile;
@@ -88,7 +90,7 @@ struct CNWSModule_s;						typedef struct CNWSModule_s						CNWSModule;
 struct CNWSDoor_s;                        	typedef struct CNWSDoor_s                       CNWSDoor; 
 struct CNWSTrigger_s;                     	typedef struct CNWSTrigger_s                    CNWSTrigger; 
 struct CNWSPlaceable_s;                   	typedef struct CNWSPlaceable_s                  CNWSPlaceable; 
-struct CGenericObject_s;					typedef struct CGenericObject_s					CGenericObject;
+struct CGameObject_s;					typedef struct CGameObject_s					CGameObject;
 struct CNWSCreatureAppearanceInfo_s;      	typedef struct CNWSCreatureAppearanceInfo_s     CNWSCreatureAppearanceInfo;
 struct CNWSCreatureClass_s;               	typedef struct CNWSCreatureClass_s              CNWSCreatureClass;
 struct CNWSCreatureStats_s;               	typedef struct CNWSCreatureStats_s              CNWSCreatureStats;
@@ -123,7 +125,7 @@ struct CEffectsStore_s; typedef struct CEffectsStore_s CEffectsStore;
 #include ".\CNWSCreatureEventHandler.h"
 #include ".\CNWSScriptVarTable.h"
 #include ".\CGameObject_VTable.h"
-#include ".\CGenericObject.h"
+#include ".\CGameObject.h"
 #include ".\CNWSObject.h"
 #include ".\CNWSDoor.h"
 #include ".\CNWSTrigger.h"
@@ -144,6 +146,7 @@ struct CEffectsStore_s; typedef struct CEffectsStore_s CEffectsStore;
 #include ".\CNWSItemProperty.h"
 #include ".\CNWSItemPropertyHandler.h"
 #include ".\CNWSInventory.h"
+#include ".\CNWItem.h"
 #include ".\CNWSItem.h"
 #include ".\CNWSCreature.h"
 #include ".\CNWSStats_Spell.h"
@@ -189,6 +192,7 @@ struct CEffectsStore_s; typedef struct CEffectsStore_s CEffectsStore;
 #include ".\CNWSObjectActionNode.h"
 #include ".\CVirtualMachineCommands.h"
 #include ".\CResStruct.h"
+#include ".\CResHelper.h"
 
 #include ".\nwn_internals.h"
 

@@ -4,8 +4,8 @@
 #include "CExoArrayList_2.h"
 #include "CAutoMap.h"
 
-struct CNWSCreature_s {
-    CNWSObject                  		obj;
+struct CNWSCreature_s : public CNWSObject_s {
+//    CNWSObject                  		obj;
   unsigned __int32							spacer_01;
   unsigned __int32							spacer_02;
   unsigned __int32							spacer_03;

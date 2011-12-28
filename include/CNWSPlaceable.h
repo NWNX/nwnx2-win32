@@ -1,8 +1,8 @@
 #ifndef _NX_NWN_STRUCT_CNWSPLACEABLE_
 #define _NX_NWN_STRUCT_CNWSPLACEABLE_
 
-struct CNWSPlaceable_s {
-    CNWSObject                  obj;
+struct CNWSPlaceable_s : public CNWSObject_s {
+//    CNWSObject                  obj;
     CExoLocString              *plc_firstname;
     unsigned 				__int32 field_1C8;
     CExoString                  plc_displayname;

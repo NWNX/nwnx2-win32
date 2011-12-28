@@ -13,10 +13,9 @@ static int (__fastcall *CServerExoAppInternal__RemovePCFromWorldNEXT)(CServerExo
 
 class CHookFunctions {
 public:
-	CHookFunctions(int debugLevel);
+	CHookFunctions();
 
 private:
-	static int debugLevel;
 	void HookFunctions();
 
 	DWORD org_CreateNewGeometry;
@@ -36,7 +35,6 @@ private:
 	static int __fastcall CServerExoAppInternal__RemovePCFromWorldHOOK(CServerExoAppInternal *pTHIS, void *pVOID, CNWSPlayer_s *a2);
 
 private:
-	CHookFunctions();
 	CHookFunctions(const CHookFunctions &HF);
 	CHookFunctions& operator=(const CHookFunctions& HF);
 

@@ -24,8 +24,13 @@
 #ifndef _NX_NWN_STRUCT_CNWSWAYPOINT_
 #define _NX_NWN_STRUCT_CNWSWAYPOINT_
 
-struct CNWSWaypoint_s {
-    void               *unknown;
+struct CNWSWaypoint_s : public CNWSObject {
+//    CNWSObject				obj;					// 0000 - 01C0 (Linux: 01C4)
+
+	uint32_t 				bHasMapNote;			// 01C0
+	uint32_t 				bMapNoteEnabled;		// 01C4
+	CExoLocString 			sMapNote;				// 01C8
+	CExoLocString 			sName;					// 01D0 
 };
 
 #endif /* _NX_NWN_STRUCT_CNWSWAYPOINT_ */

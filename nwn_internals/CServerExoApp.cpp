@@ -5,7 +5,7 @@
 CWorldTimer*		(__thiscall *CServerExoApp__GetActiveTimer)(CServerExoApp *pTHIS, unsigned int a2) = (CWorldTimer*(__thiscall*)(CServerExoApp *pTHIS, unsigned int a2))0x0042C980;
 CNWSPlayer* 		(__thiscall *CServerExoApp__GetClientObjectByObjectId)(CServerExoApp *pTHIS, nwn_objid_t oID) = (CNWSPlayer *(__thiscall *)(CServerExoApp *pTHIS, nwn_objid_t oID))0x0042cd20;
 CNWSClient* 		(__thiscall *CServerExoApp__GetClientObjectByPlayerId)(CServerExoApp *pTHIS, uint32_t player_id, uint8_t a3) = (CNWSClient* (__thiscall*)(CServerExoApp *pTHIS, uint32_t player_id, uint8_t a3))0x0042CD30;
-CGenericObject* 	(__thiscall *CServerExoApp__GetGameObject)(CServerExoApp *pTHIS, nwn_objid_t oID) = (CGenericObject* (__thiscall *)(CServerExoApp *pTHIS, nwn_objid_t oID))0x0042C810;
+CGameObject* 	(__thiscall *CServerExoApp__GetGameObject)(CServerExoApp *pTHIS, nwn_objid_t oID) = (CGameObject* (__thiscall *)(CServerExoApp *pTHIS, nwn_objid_t oID))0x0042C810;
 int 				(__thiscall *CServerExoApp__GetIsControlledByPlayer)(CServerExoApp *pTHIS, nwn_objid_t oID) = (int (__thiscall*)(CServerExoApp *pTHIS, nwn_objid_t oID))0x0042CD70;
 int 				(__thiscall *CServerExoApp__GetModuleLanguage)(CServerExoApp *pTHIS) = (int (__thiscall*)(CServerExoApp *pTHIS))0x0042C900;
 CNWSMessage*		(__thiscall *CServerExoApp__GetNWSMessage)(CServerExoApp *pTHIS) = (CNWSMessage* (__thiscall *)(CServerExoApp *pTHIS))0x0042C940;
@@ -22,7 +22,7 @@ CNWSClient *CServerExoApp_s::GetClientObjectByPlayerId(uint32_t player_id, uint8
 	return CServerExoApp__GetClientObjectByPlayerId(this, player_id, a3);
 }
 
-CGenericObject *CServerExoApp_s::GetGameObject(nwn_objid_t oID) {
+CGameObject *CServerExoApp_s::GetGameObject(nwn_objid_t oID) {
 	return CServerExoApp__GetGameObject(this, oID);
 }
 

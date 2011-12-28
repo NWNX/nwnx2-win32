@@ -1,7 +1,7 @@
 #ifndef _NX_NWN_STRUCT_CGENERICOBJECT_
 #define _NX_NWN_STRUCT_CGENERICOBJECT_
 
-struct CGenericObject_s {
+struct CGameObject_s {
 	uint32_t							obj_type;						/* 0x000C */
 	nwn_objid_t							obj_id;								/* 0x0004 */
 	uint8_t								obj_type2;							/* 0x0008 */
@@ -10,7 +10,7 @@ struct CGenericObject_s {
 	uint8_t								field_000A;							/* 0x000A */
 	uint8_t								field_000B;							/* 0x000B */
 	
-	void				*obj_vtable;						/* 0x000C */
+	void								*obj_vtable;						/* 0x000C */
 	char								*obj_lastname;						/* 0x0010 */
 	
 	uint32_t							field_0014;							/* 0x0014 */
@@ -21,6 +21,20 @@ struct CGenericObject_s {
 	CExoString							obj_template;						/* 0x0020 */
 //	uint32_t							obj_template_len;					/* 0x0024 */
 
+	CNWSModule *AsModule();
+	CNWSArea *AsNWSArea();
+
+	CNWSObject *AsNWSObject();
+
+	CNWSItem *AsNWSItem();
+	CNWSAreaOfEffectObject *AsNWSAreaOfEffectObject();
+	CNWSStore *AsNWSStore();
+	CNWSDoor *AsNWSDoor();
+	CNWSCreature *AsNWSCreature();
+	CNWSTrigger *AsNWSTrigger();
+	CNWSPlaceable *AsNWSPlaceable();
+	CNWSWaypoint *AsNWSWaypoint();
+	CNWSEncounter *AsNWSEncounter();
 };
 
 #endif /* _NX_NWN_STRUCT_CGENERICOBJECT_ */

@@ -1,9 +1,8 @@
 #ifndef _H_CNWSENCOUNTER_H
 #define _H_CNWSENCOUNTER_H
 
-struct CNWSEncounter_s
-{
-  CNWSObject obj;
+struct CNWSEncounter_s : public CNWSObject_s {
+//  CNWSObject obj;
   unsigned __int8 field_1C0;
   unsigned __int8 field_1C1;
   unsigned __int8 field_1C2;

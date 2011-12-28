@@ -24,7 +24,7 @@ struct CNWSPlayer_s {
     char				pl_bicfile[19];		/* 0x0075 */
 
 	int 					AddArea(uint32_t areaid);
-	CGenericObject* 		GetGameObject();
+	CGameObject* 		GetGameObject();
 	int 					HasExpansionPack(unsigned char a2, int a3);
 	void					vec_dtor(char Flag);
 

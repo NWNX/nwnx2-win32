@@ -1,7 +1,11 @@
 #ifndef _NX_NWN_STRUCT_CNWSMODULE_
 #define _NX_NWN_STRUCT_CNWSMODULE_
 
-struct CNWSModule_s {
+struct CNWSModule_s { //: public CResHelper_s { //, public CGameObject {
+	uint32_t					*pVTable;			// 0000 
+	uint32_t 					bIsRequestPending;  // 0004 not quite sure
+	void 						*pRes;    			// 0008
+	char 					sResRef[16];	        // 000C 
     uint32_t                    obj_type;
     nwn_objid_t					obj_id			/* 0x004 */;
     uint32_t                    field_08;

@@ -7,7 +7,7 @@ CNWSCreature*			(__thiscall *CServerExoAppInternal__GetCreatureByGameObjectID)(C
 CNWSArea* 				(__thiscall *CServerExoAppInternal__GetAreaByGameObjectID)(CServerExoAppInternal *, nwn_objid_t Area) = (CNWSArea* (__thiscall*)(CServerExoAppInternal *, nwn_objid_t Area))0x0045C0C0;
 uint32_t				(__thiscall *CServerExoAppInternal__GetPlayerIDByGameObjectID)(CServerExoAppInternal* pThis, nwn_objid_t oID) = (uint32_t (__thiscall*)(CServerExoAppInternal* pThis, nwn_objid_t oID))0x00462C80;
 CNWSItem*  				(__thiscall *CServerExoAppInternal__GetItemByGameObjectID)(CServerExoAppInternal* pThis, nwn_objid_t oID) = (CNWSItem* (__thiscall*)(CServerExoAppInternal* pThis, nwn_objid_t oID))0x0045BFD0;
-CGenericObject*			(__thiscall *CServerExoAppInternal__GetGameObject)(CServerExoAppInternal* pTHIS, nwn_objid_t oID) = (CGenericObject* (__thiscall*)(CServerExoAppInternal* pTHIS, nwn_objid_t oID))0x0045BF40;
+CGameObject*			(__thiscall *CServerExoAppInternal__GetGameObject)(CServerExoAppInternal* pTHIS, nwn_objid_t oID) = (CGameObject* (__thiscall*)(CServerExoAppInternal* pTHIS, nwn_objid_t oID))0x0045BF40;
 CNWSPlaceable*  		(__thiscall *CServerExoAppInternal__GetPlaceableByGameObjectID)(CServerExoAppInternal *, nwn_objid_t Placeable) = (CNWSPlaceable* (__thiscall*)(CServerExoAppInternal *, nwn_objid_t Placeable))0x0045C160;
 CNWSAreaOfEffectObject*	(__thiscall *CServerExoAppInternal__GetAreaOfEffectByGameObjectID)(CServerExoAppInternal* pThis, nwn_objid_t oID) = (CNWSAreaOfEffectObject* (__thiscall*)(CServerExoAppInternal* pThis, nwn_objid_t oID))0x0045C200;
 CNWSDoor* 				(__thiscall *CServerExoAppInternal__GetDoorByGameObjectID)(CServerExoAppInternal *pTHIS, nwn_objid_t oID) = (CNWSDoor* (__thiscall*)(CServerExoAppInternal *pTHIS, nwn_objid_t oID))0x0045C1B0;
@@ -40,7 +40,7 @@ int CServerExoAppInternal_s::GetFactionOfObject(nwn_objid_t oID, uint32_t *ret_f
 	return CServerExoAppInternal__GetFactionOfObject(this, oID, ret_factionID);
 }
 
-CGenericObject *CServerExoAppInternal_s::GetGameObject(nwn_objid_t oID) {
+CGameObject *CServerExoAppInternal_s::GetGameObject(nwn_objid_t oID) {
 	return CServerExoAppInternal__GetGameObject(this, oID);
 }
 

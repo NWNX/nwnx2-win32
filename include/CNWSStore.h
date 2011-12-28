@@ -1,8 +1,8 @@
 #ifndef _H_CNWSSTORE_H_
 #define _H_CNWSSTORE_H_
 
-struct CNWSStore_s {
-  CNWSObject obj;
+struct CNWSStore_s  : public CNWSObject_s {
+  //CNWSObject obj;
   CExoString OnOpenStore;
   CExoString OnStoreClosed;
   unsigned __int8 field_1D0;

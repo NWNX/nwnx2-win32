@@ -21,12 +21,8 @@ void 			(__thiscall *CNWSObject__SetPosition)(CNWSObject *pTHIS, Vector v, int a
 void 			(__thiscall *CNWSObject__SetOrientation)(CNWSObject *pTHIS, Vector v) = (void(__thiscall*)(CNWSObject *pTHIS, Vector v))0x004E25B0;
 void *			(__thiscall *CNWSObject__BroadcastDialog)(CNWSObject *pTHIS, CExoString Msg, float Max_Distance) = (void*(__thiscall*)(CNWSObject *pTHIS, CExoString Msg, float Max_Distance))0x004E54B0;
 
-CNWSItem *CNWSObject_s::AsNWSItem() {
+/*CNWSItem *CNWSObject_s::AsNWSItem() {
 	return ((CNWSItem*)((char*)this-0x10));
-}
-
-CNWSModule *CNWSObject_s::AsModule() {
-	return ((CNWSModule*)((char*)this-0x1C));
 }
 
 CNWSAreaOfEffectObject *CNWSObject_s::AsNWSAreaOfEffectObject() {
@@ -34,15 +30,18 @@ CNWSAreaOfEffectObject *CNWSObject_s::AsNWSAreaOfEffectObject() {
 	
 }
 
+CNWSStore *CNWSObject_s::AsNWSStore() {
+	return (CNWSStore*)this;
+}*/
+/*
 CNWSArea *CNWSObject_s::AsNWSArea() {
 	return ((CNWSArea*)((char*)this-0xC4));
 }
 
-CNWSStore *CNWSObject_s::AsNWSStore() {
-	return (CNWSStore*)this;
+CNWSModule *CNWSObject_s::AsModule() {
+	return ((CNWSModule*)((char*)this-0x1C));
 }
-
-
+*/
 CNWSArea *CNWSObject_s::GetArea() {
 	return CNWSObject__GetArea(this);
 }

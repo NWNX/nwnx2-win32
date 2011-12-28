@@ -1,8 +1,8 @@
 #ifndef _H_CNWSAREAOFEFFECTOBJECT_H_
 #define _H_CNWSAREAOFEFFECTOBJECT_H_
 
-struct CNWSAreaOfEffectObject_s {
-	CNWSObject obj;
+struct CNWSAreaOfEffectObject_s : public CNWSObject_s {
+//	CNWSObject obj;
   unsigned __int8 unknown_449;
   unsigned __int8 unknown_450;
   unsigned __int8 unknown_451;

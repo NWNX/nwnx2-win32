@@ -1,8 +1,8 @@
 #ifndef _NX_NWN_STRUCT_CNWSOBJECT_
 #define _NX_NWN_STRUCT_CNWSOBJECT_
 
-struct CNWSObject_s {
-	CGenericObject						obj_generic;						/* 0x0000 - 0x0007 */
+struct CNWSObject_s : public CGameObject_s {
+//	CGameObject						obj_generic;						/* 0x0000 - 0x0007 */
 
 	uint32_t							field_0028;							/* 0x0028 */
 	uint32_t							field_002C;							/* 0x002C */
@@ -150,11 +150,13 @@ struct CNWSObject_s {
 	uint32_t							obj_effect_postprocess;				/* 0x01B8 */
 	uint32_t							obj_door_anim_played;				/* 0x01BC */
 
-CNWSItem *AsNWSItem();
-CNWSModule *AsModule();
+/*CNWSItem *AsNWSItem();
 CNWSAreaOfEffectObject *AsNWSAreaOfEffectObject();
+CNWSStore *AsNWSStore();*/
+
+/*CNWSModule *AsModule();
 CNWSArea *AsNWSArea();
-CNWSStore *AsNWSStore();
+*/
 
 
 int16_t				ApplyEffect(CGameEffect *Effect, int a3, int a4);

@@ -1,8 +1,8 @@
 #ifndef _NX_NWN_STRUCT_CNWSDOOR_
 #define _NX_NWN_STRUCT_CNWSDOOR_
 
-struct CNWSDoor_s {
-  CNWSObject obj;
+struct CNWSDoor_s : public CNWSObject_s {
+//  CNWSObject obj;
   CExoString OnOpen;
   CExoString OnClosed;
   CExoString OnDamaged;

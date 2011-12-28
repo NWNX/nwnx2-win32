@@ -1,9 +1,8 @@
 #ifndef _CNWSTRIGGER_H_
 #define _CNWSTRIGGER_H_
 
-struct CNWSTrigger_s
-{
-  CNWSObject obj;
+struct CNWSTrigger_s : public CNWSObject_s {
+//  CNWSObject obj;
   CExoLocString LocalizedName;
   CExoString LinkedTo;
   unsigned __int8 LinkedToFlags;

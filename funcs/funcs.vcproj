@@ -316,7 +316,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) e:\games\nwn"
+				CommandLine="copy &quot;$(TargetPath)&quot; e:\games\nwn&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -429,19 +429,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\CVisibility.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\funcs.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\funcs_def.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\funcs_lookup.cpp"
 				>
 			</File>
 			<File
@@ -449,7 +437,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\nwnfuncs_internal.cpp"
+				RelativePath=".\LogFile.cpp"
 				>
 			</File>
 			<File
@@ -557,6 +545,10 @@
 				</File>
 				<File
 					RelativePath="..\nwn_internals\CGameEffect.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\nwn_internals\CGameObject.cpp"
 					>
 				</File>
 				<File
@@ -672,17 +664,101 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="FuncLookup"
+				>
+				<File
+					RelativePath=".\CFuncLookup.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Script Function Classes"
+				>
+				<File
+					RelativePath=".\CFuncUtility.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssAreas.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssCreature.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssCreatureStats.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssCustomTrigger.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssEffects.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssFeats.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssItemProperty.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssItems.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssLocalVariables.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssLock.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssPlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssServer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssSpells.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssTransition.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssUtility.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CVisibility.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\CVisibility.h"
+				RelativePath=".\HookFunc.h"
 				>
 			</File>
 			<File
-				RelativePath=".\HookFunc.h"
+				RelativePath=".\LogFile.h"
 				>
 			</File>
 			<File
@@ -713,6 +789,94 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="FuncLookup"
+				>
+				<File
+					RelativePath=".\CFuncLookup.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CParams.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Script Function Classes"
+				>
+				<File
+					RelativePath=".\CFuncUtility.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssAreas.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssCreature.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssCreatureStats.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssCustomTrigger.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssEffects.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssFeats.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssItemProperty.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssItems.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssLocalVariables.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssLock.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssObject.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssPlayer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssServer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssSpells.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssTransition.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CNssUtility.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CVisibility.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -723,6 +887,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

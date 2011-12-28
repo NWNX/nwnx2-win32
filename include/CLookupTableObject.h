@@ -11,7 +11,7 @@ struct CLookupTableObject_s {
 	uint32_t tag_len2; //not sure why there is a second length
 	uint32_t unknown_6;
 	uint32_t unknown_7;
-	CGenericObject *pObject;
+	CGameObject *pObject;
 	uint32_t obj_oid;
 };
 
