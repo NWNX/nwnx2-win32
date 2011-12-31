@@ -414,7 +414,5 @@ v 0.0.9
 		NWNXFuncs_Get/SetAutoRemoveKey should now also work on placeables
 		NWNXFuncs_Get/SetSoundSet should now work correctly ("get" called "set" and vice versa)
 		
-		
-		
-	
-	
+v 0.0.91
+	Fixed serious bug that crashed the server

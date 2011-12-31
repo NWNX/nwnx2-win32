@@ -4,7 +4,6 @@
 class CNssCreature : public CFuncLookup {
 public:
 	CNssCreature(void);
-	~CNssCreature(void);
 
 private: //helper functions
 

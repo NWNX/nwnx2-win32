@@ -42,7 +42,7 @@ public: // main plugin functions
 private:
 
 	unsigned long OnRequestObject (char *gameObject, char *Request);
-	void WriteLogHeader();
+	void WriteLogHeader(int debugLevel);
 
 	CHookFunctions *FunctionHooks;
 	unsigned long gameID;

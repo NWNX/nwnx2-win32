@@ -71,15 +71,17 @@ BOOL CNWNXFuncs::OnCreate(const char* LogDir) {
 	CIniFile iniFile ("nwnx.ini");
 	int debugLevel = iniFile.ReadInteger("FUNCS", "DebugLevel", 0);
 	LogFile::SetDebugLevel(debugLevel);
-	_log(0, "OnCreate DebugLevel: %d\n", debugLevel);
+
 	nSkill = iniFile.ReadInteger("FUNCS", "Number_of_Skills", 28);
 	bHookCreateGeometry = iniFile.ReadInteger("FUNCS", "HOOK_CustomTrapGeometry", 0);
 	bOverrideMaximumDexMod = iniFile.ReadInteger("FUNCS", "HOOK_OverrideMaximumDexMod", 0);
+
 	if ((bHookRemovePCFromWorld = iniFile.ReadInteger("FUNCS", "HOOK_OnPlayerLeaving", 0))) {
 		iniFile.ReadString("FUNCS", "OnPlayerLeavingScript", OnPlayerLeavingScript, 16, "onplayerleaving");
 	}
 
-	WriteLogHeader();
+	WriteLogHeader(debugLevel);
+
 	FunctionHooks = new CHookFunctions();
 
 	NssLocalVariables = new CNssLocalVariables;
@@ -100,7 +102,7 @@ BOOL CNWNXFuncs::OnCreate(const char* LogDir) {
 	NssTransition = new CNssTransition;
 	NssItemProperty = new CNssItemProperty;
 	
-	//MainLookup = NssLocalVariables;
+	MainLookup = NssLocalVariables;
 	
 	return true;
 }
@@ -112,8 +114,7 @@ BOOL CNWNXFuncs::OnRelease() {
 	return CNWNXBase::OnRelease();
 }
 
-void CNWNXFuncs::WriteLogHeader()
-{
-	_log(0, "Windows NWNX Funcs plugin v.0.0.9.0\n");
-//	_log(0, "log level: %i\n", debugLevel);
+void CNWNXFuncs::WriteLogHeader(int debugLevel) {
+	_log(0, "Windows NWNX Funcs plugin v.0.0.9.1\n");
+	_log(0, "log level: %i\n", debugLevel);
 }

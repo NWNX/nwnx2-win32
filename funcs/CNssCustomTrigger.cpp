@@ -15,7 +15,7 @@ bool CNssCustomTrigger::CreateCustomGeometry(CNWSTrigger *pTHIS, CScriptLocation
 	if (bUseCustomTriggerGeometry) {
 		CreateGeometry(pTHIS, Loc, Area);
 		bUseCustomTriggerGeometry = false;
-		Floats.clear();
+		Coordinates.clear();
 		return true;
 	}
 	return false;
@@ -28,7 +28,7 @@ void CNssCustomTrigger::CreateGeometry(CNWSTrigger *Trigger, CScriptLocation *Lo
 	int nVertex;
 	Vector *v10;
 
-	int nCoordinates = (Floats.size() / 2)+1; // Loc holds the first coordinate
+	int nCoordinates = (Coordinates.size() / 2)+1; // Loc holds the first coordinate
 
 	Position = Trigger->geometry_vectors;
 	Trigger->VerticesCount = nCoordinates;
@@ -42,7 +42,7 @@ void CNssCustomTrigger::CreateGeometry(CNWSTrigger *Trigger, CScriptLocation *Lo
 		Trigger->Vertices = 0;
 	}
 
-	if ( Area && !Floats.empty()) {
+	if ( Area && !Coordinates.empty()) {
 		float x, y;
 
 		v8 = new Vector[nCoordinates];
@@ -75,8 +75,8 @@ void CNssCustomTrigger::CreateGeometry(CNWSTrigger *Trigger, CScriptLocation *Lo
 		Trigger->Vertices[0] = 0;
 
 		int i=1;
-		std::list<float>::iterator it = Floats.begin();
-		while (it != Floats.end()) {
+		std::vector<float>::iterator it = Coordinates.begin();
+		while (it != Coordinates.end()) {
 			x = *it + !bUseAbsoluteCoordinates * Loc->loc_position.x;
 			it++;
 			y = *it + !bUseAbsoluteCoordinates * Loc->loc_position.y;
@@ -110,16 +110,18 @@ int CNssCustomTrigger::SetCustomGeometry(CGameObject *oObject, char *Params) {
 		
 		iStart = iP+1; iP = floats.find("¬", iStart);
 
-		Floats.clear();
+		if (Coordinates.size() > 0) {
+			Coordinates.clear();
+		}
 		while (iP != std::string::npos) {
 			sTemp = floats.substr(iStart, iP-iStart); iStart = iP+1; iP = floats.find("¬", iStart);
 			sscanf(sTemp.c_str(), "%f", &f);
-			Floats.push_back(f);
+			Coordinates.push_back(f);
 		}
 
-		if (Floats.size() < 4 || (Floats.size() % 2) != 0) {
+		if (Coordinates.size() < 4 || (Coordinates.size() % 2) != 0) {
 			_log(2, "o Error: invalid number of coordinates\n");
-			Floats.clear();
+			Coordinates.clear();
 			bUseCustomTriggerGeometry = false;
 			sprintf(Params, "-1");
 			return 0;
@@ -131,7 +133,7 @@ int CNssCustomTrigger::SetCustomGeometry(CGameObject *oObject, char *Params) {
 	}
 	else {
 		_log(2, "o Error: Invalid number of coordinates\n");
-		Floats.clear();
+		Coordinates.clear();
 		bUseCustomTriggerGeometry = false;
 		return 0;
 	}
@@ -143,16 +145,16 @@ int CNssCustomTrigger::RotateCustomGeometry(CGameObject *oObject, char *Params) 
 	float fAngle = 0.0;
 
 	if ((sscanf(Params, "%f", &fAngle) != 1)
-		||Floats.empty()) {
+		||Coordinates.empty()) {
 			sprintf(Params, "-1");
 			return 0;
 	}
 
-	std::list<float> rotate;
-	std::list<float>::iterator it;
+	std::vector<float> rotate;
+	std::vector<float>::iterator it;
 
 	float fx, fy, fx_n, fy_n, sini, cosi;
-	for (it=Floats.begin(); it != Floats.end(); it++) {
+	for (it=Coordinates.begin(); it != Coordinates.end(); it++) {
 		fx = *it;
 		it++;
 		fy = *it;
@@ -165,8 +167,8 @@ int CNssCustomTrigger::RotateCustomGeometry(CGameObject *oObject, char *Params) 
 		rotate.push_back(fy_n);
 	}
 
-	Floats.clear();
-	Floats = rotate;
+	Coordinates.clear();
+	Coordinates = rotate;
 
 	return 1;
 }

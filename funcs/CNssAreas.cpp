@@ -44,6 +44,7 @@ int CNssAreas::GetAreaByPosition(CGameObject *oObject, char *Params) {
 
 int CNssAreas::GetFirstArea(CGameObject *oObject, char *Params) {
 	getFirstNextAreaIndex = 0;
+	this;
 	nwn_objid_t oID = OBJECT_INVALID;
 
 	oID = GetAreaByPos(getFirstNextAreaIndex);

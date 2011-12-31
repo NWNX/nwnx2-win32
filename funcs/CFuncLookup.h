@@ -10,12 +10,21 @@
 #define L_CAST static_cast<int(CFuncLookup::*)(CGameObject *oObject, char *Params)>
 #endif
 
+
+class CFuncLookup;
+
+typedef struct Functions_s {
+	CFuncLookup *pTHIS;
+	int (__thiscall CFuncLookup::*pF)(CGameObject *oObject, char *Params);
+}Functions;
+
 class CFuncLookup {
 private:
-	static stdext::hash_map<std::string, int (__thiscall CFuncLookup::*)(CGameObject *oObject, char *Params)> FunctionMap;
+	//static stdext::hash_map<std::string, int (__thiscall CFuncLookup::*)(CGameObject *oObject, char *Params)> FunctionMap;
+	static stdext::hash_map<std::string, Functions> FunctionMap;
 
 public:
-	CFuncLookup();
+//	virtual ~CFuncLookup(); //just in case
 	void AddFunction(std::string Name, int(__thiscall CFuncLookup::*p)(CGameObject *oObject, char *Params));
 	int Execute(std::string Name, CGameObject *oObject, char *Params);
 
@@ -24,6 +33,7 @@ private: //no copying
 	CFuncLookup& operator=(CFuncLookup const&);
 
 protected:
+	CFuncLookup();
 	
 };
 

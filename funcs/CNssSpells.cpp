@@ -693,7 +693,7 @@ int CNssSpells::SetMaxSpellSlots(CGameObject *oObject, char *Params) {
 
 	CParams::ExtractP3(Params, Class, SpellLevel, MaxSpells);
 
-	int i, slots;
+	int i;
 
 	if (SpellLevel < 0 || SpellLevel > 9) {
 		sprintf(Params, "-1");

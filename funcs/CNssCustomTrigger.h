@@ -10,7 +10,7 @@ public:
 private: //helper functions
 	bool bUseCustomTriggerGeometry;
 	bool bUseAbsoluteCoordinates;
-	std::list<float> Floats;
+	std::vector<float> Coordinates;
 
 	void CreateGeometry(CNWSTrigger *Trigger, CScriptLocation *Loc, CNWSArea *Area);
 
