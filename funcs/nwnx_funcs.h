@@ -25,30 +25,31 @@
 #include "CNssServer.h"
 #include "CNssTransition.h"
 #include "CNssItemProperty.h"
+#include "CNssModule.h"
 
-#define PLAYER_ID_ALL_PLAYERS						0xFFFFFFF7
-
-#define FUNCTION_COUNT 137
 
 class CNWNXFuncs : public CNWNXBase {
-public: // main plugin functions
+public:
 	CNWNXFuncs();
 	virtual ~CNWNXFuncs();
 	
-	char *OnRequest(char *gameObject, char *Request, char *Parameters);
-	BOOL OnCreate(const char *LogDir);
-	BOOL OnRelease();
 
 private:
-
+//nwnx base members
+	BOOL OnCreate(const char *LogDir);
+	BOOL OnRelease();
+	char *OnRequest(char *gameObject, char *Request, char *Parameters);
 	unsigned long OnRequestObject (char *gameObject, char *Request);
 	void WriteLogHeader(int debugLevel);
 
-	CHookFunctions *FunctionHooks;
 	unsigned long gameID;
 
-private: //Script Function classes
+
+//function hooks
+	CHookFunctions *FunctionHooks;
 	friend class CHookFunctions;
+
+//Script Function classes
 
 	CFuncLookup *MainLookup; //main function lookup and execution. This is never actually instantiated but pointed at any of its derived classes
 	CNssLocalVariables *NssLocalVariables;
@@ -68,14 +69,15 @@ private: //Script Function classes
 	CNssServer *NssServer;
 	CNssTransition *NssTransition;
 	CNssItemProperty *NssItemProperty;
+	CNssModule *NssModule;
 
-public:
-	//ini file values
+//ini file values
 	bool bHookCreateGeometry;
 	bool bOverrideMaximumDexMod;
 	bool bHookRemovePCFromWorld;
-	char OnPlayerLeavingScript[17];
-
+	char OnPlayerLeavingScript[18];
+	bool bHookTimeOfDayChange;
+	char OnTimeOfDayChangeScript[18];
 	uint8_t nSkill;
 
 };

@@ -16,7 +16,7 @@ CNssLocalVariables::CNssLocalVariables() {
 CNWSScriptVarTable* CNssLocalVariables::GetVarTable(CGameObject *oObject) {
 	switch(oObject->obj_type) {
 		case OBJECT_TYPE_AREA: { //Area
-			return &((CNWSArea*)oObject)->area_vartable;
+			return &oObject->AsNWSArea()->area_vartable;
 		} break;
 		case OBJECT_TYPE_MODULE: { //Module
 			return &((CNWSModule*)oObject)->mod_vartable;

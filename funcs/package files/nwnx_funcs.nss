@@ -163,6 +163,15 @@ const int REGENERATION_ALL = 1;
 const int REGENERATION_ITEM = 2;
 const int REGENERATION_EFFECT = 3;
 
+const int VISIBILITY_TYPE_DEFAULT = 0;
+const int VISIBILITY_TYPE_VISIBLE = 1;
+const int VISIBILITY_TYPE_INVISIBLE = 2;
+
+const int MOD_TIMEOFDAY_DAY = 1;
+const int MOD_TIMEOFDAY_NIGHT = 2;
+const int MOD_TIMEOFDAY_DAWN = 3;
+const int MOD_TIMEOFDAY_DUSK = 4;
+
 struct localvar_s {
 	int iType;
 	string sName;
@@ -698,7 +707,7 @@ void NWNXFuncs_QueueRemoveEffectInternal();
 void NWNXFuncs_RemoveQueuedEffectsInternal(object oObject);
 
 //*
-// The following functions are for can be used inside a regular GetFirst/GetNextEffect loop
+// The following functions can be used inside a regular GetFirst/GetNextEffect loop
 // and do the same as the "internal" versions; With the exception of NWNXFuncs_GetEffectRealType, which
 // always returns the "internal" effect type
 // However, they invalidate a NWNXFuncs_GetFirst/NextEffectInternal loop
@@ -718,7 +727,7 @@ void NWNXFuncs_ApplyVisualEffectForPC(object oPC, int nVFX, vector vPos);
 // Needs to be called before CreateTrapAtLocation!
 // sGeometry is a list of x and y coordinates separated by ¬ (the z coordinate is 
 // calculated automatically so that the trap is placed on the floor)
-// The coordinates list also not include the the first coordinate pair (actual location
+// The coordinates list also does not include the the first coordinate pair (actual location
 // of the trap), because the location parameter from CreateTrapAtLocation will 
 // be used for that.
 // If bAbsoluteCoordinates is FALSE, all coordinates in the list are treated as being relative to 
@@ -742,8 +751,8 @@ void NWNXFuncs_RotateCustomTrapGeometry(float fAngle);
 // See trap_respawn.nss and trap_area_respwn.nss for details
 string NWNXFuncs_GetTrapGeometry(object oTrap);
 
-// Returns a row from surfacemat.2da indicating the material of the location given
-// Return -1 on error
+// Returns a row from surfacemat.2da indicating the ground material of the location given
+// Returns -1 on error
 int NWNXFuncs_GetSurfaceMaterial(location lLoc);
 
 // Changes the debug level (how much gets logged) for the plugin
@@ -823,10 +832,6 @@ itemproperty NWNXFuncs_ItemPropertyCustom(int iType, int iSubType, int iCostTabl
 
 //**** Original work by virusman ****
 
-const int VISIBILITY_TYPE_DEFAULT = 0;
-const int VISIBILITY_TYPE_VISIBLE = 1;
-const int VISIBILITY_TYPE_INVISIBLE = 2;
-
 // Sets the visibility of oObject for everybody
 void NWNXFuncs_SetVisibilityOverride(object oObject, int nVisibilityType);
 
@@ -873,6 +878,15 @@ string NWNXFuncs_GetDestinationTag(object oObject);
 
 //Set the Destination Tag of an area transition (Door or Trigger)
 void NWNXFuncs_SetDestinationTag(object oObject, string sTag);
+
+//Get whether players are allowed to rest in an area
+int NWNXFuncs_GetNoRestFlag(object oArea);
+
+//Set whether players are allowed to rest in an area
+void NWNXFuncs_SetNoRestFlag(object oArea, int bNoRest);
+
+//Returns the phase of the day (dawn, day, dusk, night)
+int NWNXFuncs_GetTimeOfDay();
 
 //*******************************************************************************************************************
 
@@ -1721,7 +1735,7 @@ string NWNXFuncs_GetTrapGeometry(object oTrap) {
 int NWNXFuncs_GetSurfaceMaterial(location lLoc) {
 	vector v = GetPositionFromLocation(lLoc);
 	object oArea = GetAreaFromLocation(lLoc);
-	SetLocalString(oArea, "NWNX!FUNCS!GETSURFACEMATERIAL", FloatToString(v.x)+" "+FloatToString(v.y)+" "+FloatToString(v.z));
+	SetLocalString(oArea, "NWNX!FUNCS!GETSURFACEMATERIAL", ObjectToString(oArea)+" "+FloatToString(v.x)+" "+FloatToString(v.y)+" "+FloatToString(v.z));
 	int iRet = StringToInt(GetLocalString(oArea, "NWNX!FUNCS!GETSURFACEMATERIAL"));
 	DeleteLocalString(oArea, "NWNX!FUNCS!GETSURFACEMATERIAL");
 	return iRet;
@@ -1799,7 +1813,7 @@ effect NWNXFuncs_EffectCustomEffect(struct gameeffect_s e) {
 	DeleteLocalInt(o, "NWNXFUNCS_CE");
 	DeleteLocalInt(o, "NWNXFUNCS_CE_NUMINTS");
 	DeleteLocalString(o, "NWNXFUNCS_CE_INTS");
-	DeleteLocalString(o, "NWNXFUNCS_CUSTOMEFFECT");
+	DeleteLocalString(o, "NWNXFUNCS_CE_EFFECT");
 	
 	return Eff;
 }
@@ -1965,4 +1979,23 @@ string NWNXFuncs_GetDestinationTag(object oObject) {
 void NWNXFuncs_SetDestinationTag(object oObject, string sTag) {
 	SetLocalString(oObject, "NWNX!FUNCS!SETDESTINATIONTAG", sTag);
 	DeleteLocalString(oObject, "NWNX!FUNCS!SETDESTINATIONTAG");
+}
+
+int NWNXFuncs_GetNoRestFlag(object oArea) {
+	SetLocalString(oArea, "NWNX!FUNCS!GETNORESTFLAG", "-");
+	int Ret = StringToInt(GetLocalString(oArea, "NWNX!FUNCS!GETNORESTFLAG"));
+	DeleteLocalString(oArea, "NWNX!FUNCS!GETNORESTFLAG");
+	return Ret;
+}
+
+void NWNXFuncs_SetNoRestFlag(object oArea, int bNoRest) {
+	SetLocalString(oArea, "NWNX!FUNCS!SETNORESTFLAG", IntToString(bNoRest));
+	DeleteLocalString(oArea, "NWNX!FUNCS!SETNORESTFLAG");
+}
+
+int NWNXFuncs_GetTimeOfDay() {
+	SetLocalString(OBJECT_SELF, "NWNX!FUNCS!GETTIMEOFDAY", "-");
+	int Ret = StringToInt(GetLocalString(OBJECT_SELF, "NWNX!FUNCS!GETTIMEOFDAY"));
+	DeleteLocalString(OBJECT_SELF, "NWNX!FUNCS!GETTIMEOFDAY");
+	return Ret;
 }

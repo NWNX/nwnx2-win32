@@ -53,8 +53,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,0,9,1
- PRODUCTVERSION 0,0,9,1
+ FILEVERSION 0,0,9,2
+ PRODUCTVERSION 0,0,9,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -72,11 +72,11 @@ BEGIN
             VALUE "Comments", "http://www.nwnx.org"
             VALUE "CompanyName", " "
             VALUE "FileDescription", "NWNX2 funcs"
-            VALUE "FileVersion", "0.0.9.1"
+            VALUE "FileVersion", "0.0.9.2"
             VALUE "InternalName", "nwnx funcs"
             VALUE "OriginalFilename", "nwnx_funcs.dll"
             VALUE "ProductName", "NWNX2 funcs"
-            VALUE "ProductVersion", "0.0.9.1"
+            VALUE "ProductVersion", "0.0.9.2"
         END
     END
     BLOCK "VarFileInfo"

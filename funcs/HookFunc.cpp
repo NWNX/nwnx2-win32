@@ -14,6 +14,8 @@ CHookFunctions::CHookFunctions() {
 	CNWSCreatureStats__GetEffectImmunityORG = 0x0048B770;
 	CServerExoAppInternal__RemovePCFromWorldORG = 0x0045B990;
 
+	CNWSModule__UpdateTimeORG = 0x004DB1A0;
+
 	HookFunctions();
 }
 
@@ -80,6 +82,15 @@ int __fastcall CHookFunctions::CServerExoAppInternal__RemovePCFromWorldHOOK(CSer
 	return CServerExoAppInternal__RemovePCFromWorldNEXT(pTHIS, NULL, a2);
 }
 
+char __fastcall CHookFunctions::CNWSModule__UpdateTimeHOOK(CNWSModule *pTHIS, void *pVOID, int a2, int i, int a4) {
+	uint8_t Time = pTHIS->mod_timeofday;
+	char ret = CNWSModule__UpdateTimeNEXT(pTHIS, NULL, a2, i, a4);
+	if (Time != pTHIS->mod_timeofday) {
+		(*NWN_VirtualMachine)->Runscript(&CExoString(NWNFuncs.OnTimeOfDayChangeScript), 0);
+	}
+	return ret;
+}
+
 void CHookFunctions::HookFunctions() {
 	if(NWNFuncs.bHookCreateGeometry) {
 		if (HookCode((PVOID) org_CreateNewGeometry, CreateNewGeometryHookProc, (PVOID*)&nwn_CreateNewGeometryNextHook))
@@ -116,6 +127,11 @@ void CHookFunctions::HookFunctions() {
 		else _log(0, "X CServerExoAppInternal__RemovePCFromWorld hook failed\n");
 	}
 
+	if (NWNFuncs.bHookRemovePCFromWorld) {
+		if (HookCode((PVOID)CNWSModule__UpdateTimeORG, CNWSModule__UpdateTimeHOOK, (PVOID*)&CNWSModule__UpdateTimeNEXT))
+			_log(0, "* CNWSModule__UpdateTime hooked; script to run: %s\n", NWNFuncs.OnTimeOfDayChangeScript);
+		else _log(0, "X CNWSModule__UpdateTime hook failed\n");
+	}
 }
 
 /*char __fastcall CHookFunctions::CNWSCreatureStats__GetDEXModHook(CNWSCreatureStats *Stats, void *pVOID, int a3) {

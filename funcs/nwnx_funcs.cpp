@@ -25,6 +25,11 @@ char* CNWNXFuncs::OnRequest(char *gameObject, char* Request, char* Parameters) {
 	}
 
 	if (strcmp(Request, "TEST") == 0) {
+/*		nwn_objid_t oiArea = 0;
+		sscanf(Parameters, "%08X", &oiArea);
+		_log(3, "oiArea: %08X\n", oiArea);
+		CNWSArea *area = (*NWN_AppManager)->app_server->srv_internal->GetAreaByGameObjectID(oiArea);
+		_log(3, "%08X\n", area);*/
 	}
 
 	else if (MainLookup->Execute(Request, (CGameObject*)gameObject, Parameters)) {
@@ -77,7 +82,10 @@ BOOL CNWNXFuncs::OnCreate(const char* LogDir) {
 	bOverrideMaximumDexMod = iniFile.ReadInteger("FUNCS", "HOOK_OverrideMaximumDexMod", 0);
 
 	if ((bHookRemovePCFromWorld = iniFile.ReadInteger("FUNCS", "HOOK_OnPlayerLeaving", 0))) {
-		iniFile.ReadString("FUNCS", "OnPlayerLeavingScript", OnPlayerLeavingScript, 16, "onplayerleaving");
+		iniFile.ReadString("FUNCS", "OnPlayerLeavingScript", OnPlayerLeavingScript, 17, "onplayerleaving");
+	}
+	if ((bHookTimeOfDayChange = iniFile.ReadInteger("FUNCS", "HOOK_TimeOfDayChange", 0))) {
+		iniFile.ReadString("FUNCS", "OnTimeOfDayChangeScript", OnTimeOfDayChangeScript, 17, "mod_timechanged");
 	}
 
 	WriteLogHeader(debugLevel);
@@ -101,6 +109,7 @@ BOOL CNWNXFuncs::OnCreate(const char* LogDir) {
 	NssServer = new CNssServer;
 	NssTransition = new CNssTransition;
 	NssItemProperty = new CNssItemProperty;
+	NssModule = new CNssModule;
 	
 	MainLookup = NssLocalVariables;
 	
@@ -115,6 +124,6 @@ BOOL CNWNXFuncs::OnRelease() {
 }
 
 void CNWNXFuncs::WriteLogHeader(int debugLevel) {
-	_log(0, "Windows NWNX Funcs plugin v.0.0.9.1\n");
+	_log(0, "Windows NWNX Funcs plugin v.0.0.9.2\n");
 	_log(0, "log level: %i\n", debugLevel);
 }

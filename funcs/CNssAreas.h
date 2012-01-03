@@ -17,4 +17,6 @@ public: //Script functions
 	int GetFirstArea(CGameObject *oObject, char *Params);
 	int GetNextArea(CGameObject *oObject, char *Params);
 	int GetSurfaceMaterial(CGameObject *oObject, char *Params);
+	int SetNoRestFlag(CGameObject *oObject, char *Params);
+	int GetNoRestFlag(CGameObject *oObject, char *Params);
 };

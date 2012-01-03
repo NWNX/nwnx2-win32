@@ -9,11 +9,13 @@ CNssAreas::CNssAreas(void) {
 	AddFunction("GETNEXTAREA", L_CAST(&CNssAreas::GetNextArea));
 	AddFunction("GETAREABYPOSITION", L_CAST(&CNssAreas::GetAreaByPosition));
 	AddFunction("GETSURFACEMATERIAL", L_CAST(&CNssAreas::GetSurfaceMaterial));
+	AddFunction("GETNORESTFLAG", L_CAST(&CNssAreas::GetNoRestFlag));
+	AddFunction("SETNORESTFLAG", L_CAST(&CNssAreas::SetNoRestFlag));
 }
 
 nwn_objid_t CNssAreas::GetAreaByPos(int iPos) {
 	_log(3, "GetAreaByPos(%d)\n", iPos);
-	CNWSModule *cModule = (*NWN_AppManager)->app_server->srv_internal->GetModule(); //nwn_GetModule();
+	CNWSModule *cModule = (*NWN_AppManager)->app_server->srv_internal->GetModule();
 	if (iPos >= cModule->mod_areas_len || iPos < 0) {
 		return OBJECT_INVALID;
 	}
@@ -100,4 +102,30 @@ int CNssAreas::GetSurfaceMaterial(CGameObject *oObject, char *Params) {
 	
 	sprintf(Params, "-1");
 	return 0;
+}
+
+int CNssAreas::SetNoRestFlag(CGameObject *oObject, char *Params) {
+	CNWSArea *Area = oObject->AsNWSArea();
+	if (!Area) {
+		sprintf(Params, "-1");
+		_log(2, "o Error: SetNoRestFlag used on non-area object.\n");
+		return 0;
+	}
+
+	uint32_t bRest = 0;
+	CParams::ExtractP1(Params, bRest);
+	Area->NoRest = bRest;
+	return 1;
+}
+
+int CNssAreas::GetNoRestFlag(CGameObject *oObject, char *Params) {
+	CNWSArea *Area = oObject->AsNWSArea();
+	if (!Area) {
+		sprintf(Params, "-1");
+		_log(2, "o Error: GetNoRestFlag used on non-area object.\n");
+		return 0;
+	}
+
+	sprintf(Params, "%d", Area->NoRest);
+	return 1;
 }
