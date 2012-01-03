@@ -37,16 +37,16 @@ struct CNWSArea_s {
     uint32_t                    NoRest;
     uint32_t                    field_A0;
     uint32_t                    field_A4;
-    uint32_t                    field_A8;
+    uint32_t                    are_CResHelper_vftable;
     uint32_t                    field_AC;
     uint32_t                    field_B0;
     CResRef                     *area_git;
     uint32_t                    field_B8;
     uint32_t                    field_BC;
     uint32_t                    field_C0;
-    uint32_t                    field_C4;
-    uint32_t                    field_C8;
-    uint32_t                    field_CC;
+    void                    	*are_CGameObject_vftable;
+    uint32_t                    are_oid;
+    uint32_t                    are_object_type;
     uint32_t                    are_numplayers;
     uint32_t                    field_D4;
     uint32_t                    field_D8;
@@ -57,12 +57,11 @@ struct CNWSArea_s {
     uint32_t                    field_EC;
     uint32_t                    field_F0;
     uint32_t                    field_F4;
-    uint32_t                    field_F8;
-    uint32_t                    field_FC;
+    CExoLocString2              are_name;
     CExoString                  are_tag;
     uint32_t                    field_108;
     uint32_t                    field_10C;
-    CNWSScriptVarTable          area_vartable;	/* 0x0110 */
+    uint32_t					field_110;
     uint32_t                    field_114;
     uint32_t                    field_118;
     uint32_t                    field_11C;
@@ -77,13 +76,57 @@ struct CNWSArea_s {
     uint32_t                    field_140;
     uint32_t                    field_144;
     uint32_t                    field_148;
-    uint32_t                    *obj_list;
-    uint32_t                    obj_list_len;
-    uint32_t                    obj_list_alloc;
-    uint32_t                    first_next_obj_index;
-    uint32_t                    *transition_list;
-    uint32_t                    transition_list_len;
-    uint32_t                    transition_list_alloc;
+    uint32_t                    *obj_list;					/*0x14C*/
+    uint32_t                    obj_list_len;				/*0x150*/
+    uint32_t                    obj_list_alloc;				/*0x154*/
+    uint32_t                    first_next_obj_index;		/*0x158*/
+    uint32_t                    *transition_list;			/*0x15C*/
+    uint32_t                    transition_list_len;		/*0x160*/
+    uint32_t                    transition_list_alloc;		/*0x164*/
+    uint32_t					field_168;
+    uint32_t					field_16C;
+    uint32_t					field_170;
+    uint32_t					field_174;
+    uint32_t					field_178;
+    uint32_t					field_17C;
+    uint32_t					field_180;
+    uint32_t					field_184;
+    uint32_t					field_188;
+    uint32_t					field_18C;
+    uint32_t					field_190;
+    uint32_t					field_194;
+    uint32_t					field_198;
+    uint32_t					field_19C;
+    uint32_t					field_1A0;
+    uint32_t					field_1A4;
+    uint32_t					field_1A8;
+    uint32_t					field_1AC;
+    uint32_t					field_1B0;
+    uint32_t					field_1B4;
+    uint32_t					field_1B8;
+    uint32_t					field_1BC;
+    uint32_t					field_1C0;
+    uint32_t					field_1C4;
+    uint32_t					field_1C8;
+    uint32_t					field_1CC;
+    uint32_t					field_1D0;
+    CNWSScriptVarTable			area_vartable;
+    uint32_t					field_1D8;
+    uint32_t					field_1DC;
+    uint32_t					field_1E0;
+    uint32_t					field_1E4;
+    uint32_t					field_1E8;
+    uint32_t					field_1EC;
+    uint32_t					field_1F0;
+    uint32_t					field_1F4;
+    uint32_t					field_1F8;
+	uint8_t						field_1FC;				// 01FC -1 (if -1, weather is updated during AIUpdate)
+	uint8_t						field_1FD;				// 01FD 0 set to a2 in SetCurrentWeather(this, uchar a2, int a3) 
+	uint8_t						nLightingScheme;		// 01FE 1
+	uint8_t						nPvP;					// 01FF 
+    uint32_t					field_200;
+    uint32_t					field_204;
+    uint32_t					field_208;
 
 void Destructor();
 void CNWSArea(CResRef, int, unsigned long);
