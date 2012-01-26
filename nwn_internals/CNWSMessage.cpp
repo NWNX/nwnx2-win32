@@ -29,6 +29,9 @@ int 		(__thiscall *CNWSMessage__SendServerToPlayerCCMessage)(CNWSMessage *pTHIS,
 int 		(__thiscall *CNWSMessage__SendServerToPlayerArea_ClientArea)(CNWSMessage *pTHIS, CNWSPlayer_s *Player, CNWSArea *Area, Vector Pos, Vector *Rot, int a8) = (int(__thiscall*)(CNWSMessage *pTHIS, CNWSPlayer_s *Player, CNWSArea *Area, Vector Pos, Vector *Rot, int a8))0x00439EB0;
 int 		(__thiscall *CNWSMessage__SendServerToPlayerModule_Info)(CNWSMessage *pTHIS, uint32_t PlayerID) = (int(__thiscall*)(CNWSMessage *pTHIS, uint32_t PlayerID))0x00449FF0;
 
+signed int 	(__thiscall *CNWSMessage__SendServerToPlayerExamineGui_PlaceableData)(CNWSMessage *pTHIS, CNWSPlayer *Player, nwn_objid_t oID) = (signed int(__thiscall*)(CNWSMessage *pTHIS, CNWSPlayer *Player, nwn_objid_t oID))0x004474B0;
+int 		(__thiscall *CNWSMessage__WriteOBJECTIDServer)(CNWSMessage *pTHIS, nwn_objid_t oID) = (int (__thiscall*)(CNWSMessage *pTHIS, nwn_objid_t oID))0x00508CB0;
+
 nwn_objid_t CNWSMessage_s::ReadOBJECTIDServer() {
 	return CNWSMessage__ReadOBJECTIDServer(this);
 }
@@ -77,8 +80,8 @@ int CNWSMessage_s::SendServerToPlayerGuiQuickbar_SetButton(CNWSPlayer* Player, u
 	return CNWSMessage__SendServerToPlayerGuiQuickbar_SetButton(this, Player, a2, a3);
 }
 
-int CNWSMessage_s::SendServerToPlayerMessage(nwn_objid_t Receiver, uint8_t a2, uint8_t Channel, void *pMessagedata, nwn_objid_t Sender) {
-	return CNWSMessage__SendServerToPlayerMessage(this, Receiver, a2, Channel, pMessagedata, Sender);
+int CNWSMessage_s::SendServerToPlayerMessage(nwn_objid_t Receiver, uint8_t a2, uint8_t Channel, void *pMessagedata, uint32_t MessageLength) {
+	return CNWSMessage__SendServerToPlayerMessage(this, Receiver, a2, Channel, pMessagedata, MessageLength);
 }
 
 void CNWSMessage_s::WriteGameObjUpdate_UpdateAppearance(CNWSObject* a1, CLastUpdateObject* a2, uint32_t a3) {
@@ -120,4 +123,12 @@ int CNWSMessage_s::SendServerToPlayerArea_ClientArea(CNWSPlayer_s *Player, CNWSA
 
 int CNWSMessage_s::SendServerToPlayerModule_Info(uint32_t PlayerID) {
 	return CNWSMessage__SendServerToPlayerModule_Info(this, PlayerID);
+}
+
+signed int CNWSMessage_s::SendServerToPlayerExamineGui_PlaceableData(CNWSPlayer *Player, nwn_objid_t oID) {
+	return CNWSMessage__SendServerToPlayerExamineGui_PlaceableData(this, Player, oID);
+}
+
+int CNWSMessage_s::WriteOBJECTIDServer(nwn_objid_t oID) {
+	return CNWSMessage__WriteOBJECTIDServer(this, oID);
 }

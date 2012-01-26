@@ -44,9 +44,11 @@ struct CNWClass_s {
   uint8_t EpicLevel;
   uint8_t byte267;
   
+
   unsigned char GetFortSaveBonus(uint8_t Level);
   unsigned char GetWillSaveBonus(uint8_t Level);
   unsigned char GetRefSaveBonus(uint8_t Level);
+  char GetAttackBonus(uint8_t Level);
 };
 
 #endif

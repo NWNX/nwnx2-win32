@@ -134,6 +134,7 @@ struct CTwoDimArrays_s {
     uint8_t GetEpicFortSaveBonus(int EpicLevels);
     uint8_t GetEpicWillSaveBonus(int EpicLevels);
     uint8_t GetEpicRefSaveBonus(int EpicLevels);
+	uint8_t GetEpicAttackBonus(int EpicLevels);
 };
 
 #endif /* _NX_NWN_STRUCT_CTWODIMARRAYS_ */

@@ -27,7 +27,10 @@ struct CNWSMessage_s {
 	void		WriteGameObjUpdate_UpdateObject(CNWSPlayer*, CNWSObject*, CLastUpdateObject*, uint32_t, uint32_t);
 	
 	int SendServerToPlayerArea_ClientArea(CNWSPlayer_s *Player, CNWSArea *Area, Vector Pos, Vector *Rot, int a8);
-	int CNWSMessage_s::SendServerToPlayerModule_Info(uint32_t PlayerID);
+	int SendServerToPlayerModule_Info(uint32_t PlayerID);
+	
+	signed int SendServerToPlayerExamineGui_PlaceableData(CNWSPlayer *Player, nwn_objid_t oID);
+	int WriteOBJECTIDServer(nwn_objid_t oID);
 };
 
 #endif

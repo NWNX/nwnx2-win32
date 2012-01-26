@@ -114,7 +114,7 @@ struct CNWSItem_s : public CNWItem_s, public CNWSObject_s{
 	unsigned short GetDamageFlags();
 	unsigned char GetMinEquipLevel();
 	int GetPropertyByType(CNWSItemProperty **iprp, uint16_t ipType, uint16_t ipSubType);
-	int GetPropertyByTypeExists(unsigned short a1, unsigned short a2);
+	int GetPropertyByTypeExists(unsigned short Type, unsigned short SubType);
 	int LoadFromTemplate(CResRef CRes, CExoString *Tag);
 	int LoadItem(CResGFF *ResGFF, void *CResStruct, int a3);
 	int SaveItem(CResGFF *ResGFF, void *ResStruct, int a3);

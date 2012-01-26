@@ -21,6 +21,8 @@ void 			(__thiscall *CNWSObject__SetPosition)(CNWSObject *pTHIS, Vector v, int a
 void 			(__thiscall *CNWSObject__SetOrientation)(CNWSObject *pTHIS, Vector v) = (void(__thiscall*)(CNWSObject *pTHIS, Vector v))0x004E25B0;
 void *			(__thiscall *CNWSObject__BroadcastDialog)(CNWSObject *pTHIS, CExoString Msg, float Max_Distance) = (void*(__thiscall*)(CNWSObject *pTHIS, CExoString Msg, float Max_Distance))0x004E54B0;
 
+int				(__thiscall *CNWSObject__DoDamageReduction)(CNWSObject *pTHIS, CNWSCreature *cre_Attacker, int DamageDelivered, unsigned __int8 DamageDelivered_Power, signed int bMaxDamage, int bFeedback) = (int(__thiscall*)(CNWSObject *pTHIS, CNWSCreature *cre_Attacker, int DamageDelivered, unsigned __int8 DamageDelivered_Power, signed int bMaxDamage, int bFeedback))0x004DFDE0;
+
 /*CNWSItem *CNWSObject_s::AsNWSItem() {
 	return ((CNWSItem*)((char*)this-0x10));
 }
@@ -112,4 +114,8 @@ void CNWSObject_s::SetOrientation(Vector v) {
 
 void *CNWSObject_s::BroadcastDialog(CExoString Msg, float Max_Distance) {
 	return CNWSObject__BroadcastDialog(this, Msg, Max_Distance);
+}
+
+int CNWSObject_s::DoDamageReduction(CNWSCreature *cre_Attacker, int DamageDelivered, unsigned __int8 DamageDelivered_Power, signed int bMaxDamage, int bFeedback) {
+	return CNWSObject__DoDamageReduction(this, cre_Attacker, DamageDelivered, DamageDelivered_Power, bMaxDamage, bFeedback);
 }

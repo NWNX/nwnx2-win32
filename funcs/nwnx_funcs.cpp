@@ -25,11 +25,24 @@ char* CNWNXFuncs::OnRequest(char *gameObject, char* Request, char* Parameters) {
 	}
 
 	if (strcmp(Request, "TEST") == 0) {
-/*		nwn_objid_t oiArea = 0;
-		sscanf(Parameters, "%08X", &oiArea);
-		_log(3, "oiArea: %08X\n", oiArea);
-		CNWSArea *area = (*NWN_AppManager)->app_server->srv_internal->GetAreaByGameObjectID(oiArea);
-		_log(3, "%08X\n", area);*/
+		CNWSCreature *cre = ((CGameObject*)gameObject)->AsNWSCreature();
+
+		CNWSItem *Weapon = cre->cre_equipment->GetItemInSlot(EQUIPMENT_SLOT_RIGHTHAND);
+		if (Weapon) {
+			if (Weapon->GetPropertyByTypeExists(74, 0)) {
+				CNWSItemProperty *iprp = new CNWSItemProperty;
+				if (Weapon->GetPropertyByType(&iprp, 74, 0)) {
+					if (iprp->ip_cost_value) {
+						int NumDice = 0, Die = 0;
+						CExoString ExoString = "NumDice";
+						((*NWN_Rules)->ru_2das->tda_iprp_damagecost)->GetINTEntry_strcol(iprp->ip_cost_value, ExoString, &NumDice);
+						ExoString = "Die";
+						((*NWN_Rules)->ru_2das->tda_iprp_damagecost)->GetINTEntry_strcol(iprp->ip_cost_value, ExoString, &Die);
+					}
+				}
+			}
+		}
+
 	}
 
 	else if (MainLookup->Execute(Request, (CGameObject*)gameObject, Parameters)) {
@@ -61,6 +74,9 @@ unsigned long CNWNXFuncs::OnRequestObject (char *gameObject, char* Request){
 
 	if(MainLookup->Execute(TrueRequest, (CGameObject*)gameObject, NewParams)) {
 		sscanf(NewParams, "%08X", &ret);
+	}
+	else {
+		_log(1, "o Could not find requested function.\n");
 	}
 
 	return ret;
@@ -124,6 +140,6 @@ BOOL CNWNXFuncs::OnRelease() {
 }
 
 void CNWNXFuncs::WriteLogHeader(int debugLevel) {
-	_log(0, "Windows NWNX Funcs plugin v.0.0.9.2\n");
+	_log(0, "Windows NWNX Funcs plugin v.0.0.9.3\n");
 	_log(0, "log level: %i\n", debugLevel);
 }

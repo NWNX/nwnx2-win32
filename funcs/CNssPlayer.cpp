@@ -10,6 +10,7 @@ CNssPlayer::CNssPlayer(void) {
 	AddFunction("UPDATECHARSHEET", L_CAST(&CNssPlayer::UpdateCharSheet));
 	AddFunction("POSSESSCREATURE", L_CAST(&CNssPlayer::PossessCreature));
 	AddFunction("BOOTPCWITHMESSAGE", L_CAST(&CNssPlayer::BootPCWithMessage));
+	AddFunction("POPUPMESSAGE", L_CAST(&CNssPlayer::PopUpMessage));
 }
 
 void CNssPlayer::UpdateQuickBar(CGameObject* obj) {
@@ -276,4 +277,34 @@ int CNssPlayer::BootPCWithMessage(CGameObject *oObject, char *Params) {
 		return 1;
 	}
 	return 0; 
+}
+
+int CNssPlayer::PopUpMessage(CGameObject *oObject, char *Params) {
+	CNWSPlayer *Player = (*NWN_AppManager)->app_server->GetClientObjectByObjectId(oObject->obj_id);
+	if (Player) {
+
+		CNWSMessage *Msg = (*NWN_AppManager)->app_server->GetNWSMessage();
+
+		CGameObjectArray *CGA = (*NWN_AppManager)->app_server->GetObjectArray();
+
+		CGameObject go;
+
+		((CNWMessage*)Msg)->CreateWriteMessage(128, Player->pl_id, 1);
+
+		Msg->WriteOBJECTIDServer(oObject->obj_id);
+		CExoString Text = Params;
+
+		char *pMessageData = 0;
+		nwn_objid_t Sender = 0;
+
+		((CNWMessage*)Msg)->WriteBOOL(1);
+		((CNWMessage*)Msg)->WriteCExoString(Text, 32);
+
+		if (((CNWMessage*)Msg)->GetWriteMessage(&pMessageData, &Sender)) {
+			Msg->SendServerToPlayerMessage(Player->pl_id, 27, 4, pMessageData, Sender);
+		}
+
+		return 1;
+	}
+	return 0;
 }

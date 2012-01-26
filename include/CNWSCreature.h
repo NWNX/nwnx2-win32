@@ -1081,6 +1081,8 @@ struct CNWSCreature_s : public CNWSObject_s {
 	void 				NotifyAssociateActionToggle(int Action);
 	int					GetArmorClass();
 	void 				UnpossessCreature();
+	char				CalculateDamagePower(CNWSObject* Defender, int bOffhand);
+
 
 	//void				Destructor(char c);
 	

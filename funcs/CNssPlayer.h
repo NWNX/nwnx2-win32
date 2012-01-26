@@ -17,5 +17,6 @@ public: //script functions
 	int UpdateCharSheet(CGameObject *oObject, char *Params);
 	int PossessCreature(CGameObject *oObject, char *Params);
 	int BootPCWithMessage(CGameObject *oObject, char *Params);
+	int PopUpMessage(CGameObject *oObject, char *Params);
 
 };

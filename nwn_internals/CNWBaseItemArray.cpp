@@ -6,5 +6,8 @@ CNWBaseItem *	(__thiscall *CNWBaseItemArray__GetBaseItem)(CNWBaseItemArray *pTHI
 
 
 CNWBaseItem *CNWBaseItemArray_s::GetBaseItem(int BaseItem) {
-	return CNWBaseItemArray__GetBaseItem(this, BaseItem);
+	if (bitemarray_bitem && BaseItem >=0 && BaseItem < bitemarray_len)
+		return &bitemarray_bitem[BaseItem];
+	else return NULL;
+	//return CNWBaseItemArray__GetBaseItem(this, BaseItem);
 }

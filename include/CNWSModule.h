@@ -79,13 +79,13 @@ struct CNWSModule_s { //: public CResHelper_s { //, public CGameObject {
     uint32_t					lookuptable_alloc;				/* 0x0154 */
     uint32_t					spacer2[26];					/* 0x0158 */
     
-    uint32_t					mod_date_year;					/* 0x01C0 */
-    uint32_t					mod_date_month;					/* 0x01C4 */
-    uint32_t					mod_date_day;					/* 0x01C8 */
-    uint32_t					mod_time_hour;					/* 0x01CC */
+    uint32_t					mod_date_year;					/* 0x01DC */
+    uint32_t					mod_date_month;					/* 0x01E0 */
+    uint32_t					mod_date_day;					/* 0x01E4 */
+    uint32_t					mod_time_hour;					/* 0x01E8 */
     
-    uint32_t					field_1D0;
-    uint8_t						mod_min_per_hour;
+    uint32_t					field_1EC;
+    uint8_t						mod_timeofday;					/* 0x1F0 */
     uint8_t						mod_dawnhour;
     uint8_t						mod_duskhour;
     uint8_t						field_1D7l;

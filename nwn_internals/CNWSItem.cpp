@@ -52,8 +52,8 @@ void CNWSItem_s::AddToArea(CNWSArea *Area, float x, float y, float z, int a5) {
 	CNWSItem__AddToArea(this, Area, x,y,z, a5);
 }
 
-int CNWSItem_s::GetPropertyByTypeExists(unsigned short a1, unsigned short a2) {
-	return CNWSItem__GetPropertyByTypeExists(this, a1, a2);
+int CNWSItem_s::GetPropertyByTypeExists(unsigned short Type, unsigned short SubType) {
+	return CNWSItem__GetPropertyByTypeExists(this, Type, SubType);
 }
 
 int CNWSItem_s::LoadFromTemplate(CResRef CRes, CExoString *Tag) {

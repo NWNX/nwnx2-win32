@@ -16,8 +16,8 @@ extern int **g_bEnableCombatDebugging;
 extern int 					(__fastcall *CExoArrayList_uint32___Add)(void *, void *, uint32_t a2);
 extern void 				(__fastcall *CExoArrayList_uint32___Remove)(void *, void *, unsigned long);
 
-extern void					(__fastcall *CNWMessage__CreateWriteMessage)(CNWSMessage*, void*, uint32_t, nwn_objid_t, uint32_t);
-extern int					(__fastcall *CNWMessage__GetWriteMessage)(CNWSMessage*, void*, uint8_t**, uint64_t*);
+//extern void					(__fastcall *CNWMessage__CreateWriteMessage)(CNWSMessage*, void*, uint32_t, nwn_objid_t, uint32_t);
+//extern int					(__fastcall *CNWMessage__GetWriteMessage)(CNWSMessage*, void*, uint32_t *, uint32_t *);
 
 // scalar and vector(if existing) deleting destructors
 extern void (__fastcall *CNWSCreature__dtor_CNWSCreature)						(void *pTHIS, void *pVOID, char);

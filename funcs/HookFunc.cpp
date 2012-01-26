@@ -127,7 +127,7 @@ void CHookFunctions::HookFunctions() {
 		else _log(0, "X CServerExoAppInternal__RemovePCFromWorld hook failed\n");
 	}
 
-	if (NWNFuncs.bHookRemovePCFromWorld) {
+	if (NWNFuncs.bHookTimeOfDayChange) {
 		if (HookCode((PVOID)CNWSModule__UpdateTimeORG, CNWSModule__UpdateTimeHOOK, (PVOID*)&CNWSModule__UpdateTimeNEXT))
 			_log(0, "* CNWSModule__UpdateTime hooked; script to run: %s\n", NWNFuncs.OnTimeOfDayChangeScript);
 		else _log(0, "X CNWSModule__UpdateTime hook failed\n");

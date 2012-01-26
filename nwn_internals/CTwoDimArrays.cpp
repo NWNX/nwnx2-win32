@@ -20,3 +20,8 @@ uint8_t CTwoDimArrays_s::GetEpicRefSaveBonus(int EpicLevels) {
 	if (EpicLevels < 1 || EpicLevels > 60) return 0;
 	return tda_epic_save_ref[EpicLevels];
 }
+
+uint8_t CTwoDimArrays_s::GetEpicAttackBonus(int EpicLevels) {
+	if (EpicLevels < 1 || EpicLevels > 60) return 0;
+	return tda_epic_ab[EpicLevels];
+}

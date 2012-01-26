@@ -888,6 +888,10 @@ void NWNXFuncs_SetNoRestFlag(object oArea, int bNoRest);
 //Returns the phase of the day (dawn, day, dusk, night)
 int NWNXFuncs_GetTimeOfDay();
 
+void NWNXFuncs_PopupMessage(object oPlayer, string sMessage);
+
+int NWNXFuncs_GetAttackModifierVersus(object oDefender, int bOffHand, int bRanged);
+
 //*******************************************************************************************************************
 
 object NWNXFuncs_StringToObject(string soID) {
@@ -1948,14 +1952,20 @@ void NWNXFuncs_AddImmunityOverride(object oCreature, int iImmunity) {
 	SetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE", Override);
 }
 
-/* For some reason my prc compiler doesn't like the NOT operator
+// for some reason my prc compiler doesn't like the NOT operator
 void NWNXFuncs_RemoveImmunityOverride(object oCreature, int iImmunity) {
 	int Override = GetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE");
-	if (iImmunity == 0) Override = Override ~ 1;
-	else Override = Override ~ (2 << (iImmunity-1));
+	if (iImmunity == 0) {
+		//Override = Override ~ 1;
+		Override -= 1;
+	}
+	else {
+		//Override = Override ~ (2 << (iImmunity-1));
+		Override -= (2 << (iImmunity-1));
+	}
 	SetLocalInt(oCreature, "NWNXFUNCS_IMMOVERRIDE", Override);
 }
-*/
+
 
 int NWNXFuncs_GetAutoRemoveKeyFlag(object oObject) {
 	SetLocalString(oObject, "NWNX!FUNCS!GETAUTOREMOVEKEY", "-");
@@ -1997,5 +2007,17 @@ int NWNXFuncs_GetTimeOfDay() {
 	SetLocalString(OBJECT_SELF, "NWNX!FUNCS!GETTIMEOFDAY", "-");
 	int Ret = StringToInt(GetLocalString(OBJECT_SELF, "NWNX!FUNCS!GETTIMEOFDAY"));
 	DeleteLocalString(OBJECT_SELF, "NWNX!FUNCS!GETTIMEOFDAY");
+	return Ret;
+}
+
+void NWNXFuncs_PopupMessage(object oPlayer, string sMessage) {
+    SetLocalString(oPlayer, "NWNX!FUNCS!POPUPMESSAGE", sMessage);
+    DeleteLocalString(oPlayer, "NWNX!FUNCS!POPUPMESSAGE");
+}
+
+int NWNXFuncs_GetAttackModifierVersus(object oDefender, int bOffHand, int bRanged) {
+	SetLocalString(OBJECT_SELF, "NWNX!FUNCS!GETATTACKMODIFIERVERSUS", ObjectToString(oDefender)+" "+IntToString(bOffHand)+" "+IntToString(bRanged));
+	int Ret = StringToInt(GetLocalString(OBJECT_SELF, "NWNX!FUNCS!GETATTACKMODIFIERVERSUS"));
+	DeleteLocalString(OBJECT_SELF, "NWNX!FUNCS!GETATTACKMODIFIERVERSUS");
 	return Ret;
 }

@@ -53,6 +53,7 @@ void 				(__thiscall *CNWSCreature__SetPVPPlayerLikesMe)(CNWSCreature *pTHIS, un
 
 CNWSCreature*		(__thiscall *CNWSCreature__CNWSCreature)(CNWSCreature *pTHIS, int a2, unsigned int a3, unsigned int a4) = (CNWSCreature*(__thiscall*)(CNWSCreature *pTHIS, int a2, unsigned int a3, unsigned int a4))0x0048F5B0;
 void				(__thiscall *CNWSCreature___CNWSCreature)(CNWSCreature *pTHIS) = (void(__thiscall*)(CNWSCreature *pTHIS))0x00490000;
+char				(__thiscall *CNWSCreature__CalculateDamagePower)(CNWSCreature *pTHIS, CNWSObject *Defender, int bOffHand) = (char(__thiscall*)(CNWSCreature *pTHIS, CNWSObject *Defender, int bOffHand))0x004A7620;
 
 //void Destructor(char c) {
 	//CNWSCreature__dtor_CNWSCreature(this, c);
@@ -252,4 +253,8 @@ void CNWSCreature_s::UnpossessCreature() {
 
 CNWSFaction * CNWSCreature_s::GetFaction() {
 	return CNWSCreature__GetFaction(this);
+}
+
+char CNWSCreature_s::CalculateDamagePower(CNWSObject* Defender, int bOffhand) {
+	return CNWSCreature__CalculateDamagePower(this, Defender, bOffhand);
 }
