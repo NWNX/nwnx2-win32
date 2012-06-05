@@ -127,50 +127,72 @@ int CNssSpells::RemoveKnownSpell(CGameObject *oObject, char *Params) {
 	return 1;
 }
 
+//code by Flutterby
 int CNssSpells::RemoveAllSpells(CGameObject *oObject, char *Params) {
-	CNWSCreature *cre = oObject->AsNWSCreature();
-	if (!cre) {
-		_log(2, "o Error RemoveAllSpells used on non-creature object.\n");
-		sprintf(Params, "-1");
-		return 0;
-	}
+   CNWSCreature *cre = oObject->AsNWSCreature();
+   if (!cre) {
+      _log(2, "o Error RemoveAllSpells used on non-creature object.\n");
+      sprintf(Params, "-1");
+      return 0;
+   }
 
-	uint8_t Class = 0;
-	CParams::ExtractP1(Params, Class);
+   uint8_t Class = 0;
+   uint8_t MinLevel = 0;
+   uint8_t MaxLevel = 0;
+   uint8_t FreeMem = 0;
+   CParams::ExtractP4(Params, Class, MinLevel, MaxLevel, FreeMem);
 
-	int i=0, sp_level=0;
-	CNWSStats_Level *ls;
+   int i=0, sp_level=MinLevel;
+   CNWSStats_Level *ls;
 
-	if (cre->cre_stats == NULL) {
-		sprintf(Params, "-1");
-		return 0;
-	}
+   if (cre->cre_stats == NULL) {
+      sprintf(Params, "-1");
+      return 0;
+   }
 
-	/* find the requested class and level, then remove the new spell */
-	for (i = 0; i < cre->cre_stats->cs_classes_len; i++) {
-		if (cre->cre_stats->cs_classes[i].cl_class != Class)
-			continue;
+   if (MinLevel < 0 || MaxLevel > 9) {
+      _log(2, "o Error RemoveAllSpells has invalid spell level range.\n");
+      sprintf(Params, "-1");
+      return 0;
+   }
 
-		if (cre->cre_stats->cs_classes[i].cl_spells_known[sp_level].len > 0) {
-			for (sp_level = 0; sp_level <=9; sp_level++) {
-				if (cre->cre_stats->cs_classes[i].cl_spells_known != NULL) {
-					cre->cre_stats->cs_classes[i].cl_spells_known[sp_level].len = 0;
-				}
-			}
-		}
-	}
+   /* find the requested class and level, then remove the new spell */
+   for (i = 0; i < cre->cre_stats->cs_classes_len; i++) {
+      if (cre->cre_stats->cs_classes[i].cl_class != Class)
+         continue;
 
-	int iCharacterLevel=0;
-	sp_level=0;
-	while ((ls = GetLevelStats(cre->cre_stats, ++iCharacterLevel)) != NULL) {
-		for (sp_level = 0; sp_level <=9; sp_level++) {
-			if (ls->ls_spells_known != NULL) {
-				ls->ls_spells_known[sp_level].len = 0;
-			}
-		}
-	}
+      if (cre->cre_stats->cs_classes[i].cl_spells_known[sp_level].len > 0) {
+         for (sp_level = MinLevel; sp_level <=MaxLevel; sp_level++) {
+            if (cre->cre_stats->cs_classes[i].cl_spells_known != NULL) {
+               cre->cre_stats->cs_classes[i].cl_spells_known[sp_level].len = 0;
+               if(FreeMem == 1)
+               {
+                  cre->cre_stats->cs_classes[i].cl_spells_known[sp_level].alloc = 0;
+                  free(cre->cre_stats->cs_classes[i].cl_spells_known[sp_level].data);
+                  cre->cre_stats->cs_classes[i].cl_spells_known[sp_level].data = NULL;
+               }
+            }
+         }
+      }
+   }
 
-	return 1;
+   int iCharacterLevel=0;
+   sp_level=MinLevel;
+   while ((ls = GetLevelStats(cre->cre_stats, ++iCharacterLevel)) != NULL) {
+      for (sp_level = MinLevel; sp_level <=MaxLevel; sp_level++) {
+         if (ls->ls_spells_known != NULL) {
+            ls->ls_spells_known[sp_level].len = 0;
+            if(FreeMem == 1)
+            {
+               ls->ls_spells_known[sp_level].alloc = 0;
+               free(ls->ls_spells_known[sp_level].data);
+               ls->ls_spells_known[sp_level].data = NULL;
+            }
+         }
+      }
+   }
+
+   return 1;
 }
 
 int CNssSpells::GetKnowsSpell(CGameObject *oObject, char *Params) {
@@ -295,7 +317,6 @@ int CNssSpells::ReplaceKnownSpell(CGameObject *oObject, char *Params) {
 }
 
 int CNssSpells::GetRemainingSpellSlots(CGameObject *oObject, char *Params) {
-	sprintf(Params, "%d", 0);
 	CNWSCreature *cre = oObject->AsNWSCreature();
 	if (!cre) {
 		_log(2, "o Error GetRemainingSpellSlots used on non-creature object.\n");
@@ -307,6 +328,7 @@ int CNssSpells::GetRemainingSpellSlots(CGameObject *oObject, char *Params) {
 	int SpellLevel = 0;
 
 	CParams::ExtractP2(Params, Class, SpellLevel);
+	sprintf(Params, "%d", 0);
 
 	int i, slots = 0;
 
@@ -363,7 +385,6 @@ int CNssSpells::SetRemainingSpellSlots(CGameObject *oObject, char *Params) {
 }
 
 int CNssSpells::GetMaxSpellSlots (CGameObject *oObject, char *Params) {
-	sprintf(Params, "%d", 0);
 	CNWSCreature *cre = oObject->AsNWSCreature();
 	if (!cre) {
 		_log(2, "o Error GetMaxSpellSlots used on non-creature object.\n");
@@ -375,6 +396,7 @@ int CNssSpells::GetMaxSpellSlots (CGameObject *oObject, char *Params) {
 	int SpellLevel = 0;
 
 	CParams::ExtractP2(Params, Class, SpellLevel);
+	sprintf(Params, "%d", 0);
 
 	int i, slots = 0;
 
@@ -402,7 +424,6 @@ int CNssSpells::GetMaxSpellSlots (CGameObject *oObject, char *Params) {
 }
 
 int CNssSpells::GetBonusSpellSlots(CGameObject *oObject, char *Params) {
-	sprintf(Params, "%d", 0);
 	CNWSCreature *cre = oObject->AsNWSCreature();
 	if (!cre) {
 		_log(2, "o Error GetBonusSpellSlots used on non-creature object.\n");
@@ -414,6 +435,7 @@ int CNssSpells::GetBonusSpellSlots(CGameObject *oObject, char *Params) {
 	int SpellLevel = 0;
 
 	CParams::ExtractP2(Params, Class, SpellLevel);
+	sprintf(Params, "%d", 0);
 
 	int i, slots = 0;
 
@@ -438,8 +460,6 @@ int CNssSpells::GetBonusSpellSlots(CGameObject *oObject, char *Params) {
 }
 
 int CNssSpells::GetMemorizedSpellSlot(CGameObject *oObject, char *Params) {
-	sprintf(Params, "%d", -1);
-
 	CNWSCreature *cre = oObject->AsNWSCreature();
 	if (!cre) {
 		_log(2, "o Error GetMemorizedSpellSlot used on non-creature object.\n");
@@ -452,6 +472,7 @@ int CNssSpells::GetMemorizedSpellSlot(CGameObject *oObject, char *Params) {
 	int Index = 0;
 
 	CParams::ExtractP3(Params, Class, SpellLevel, Index);
+	sprintf(Params, "%d", -1);
 
 	CNWSStats_Spell *sp;
 
@@ -545,8 +566,6 @@ int CNssSpells::SetMemorizedSpell(CGameObject *oObject, char *Params) {
 }
 
 int CNssSpells::RestoreMemorizedSpells(CGameObject *oObject, char *Params) {
-	sprintf(Params, "%d", 0);
-
 	CNWSCreature *cre = oObject->AsNWSCreature();
 	if (!cre) {
 		_log(2, "o Error RestoreMemorizedSpells used on non-creature object.\n");
@@ -559,6 +578,7 @@ int CNssSpells::RestoreMemorizedSpells(CGameObject *oObject, char *Params) {
 	uint8_t Class = 0;
 	int FromLevel = 0, ToLevel = 0;
 	CParams::ExtractP3(Params, Class, FromLevel, ToLevel);
+	sprintf(Params, "%d", 0);
 
     CNWSStats_Spell *sp;
 	int i,j,k;

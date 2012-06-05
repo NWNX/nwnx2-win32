@@ -450,9 +450,14 @@ void NWNXFuncs_RemoveKnownSpell(object oCreature, int iClass, int iSpell, int bR
 // Only works for spell casting classes that need to select which spells they want to know (Sorcerer, Wizard, Bard)
 int  NWNXFuncs_GetKnowsSpell(object oCreature, int iClass, int iSpell, int iSpellLevel=-1);
 
-// Removes all known spells for a class
+// Removes all known spells for a class from spell levels iMinLevel to iMaxLevel
+// If bFreeMemory is TRUE nwnx will free the memory allocated for storing learned spells. Be careful with this as
+// freeing memory for spell levels given by the game will crash the server while not freeing memory for spell levels
+// given by nwnx will also crash the server. Only use this when you used NWNXFuncs_AddKnownSpell to add spells at spell
+// levels not available in standard game rules.
 // Only works for spell casting classes that need to select which spells they want to know (Sorcerer, Wizard, Bard)
-void NWNXFuncs_RemoveAllSpells(object oCreature, int iClass);
+//**** by Flutterby *****//
+void NWNXFuncs_RemoveAllSpells(object oCreature, int iClass, int iMinLevel = 0, int iMaxLevel = 9, int bFreeMemory=FALSE);
 
 // Sets the Base Attack Bonus Override of oObject to iBaB
 // If BAB Override is greater than zero GetBaseAttackBonus will return this instead
@@ -1216,9 +1221,10 @@ void NWNXFuncs_RemoveKnownSpell(object oCreature, int iClass, int iSpell, int bR
 	DeleteLocalString(oCreature, "NWNX!FUNCS!REMOVEKNOWNSPELL");
 }
 
-void NWNXFuncs_RemoveAllSpells(object oCreature, int iClass) {
-	SetLocalString(oCreature, "NWNX!FUNCS!REMOVEALLSPELLS", IntToString(iClass));
-	DeleteLocalString(oCreature, "NWNX!FUNCS!REMOVEALLSPELLS");
+//fix by Flutterby
+void NWNXFuncs_RemoveAllSpells(object oCreature, int iClass, int iMinLevel = 0, int iMaxLevel = 9, int bFreeMemory=FALSE) {
+    SetLocalString(oCreature, "NWNX!FUNCS!REMOVEALLSPELLS", IntToString(iClass)+" "+IntToString(iMinLevel)+" "+IntToString(iMaxLevel)+" "+IntToString(bFreeMemory));
+    DeleteLocalString(oCreature, "NWNX!FUNCS!REMOVEALLSPELLS");
 }
 
 int NWNXFuncs_GetKnowsSpell(object oCreature, int iClass, int iSpell, int iSpellLevel=-1) {

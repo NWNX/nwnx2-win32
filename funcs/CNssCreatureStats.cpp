@@ -970,12 +970,11 @@ int CNssCreatureStats::GetSpellsGainedAtLevel(CGameObject *oObject, char *Params
 		return 0;
 	}
 
-	sprintf(Params, "");
-
 	int Level = -1;
 	int SpellLevel = 0;
 
 	CParams::ExtractP2(Params, Level, SpellLevel);
+	sprintf(Params, "");
 
 	CNWSCreatureStats *Stats = (CNWSCreatureStats*)((CNWSCreature*)oObject)->cre_stats;
 	CNWSStats_Level *ls;
@@ -1015,10 +1014,9 @@ int CNssCreatureStats::GetStatsGainedAtLevel(CGameObject *oObject, char *Params)
 		return 0;
 	}
 
-	sprintf(Params, "");
-
 	int Level = -1;
 	CParams::ExtractP1(Params, Level);
+	sprintf(Params, "");
 
 	CNWSCreatureStats *Stats = (CNWSCreatureStats*)((CNWSCreature*)oObject)->cre_stats;
 	CNWSStats_Level *ls;

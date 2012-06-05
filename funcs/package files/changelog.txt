@@ -1,3 +1,8 @@
+v 0.0.94
+	Fixed:
+		Instances where the Param string was overwritten before the parameters could be extracted (GetKnowsSpell, GetRemainingSpellSlots, GetMaxSpellSlots, GetSpellsGainedAtLevel, GetStatsGainedAtlevel)
+		Shamelessly copied Flutterby's RemoveAllSpells solution 
+
 v 0.0.93
 	Added:
 		PopupMessage
