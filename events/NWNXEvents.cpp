@@ -151,15 +151,15 @@ int CNWNXEvents::FireEvent(const int pObj, int nEvID)
 	nEventID = nEvID;
 
 	if( nEventID == EVENT_SAVE_CHAR ) 
-		Log( "o EVENT_SAVE_CHAR (%d):....OBJECT_SELF: %08lx.\n", nEventID, pObj);
+		Log(2, "o EVENT_SAVE_CHAR (%d):....OBJECT_SELF: %08lx.\n", nEventID, pObj);
 	else if( nEventID == EVENT_PICKPOCKET ) 
-		Log( "o EVENT_PICKPOCKET (%d):...OBJECT_SELF: %08lx TARGET: %08lx.\n", nEventID, pObj, oTarget);
+		Log(2, "o EVENT_PICKPOCKET (%d):...OBJECT_SELF: %08lx TARGET: %08lx.\n", nEventID, pObj, oTarget);
 	else if( nEventID == EVENT_ATTACK ) 
-		Log( "o EVENT_ATTACK (%d):.......OBJECT_SELF: %08lx TARGET: %08lx.\n", nEventID, pObj, oTarget);
+		Log(2, "o EVENT_ATTACK (%d):.......OBJECT_SELF: %08lx TARGET: %08lx.\n", nEventID, pObj, oTarget);
 	else if( nEventID == EVENT_EXAMINE ) 
-		Log( "o EVENT_EXAMINE (%d):......OBJECT_SELF: %08lx TARGET: %08lx.\n", nEventID, pObj, oTarget);
+		Log(2, "o EVENT_EXAMINE (%d):......OBJECT_SELF: %08lx TARGET: %08lx.\n", nEventID, pObj, oTarget);
 	else if( nEventID == EVENT_USE_SKILL ) 
-		Log( "o EVENT_USE_SKILL (%d):......OBJECT_SELF: %08lx TARGET: %08lx SKILL: %d.\n", nEventID, pObj, oTarget, nEventSubID);
+		Log(2, "o EVENT_USE_SKILL (%d):......OBJECT_SELF: %08lx TARGET: %08lx SKILL: %d.\n", nEventID, pObj, oTarget, nEventSubID);
 	
 	RunScript(eventScript, pObj);
 
