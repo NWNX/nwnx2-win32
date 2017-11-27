@@ -1,0 +1,14 @@
+/bin/debug
+/bin/dist
+/bin/release
+*.pdb
+*.user
+*.obj
+*.ncb
+*.sdf
+*.suo
+*.opensdf
+Debug
+Release
+ipch
+.vs/
