@@ -42,7 +42,7 @@ private:
 };
 
 /* TODO: UGLY! */
-typedef unsigned long int uint32_t;
+typedef unsigned int uint32_t;
 typedef unsigned char uint8_t;
 struct CAppManager_s;                     typedef struct CAppManager_s                     CAppManager;
 struct CServerExoApp_s;                   typedef struct CServerExoApp_s                   CServerExoApp;

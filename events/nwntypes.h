@@ -18,7 +18,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
 
-typedef unsigned long int uint32_t;
+typedef unsigned int uint32_t;
 typedef unsigned short uint16_t;
 typedef unsigned char uint8_t;
 struct CNWSPlayer_s;		typedef struct CNWSPlayer_s			CNWSPlayer;

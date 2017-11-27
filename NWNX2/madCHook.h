@@ -205,7 +205,7 @@ madCHookApi(PVOID) CopyFunction(
 // (2) this one also works on other sessions in winNt
 // (3) the DACL of the current thread is copied in winNt (if threadAttr = nil)
 
-madCHookApi(HANDLE) CreateRemoteThreadEx(
+/*madCHookApi(HANDLE) CreateRemoteThreadEx(
   HANDLE                 hProcess,
   LPSECURITY_ATTRIBUTES  lpThreadAttributes,
   DWORD                  dwStackSize,
@@ -213,7 +213,7 @@ madCHookApi(HANDLE) CreateRemoteThreadEx(
   LPVOID                 lpParameter,
   DWORD                  dwCreationFlags,
   LPDWORD                lpThreadId
-);
+);*/
 
 // ***************************************************************
 
